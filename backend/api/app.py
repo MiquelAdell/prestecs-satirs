@@ -8,7 +8,7 @@ from backend.api.routes.members import router as members_router
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="Prestecs Satyrs", version="0.1.0")
+    app = FastAPI(title="Prestecs Satirs", version="0.1.0")
 
     app.include_router(games_router)
     app.include_router(auth_router)

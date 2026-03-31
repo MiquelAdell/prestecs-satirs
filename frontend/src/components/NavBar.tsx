@@ -8,7 +8,7 @@ export function NavBar() {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <Link to="/">Prestecs Satyrs</Link>
+        <Link to="/">Prestecs Satirs</Link>
       </div>
       <div className="navbar-links">
         <Link to="/">Catàleg</Link>

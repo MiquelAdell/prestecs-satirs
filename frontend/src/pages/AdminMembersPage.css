@@ -73,6 +73,15 @@
   font-size: var(--font-size-sm);
 }
 
+.admin-th-sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.admin-th-sortable:hover {
+  color: var(--color-primary);
+}
+
 .admin-table tbody tr:last-child td {
   border-bottom: none;
 }

@@ -19,6 +19,35 @@ export function AdminMembersPage() {
   const [tokenBanner, setTokenBanner] = useState<{ url: string; label: string } | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<number | null>(null);
+  const [sortKey, setSortKey] = useState<keyof AdminMember>("display_name");
+  const [sortAsc, setSortAsc] = useState(true);
+
+  const handleSort = (key: keyof AdminMember) => {
+    if (sortKey === key) {
+      setSortAsc(!sortAsc);
+    } else {
+      setSortKey(key);
+      setSortAsc(true);
+    }
+  };
+
+  const sortedMembers = [...members].sort((a, b) => {
+    const av = a[sortKey];
+    const bv = b[sortKey];
+    if (av === null && bv === null) return 0;
+    if (av === null) return sortAsc ? 1 : -1;
+    if (bv === null) return sortAsc ? -1 : 1;
+    if (typeof av === "string" && typeof bv === "string") {
+      return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
+    }
+    if (typeof av === "number" && typeof bv === "number") {
+      return sortAsc ? av - bv : bv - av;
+    }
+    if (typeof av === "boolean" && typeof bv === "boolean") {
+      return sortAsc ? (av === bv ? 0 : av ? -1 : 1) : (av === bv ? 0 : av ? 1 : -1);
+    }
+    return 0;
+  });
 
   const fetchMembers = useCallback(async () => {
     try {
@@ -157,16 +186,26 @@ export function AdminMembersPage() {
           <table className="admin-table">
             <thead>
               <tr>
-                <th>Nom</th>
-                <th>Email</th>
-                <th>Nº Soci</th>
-                <th>Estat</th>
-                <th>Préstecs actius</th>
+                {([
+                  ["display_name", "Nom"],
+                  ["email", "Email"],
+                  ["member_number", "Nº Soci"],
+                  ["is_active", "Estat"],
+                  ["active_loan_count", "Préstecs actius"],
+                ] as const).map(([key, label]) => (
+                  <th
+                    key={key}
+                    className="admin-th-sortable"
+                    onClick={() => handleSort(key)}
+                  >
+                    {label} {sortKey === key ? (sortAsc ? "▲" : "▼") : ""}
+                  </th>
+                ))}
                 <th>Accions</th>
               </tr>
             </thead>
             <tbody>
-              {members.map((m) => (
+              {sortedMembers.map((m) => (
                 <tr key={m.id}>
                   <td>{m.display_name}</td>
                   <td>{m.email}</td>

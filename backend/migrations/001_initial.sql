@@ -1,4 +1,4 @@
--- Initial schema for Prestecs Satyrs
+-- Initial schema for Prestecs Satirs
 
 CREATE TABLE games (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
