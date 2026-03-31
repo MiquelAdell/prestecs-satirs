@@ -40,23 +40,72 @@ def migrate() -> None:
 
 
 @app.command()
-def import_games() -> None:
-    """Import owned games from the BGG collection (RefugioDelSatiro)."""
+def import_games(
+    json_file: Annotated[
+        Optional[str],
+        typer.Argument(help="Path to JSON seed file (alternative to BGG API)"),
+    ] = None,
+) -> None:
+    """Import games from BGG API or a JSON seed file."""
+    import json
+
+    from backend.data.repositories.sqlite_game_repository import SqliteGameRepository
+    from backend.domain.use_cases.import_games import ImportGamesUseCase
+
     settings = _get_settings()
     conn = get_connection(settings.db_path)
     try:
         run_migrations(conn)
-        from backend.data.bgg_client import BggClient
-        from backend.data.repositories.sqlite_game_repository import SqliteGameRepository
-        from backend.domain.use_cases.import_games import ImportGamesUseCase
-
         game_repo = SqliteGameRepository(conn)
-        bgg_client = BggClient(username="RefugioDelSatiro")
-        use_case = ImportGamesUseCase(game_repo, bgg_client)
 
-        typer.echo("Fetching games from BGG (this may take a moment)...")
-        result = use_case.execute()
-        typer.echo(f"Done. {result.created} new, {result.updated} updated, {result.total} total.")
+        if json_file:
+            # Import from JSON seed file
+            path = Path(json_file)
+            if not path.exists():
+                typer.echo(f"Error: file not found: {json_file}", err=True)
+                raise typer.Exit(code=1)
+
+            with path.open(encoding="utf-8") as f:
+                games_data = json.load(f)
+
+            from backend.data.bgg_client import BggGame
+
+            bgg_games = [
+                BggGame(
+                    bgg_id=g["bgg_id"],
+                    name=g["name"],
+                    thumbnail_url=g.get("thumbnail_url", ""),
+                    year_published=g.get("year_published", 0),
+                )
+                for g in games_data
+            ]
+
+            created = 0
+            updated = 0
+            for bgg_game in bgg_games:
+                existing = game_repo.get_by_bgg_id(bgg_game.bgg_id)
+                game_repo.upsert_by_bgg_id(
+                    bgg_id=bgg_game.bgg_id,
+                    name=bgg_game.name,
+                    thumbnail_url=bgg_game.thumbnail_url,
+                    year_published=bgg_game.year_published,
+                )
+                if existing is None:
+                    created += 1
+                else:
+                    updated += 1
+
+            typer.echo(f"Done. {created} new, {updated} updated, {len(bgg_games)} total.")
+        else:
+            # Import from BGG API
+            from backend.data.bgg_client import BggClient
+
+            bgg_client = BggClient(username="RefugioDelSatiro")
+            use_case = ImportGamesUseCase(game_repo, bgg_client)
+
+            typer.echo("Fetching games from BGG (this may take a moment)...")
+            result = use_case.execute()
+            typer.echo(f"Done. {result.created} new, {result.updated} updated, {result.total} total.")
     finally:
         conn.close()
 

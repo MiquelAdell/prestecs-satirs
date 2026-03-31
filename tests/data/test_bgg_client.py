@@ -32,12 +32,12 @@ SAMPLE_XML = """<?xml version="1.0" encoding="utf-8"?>
 class TestBggClientParsing:
     def test_parses_collection_xml(self) -> None:
         client = BggClient("test")
-        games = client._parse_collection(SAMPLE_XML)
+        games = client._parse_xml_collection(SAMPLE_XML)
         assert len(games) == 3
 
     def test_parses_game_fields(self) -> None:
         client = BggClient("test")
-        games = client._parse_collection(SAMPLE_XML)
+        games = client._parse_xml_collection(SAMPLE_XML)
         catan = next(g for g in games if g.bgg_id == 13)
         assert catan.name == "Catan"
         assert catan.thumbnail_url == "https://cf.geekdo-images.com/catan_t.png"
@@ -45,13 +45,13 @@ class TestBggClientParsing:
 
     def test_parses_all_game_ids(self) -> None:
         client = BggClient("test")
-        games = client._parse_collection(SAMPLE_XML)
+        games = client._parse_xml_collection(SAMPLE_XML)
         ids = {g.bgg_id for g in games}
         assert ids == {13, 174430, 230802}
 
     def test_handles_empty_collection(self) -> None:
         client = BggClient("test")
-        games = client._parse_collection(
+        games = client._parse_xml_collection(
             '<?xml version="1.0"?><items totalitems="0"></items>'
         )
         assert games == []
@@ -65,6 +65,6 @@ class TestBggClientParsing:
             </item>
         </items>"""
         client = BggClient("test")
-        games = client._parse_collection(xml)
+        games = client._parse_xml_collection(xml)
         assert len(games) == 1
         assert games[0].thumbnail_url == ""
