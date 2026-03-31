@@ -1,8 +1,14 @@
 from fastapi import FastAPI
 
+from backend.api.routes.auth_routes import router as auth_router
+from backend.api.routes.games import router as games_router
+
 
 def create_app() -> FastAPI:
     app = FastAPI(title="Prestecs Satyrs", version="0.1.0")
+
+    app.include_router(games_router)
+    app.include_router(auth_router)
 
     @app.get("/api/health")
     def health() -> dict[str, str]:
