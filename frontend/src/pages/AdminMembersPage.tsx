@@ -67,11 +67,11 @@ export function AdminMembersPage() {
       } else {
         setTokenBanner({
           url: res.token_url,
-          label: `Enlla\u00e7 d'acc\u00e9s per a ${m.display_name}:`,
+          label: `Enllaç d'accés per a ${m.display_name}:`,
         });
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error enviant l'enlla\u00e7.");
+      setError(err instanceof Error ? err.message : "Error enviant l'enllaç.");
     } finally {
       setActionLoading(null);
     }
@@ -92,7 +92,7 @@ export function AdminMembersPage() {
   if (!member?.is_admin) {
     return (
       <div className="admin-members-page">
-        <p className="admin-restricted">Acc\u00e9s restringit</p>
+        <p className="admin-restricted">Accés restringit</p>
       </div>
     );
   }
@@ -100,7 +100,7 @@ export function AdminMembersPage() {
   return (
     <div className="admin-members-page">
       <div className="admin-members-header">
-        <h1>Gesti\u00f3 de socis</h1>
+        <h1>Gestió de socis</h1>
         <button
           className="btn btn-primary"
           onClick={() => {
@@ -109,7 +109,7 @@ export function AdminMembersPage() {
             setSuccessMessage(null);
           }}
         >
-          {showCreateForm ? "Cancel\u00b7lar" : "Crear soci"}
+          {showCreateForm ? "Cancel·lar" : "Crear soci"}
         </button>
       </div>
 
@@ -138,7 +138,7 @@ export function AdminMembersPage() {
             setShowCreateForm(false);
             setTokenBanner({
               url: res.token_url,
-              label: `Enlla\u00e7 d'acc\u00e9s per a ${res.member.display_name}:`,
+              label: `Enllaç d'accés per a ${res.member.display_name}:`,
             });
             void fetchMembers();
           }}
@@ -159,9 +159,9 @@ export function AdminMembersPage() {
               <tr>
                 <th>Nom</th>
                 <th>Email</th>
-                <th>N\u00ba Soci</th>
+                <th>Nº Soci</th>
                 <th>Estat</th>
-                <th>Pr\u00e9stecs actius</th>
+                <th>Préstecs actius</th>
                 <th>Accions</th>
               </tr>
             </thead>
@@ -170,7 +170,7 @@ export function AdminMembersPage() {
                 <tr key={m.id}>
                   <td>{m.display_name}</td>
                   <td>{m.email}</td>
-                  <td>{m.member_number ?? "\u2014"}</td>
+                  <td>{m.member_number ?? "—"}</td>
                   <td>
                     <span
                       className={`admin-badge ${
@@ -195,7 +195,7 @@ export function AdminMembersPage() {
                         onClick={() => void handleSendLink(m)}
                         disabled={actionLoading === m.id}
                       >
-                        Enviar enlla\u00e7 d&apos;acc\u00e9s
+                        Enviar enllaç d'accés
                       </button>
                     </div>
                   </td>
@@ -231,7 +231,7 @@ function CreateMemberForm({ onCreated, onCancel }: CreateMemberFormProps) {
     setFormError(null);
 
     if (!firstName.trim() || !lastName.trim() || !email.trim()) {
-      setFormError("Nom, cognoms i email s\u00f3n obligatoris.");
+      setFormError("Nom, cognoms i email són obligatoris.");
       return;
     }
 
@@ -302,7 +302,7 @@ function CreateMemberForm({ onCreated, onCancel }: CreateMemberFormProps) {
           />
         </div>
         <div className="admin-form-field">
-          <label htmlFor="cf-phone">Tel\u00e8fon</label>
+          <label htmlFor="cf-phone">Telèfon</label>
           <input
             id="cf-phone"
             type="tel"
@@ -311,7 +311,7 @@ function CreateMemberForm({ onCreated, onCancel }: CreateMemberFormProps) {
           />
         </div>
         <div className="admin-form-field">
-          <label htmlFor="cf-member-number">N\u00ba Soci</label>
+          <label htmlFor="cf-member-number">Nº Soci</label>
           <input
             id="cf-member-number"
             type="number"
@@ -330,7 +330,7 @@ function CreateMemberForm({ onCreated, onCancel }: CreateMemberFormProps) {
             onClick={onCancel}
             disabled={submitting}
           >
-            Cancel\u00b7lar
+            Cancel·lar
           </button>
         </div>
       </div>
