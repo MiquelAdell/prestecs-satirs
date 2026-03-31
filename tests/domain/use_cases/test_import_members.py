@@ -56,6 +56,7 @@ class FakeMemberRepository:
                 display_name=display_name,
                 password_hash=existing.password_hash,
                 is_admin=is_admin,
+                is_active=True,
                 created_at=existing.created_at,
                 updated_at=now,
             )
@@ -71,6 +72,7 @@ class FakeMemberRepository:
                 display_name=display_name,
                 password_hash=None,
                 is_admin=is_admin,
+                is_active=True,
                 created_at=now,
                 updated_at=now,
             )

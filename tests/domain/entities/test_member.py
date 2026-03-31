@@ -17,6 +17,7 @@ class TestMember:
             display_name="Miquel Adell Borràs",
             password_hash=None,
             is_admin=True,
+            is_active=True,
             created_at=now,
             updated_at=now,
         )
@@ -42,6 +43,7 @@ class TestMember:
             display_name="Test User",
             password_hash=None,
             is_admin=False,
+            is_active=True,
             created_at=now,
             updated_at=now,
         )
@@ -62,6 +64,7 @@ class TestMember:
             display_name="Caradras",
             password_hash=None,
             is_admin=False,
+            is_active=True,
             created_at=now,
             updated_at=now,
         )
@@ -81,6 +84,7 @@ class TestMember:
             display_name="Test User",
             password_hash=None,
             is_admin=False,
+            is_active=True,
             created_at=now,
             updated_at=now,
         )

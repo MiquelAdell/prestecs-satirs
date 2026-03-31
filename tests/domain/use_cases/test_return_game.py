@@ -17,6 +17,7 @@ def _make_member(*, id: int, is_admin: bool = False) -> Member:
         id=id, member_number=id, first_name="Test", last_name="User",
         nickname=None, phone=None, email=f"user{id}@test.com",
         display_name=f"User {id}", password_hash=None, is_admin=is_admin,
+        is_active=True,
         created_at=now, updated_at=now,
     )
 

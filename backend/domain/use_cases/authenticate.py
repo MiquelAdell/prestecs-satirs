@@ -14,6 +14,8 @@ class AuthenticateUseCase:
         member = self._member_repo.get_by_email(email)
         if member is None:
             return None
+        if not member.is_active:
+            return None
         if member.password_hash is None:
             return None
         if not verify_password(password, member.password_hash):

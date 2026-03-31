@@ -108,6 +108,7 @@ def _make_member(id: int, display_name: str = "Alice") -> Member:
         display_name=display_name,
         password_hash=None,
         is_admin=False,
+            is_active=True,
         created_at=NOW,
         updated_at=NOW,
     )

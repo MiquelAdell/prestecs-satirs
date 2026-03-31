@@ -39,7 +39,7 @@ class TestMigrationRunner:
         conn = get_memory_connection()
         first_run = run_migrations(conn)
         second_run = run_migrations(conn)
-        assert len(first_run) == 1
+        assert len(first_run) == 2
         assert len(second_run) == 0
         conn.close()
 
@@ -73,7 +73,7 @@ class TestMigrationRunner:
         assert columns == {
             "id", "member_number", "first_name", "last_name", "nickname",
             "phone", "email", "display_name", "password_hash", "is_admin",
-            "created_at", "updated_at",
+            "is_active", "created_at", "updated_at",
         }
         conn.close()
 

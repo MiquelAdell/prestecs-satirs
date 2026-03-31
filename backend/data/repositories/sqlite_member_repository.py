@@ -18,6 +18,7 @@ def _row_to_member(row: sqlite3.Row) -> Member:
         display_name=row["display_name"],
         password_hash=row["password_hash"],
         is_admin=bool(row["is_admin"]),
+        is_active=bool(row["is_active"]) if "is_active" in row.keys() else True,
         created_at=datetime.fromisoformat(row["created_at"]),
         updated_at=datetime.fromisoformat(row["updated_at"]),
     )
@@ -83,6 +84,14 @@ class SqliteMemberRepository:
         self._conn.execute(
             "UPDATE members SET display_name = ?, updated_at = ? WHERE id = ?",
             (display_name, now, member_id),
+        )
+        self._conn.commit()
+
+    def set_active(self, member_id: int, is_active: bool) -> None:
+        now = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+        self._conn.execute(
+            "UPDATE members SET is_active = ?, updated_at = ? WHERE id = ?",
+            (int(is_active), now, member_id),
         )
         self._conn.commit()
 

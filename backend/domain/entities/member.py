@@ -16,5 +16,6 @@ class Member:
     display_name: str
     password_hash: str | None
     is_admin: bool
+    is_active: bool
     created_at: datetime
     updated_at: datetime
