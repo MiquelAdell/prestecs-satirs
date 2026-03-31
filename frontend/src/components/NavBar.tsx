@@ -13,6 +13,7 @@ export function NavBar() {
       <div className="navbar-links">
         <Link to="/">Catàleg</Link>
         {member && <Link to="/my-loans">Els meus préstecs</Link>}
+        {member?.is_admin && <Link to="/admin/members">Administració</Link>}
       </div>
       <div className="navbar-auth">
         {member ? (

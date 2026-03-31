@@ -6,6 +6,7 @@ import { GameDetailPage } from "./pages/GameDetailPage";
 import { MyLoansPage } from "./pages/MyLoansPage";
 import { LoginPage } from "./pages/LoginPage";
 import { SetPasswordPage } from "./pages/SetPasswordPage";
+import { AdminMembersPage } from "./pages/AdminMembersPage";
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
             <Route path="/my-loans" element={<MyLoansPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/set-password" element={<SetPasswordPage />} />
+            <Route path="/admin/members" element={<AdminMembersPage />} />
           </Routes>
         </main>
       </AuthProvider>
