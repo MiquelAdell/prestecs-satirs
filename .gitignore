@@ -32,8 +32,13 @@ htmlcov/
 
 # SQLite
 *.db
+*.db-shm
+*.db-wal
 *.sqlite
 *.sqlite3
+
+# Playwright MCP (browser logs, screenshots, downloads)
+.playwright-mcp/
 
 # Environment
 .env
