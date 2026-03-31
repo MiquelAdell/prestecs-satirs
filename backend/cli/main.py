@@ -82,13 +82,18 @@ def import_games(
 
             created = 0
             updated = 0
-            for bgg_game in bgg_games:
-                existing = game_repo.get_by_bgg_id(bgg_game.bgg_id)
+            for g in games_data:
+                existing = game_repo.get_by_bgg_id(g["bgg_id"])
                 game_repo.upsert_by_bgg_id(
-                    bgg_id=bgg_game.bgg_id,
-                    name=bgg_game.name,
-                    thumbnail_url=bgg_game.thumbnail_url,
-                    year_published=bgg_game.year_published,
+                    bgg_id=g["bgg_id"],
+                    name=g["name"],
+                    thumbnail_url=g.get("thumbnail_url", ""),
+                    year_published=g.get("year_published", 0),
+                    min_players=g.get("min_players", 0),
+                    max_players=g.get("max_players", 0),
+                    playing_time=g.get("playing_time", 0),
+                    bgg_rating=g.get("bgg_rating", 0.0),
+                    location=g.get("location", "armari"),
                 )
                 if existing is None:
                     created += 1

@@ -12,6 +12,11 @@ class TestGame:
             name="Catan",
             thumbnail_url="https://example.com/catan.jpg",
             year_published=1995,
+            min_players=3,
+            max_players=4,
+            playing_time=90,
+            bgg_rating=7.1,
+            location="armari",
             created_at=now,
             updated_at=now,
         )
@@ -29,6 +34,11 @@ class TestGame:
             name="Catan",
             thumbnail_url="https://example.com/catan.jpg",
             year_published=1995,
+            min_players=3,
+            max_players=4,
+            playing_time=90,
+            bgg_rating=7.1,
+            location="armari",
             created_at=now,
             updated_at=now,
         )

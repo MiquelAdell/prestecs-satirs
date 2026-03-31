@@ -91,6 +91,11 @@ def _make_game(id: int, name: str = "Test Game") -> Game:
         name=name,
         thumbnail_url=f"https://example.com/{id}.jpg",
         year_published=2020,
+        min_players=2,
+        max_players=4,
+        playing_time=60,
+        bgg_rating=7.0,
+        location="armari",
         created_at=NOW,
         updated_at=NOW,
     )

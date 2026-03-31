@@ -16,6 +16,11 @@ class GameWithStatus:
     name: str
     thumbnail_url: str
     year_published: int
+    min_players: int
+    max_players: int
+    playing_time: int
+    bgg_rating: float
+    location: str
     created_at: datetime
     updated_at: datetime
     status: str  # "available" or "lent"
@@ -51,6 +56,11 @@ class ListGamesUseCase:
                         name=game.name,
                         thumbnail_url=game.thumbnail_url,
                         year_published=game.year_published,
+                        min_players=game.min_players,
+                        max_players=game.max_players,
+                        playing_time=game.playing_time,
+                        bgg_rating=game.bgg_rating,
+                        location=game.location,
                         created_at=game.created_at,
                         updated_at=game.updated_at,
                         status="lent",
@@ -66,6 +76,11 @@ class ListGamesUseCase:
                         name=game.name,
                         thumbnail_url=game.thumbnail_url,
                         year_published=game.year_published,
+                        min_players=game.min_players,
+                        max_players=game.max_players,
+                        playing_time=game.playing_time,
+                        bgg_rating=game.bgg_rating,
+                        location=game.location,
                         created_at=game.created_at,
                         updated_at=game.updated_at,
                         status="available",

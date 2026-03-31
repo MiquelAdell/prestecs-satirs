@@ -4,6 +4,11 @@ export interface Game {
   readonly name: string;
   readonly thumbnail_url: string;
   readonly year_published: number;
+  readonly min_players: number;
+  readonly max_players: number;
+  readonly playing_time: number;
+  readonly bgg_rating: number;
+  readonly location: string;
 }
 
 export interface GameWithStatus extends Game {

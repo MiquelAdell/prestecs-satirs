@@ -19,6 +19,11 @@ class GameResponse(BaseModel):
     name: str
     thumbnail_url: str
     year_published: int
+    min_players: int
+    max_players: int
+    playing_time: int
+    bgg_rating: float
+    location: str
     created_at: datetime
     updated_at: datetime
     status: str
@@ -44,6 +49,11 @@ def list_games(
             name=g.name,
             thumbnail_url=g.thumbnail_url,
             year_published=g.year_published,
+            min_players=g.min_players,
+            max_players=g.max_players,
+            playing_time=g.playing_time,
+            bgg_rating=g.bgg_rating,
+            location=g.location,
             created_at=g.created_at,
             updated_at=g.updated_at,
             status=g.status,
