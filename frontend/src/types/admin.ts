@@ -1,0 +1,36 @@
+export interface AdminMember {
+  readonly id: number;
+  readonly member_number: number | null;
+  readonly first_name: string;
+  readonly last_name: string;
+  readonly nickname: string | null;
+  readonly display_name: string;
+  readonly email: string;
+  readonly phone: string | null;
+  readonly is_admin: boolean;
+  readonly is_active: boolean;
+  readonly active_loan_count: number;
+}
+
+export interface CreateMemberRequest {
+  readonly first_name: string;
+  readonly last_name: string;
+  readonly email: string;
+  readonly nickname?: string | null;
+  readonly phone?: string | null;
+  readonly member_number?: number | null;
+}
+
+export interface CreateMemberResponse {
+  readonly member: AdminMember;
+  readonly token_url: string;
+}
+
+export interface SendLinkResponse {
+  readonly email_sent: boolean;
+  readonly token_url: string;
+}
+
+export interface OkResponse {
+  readonly ok: boolean;
+}

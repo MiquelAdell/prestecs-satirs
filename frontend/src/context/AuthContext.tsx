@@ -1,0 +1,52 @@
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { apiFetch } from "../api/client";
+import type { CurrentMember } from "../types/member";
+
+interface AuthState {
+  readonly member: CurrentMember | null;
+  readonly loading: boolean;
+  readonly login: (email: string, password: string) => Promise<void>;
+  readonly logout: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthState | null>(null);
+
+export function AuthProvider({ children }: { readonly children: ReactNode }) {
+  const [member, setMember] = useState<CurrentMember | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    apiFetch<CurrentMember>("/me")
+      .then(setMember)
+      .catch(() => setMember(null))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const login = async (email: string, password: string) => {
+    await apiFetch<{ ok: boolean }>("/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
+    const me = await apiFetch<CurrentMember>("/me");
+    setMember(me);
+  };
+
+  const logout = async () => {
+    await apiFetch<{ ok: boolean }>("/logout", { method: "POST" });
+    setMember(null);
+  };
+
+  return (
+    <AuthContext.Provider value={{ member, loading, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuth(): AuthState {
+  const context = useContext(AuthContext);
+  if (context === null) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+}

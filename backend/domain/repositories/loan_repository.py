@@ -1,0 +1,19 @@
+from __future__ import annotations
+
+from typing import Protocol
+
+from backend.domain.entities.loan import Loan
+
+
+class LoanRepository(Protocol):
+    def get_by_id(self, loan_id: int) -> Loan | None: ...
+
+    def get_active_by_game_id(self, game_id: int) -> Loan | None: ...
+
+    def list_active_by_member_id(self, member_id: int) -> list[Loan]: ...
+
+    def list_by_game_id(self, game_id: int) -> list[Loan]: ...
+
+    def create(self, game_id: int, member_id: int) -> Loan: ...
+
+    def mark_returned(self, loan_id: int) -> Loan: ...

@@ -1,0 +1,159 @@
+schema: spec-driven
+
+context: |
+  Project: Prestecs Satirs
+
+  What it is:
+  - A web interface to manage board/role-playing game lending for the "Refugio del Sátiro" RPG group
+  - Members can browse available games, request loans, and track who has what
+
+  Tech stack:
+  - Python 3.12+ with FastAPI for the backend API
+  - Typer for CLI commands (`game-lending` console script)
+  - SQLite for persistence (file-based, no server required)
+  - React with TypeScript (strict mode) for the frontend
+  - Vite for frontend dev server and builds
+  - Black + Ruff for Python formatting and linting
+  - ESLint + Prettier for TypeScript/React linting and formatting
+  - pytest + pytest-cov for backend testing
+  - Vitest + React Testing Library for frontend testing
+  - Playwright for end-to-end testing
+
+  Directory structure:
+  - backend/              # Python package root
+    - domain/             # INNER LAYER — zero infrastructure deps
+      - entities/         # Frozen dataclasses: game.py, member.py, loan.py, password_token.py
+      - repositories/     # Protocol interfaces: game, member, loan, password_token
+      - use_cases/        # Business logic: import_games, import_members, borrow_game, return_game, authenticate, set_password, etc.
+    - data/               # MIDDLE LAYER — concrete implementations
+      - repositories/     # SQLite implementations of domain Protocols
+      - bgg_client.py     # BGG XML API v2 HTTP client
+      - database.py       # SQLite connection factory, migration bootstrap
+    - api/                # OUTER LAYER — FastAPI wiring
+      - app.py            # App factory (create_app)
+      - dependencies.py   # Dependency injection
+      - auth.py           # JWT/cookie/bcrypt helpers
+      - routes/           # games.py, loans.py, members.py, auth_routes.py
+    - cli/                # OUTER LAYER — Typer wiring
+      - main.py           # Commands: import-games, import-members, migrate
+    - config.py           # Settings from env vars
+    - migrations/         # Versioned SQL files (001_initial.sql, ...)
+      - runner.py         # Migration runner
+  - tests/                # Mirrors backend/ structure
+    - domain/use_cases/   # Unit tests with in-memory fakes
+    - data/repositories/  # Integration tests with SQLite :memory:
+    - api/                # FastAPI TestClient tests
+    - cli/                # CLI tests
+  - frontend/             # Separate Vite/React app
+    - src/
+      - api/client.ts     # Typed fetch wrapper
+      - context/AuthContext.tsx
+      - hooks/            # useGames, useGameHistory, useMyLoans, useAuth
+      - pages/            # CatalogPage, GameDetailPage, MyLoansPage, LoginPage, SetPasswordPage
+      - components/       # GameCard, ConfirmDialog, SearchBar, FilterControl, NavBar
+      - types/            # game.ts, member.ts, loan.ts
+      - tokens.css        # Design tokens
+  - e2e/                  # Playwright end-to-end tests
+
+  Configuration:
+  - PRESTECS_DB_PATH: SQLite database file path (default: prestecs.db)
+  - PRESTECS_JWT_SECRET: JWT signing secret (required in production)
+  - PRESTECS_BASE_URL: App public URL (default: http://localhost:8000)
+  - VITE_API_URL: Frontend API base URL (default: /api)
+
+  Canonical commands:
+  - Backend install: pip install -e ".[dev]"
+  - Backend dev: uvicorn backend.api.app:create_app --factory --reload --port 8000
+  - Backend test: pytest
+  - Backend test+cov: pytest --cov=backend --cov-report=term-missing
+  - Backend lint: ruff check backend/ tests/
+  - Backend format: black backend/ tests/
+  - Backend typecheck: mypy backend/
+  - CLI: game-lending import-games / game-lending import-members members.csv / game-lending migrate
+  - Frontend install: cd frontend && npm install
+  - Frontend dev: cd frontend && npm run dev
+  - Frontend build: cd frontend && npm run build
+  - Frontend test: cd frontend && npm test
+  - Frontend lint: cd frontend && npm run lint
+  - Frontend typecheck: cd frontend && npm run typecheck
+  - E2E: cd e2e && npx playwright test
+
+  Code conventions:
+  - Python: PEP 8, enforced by Black (formatter) and Ruff (linter). Type hints on all functions. Frozen dataclasses for entities. Protocol for repository interfaces.
+  - TypeScript/React: ESLint + Prettier with strict TypeScript. No `any`.
+  - Prefer functional/declarative patterns over imperative loops with mutable state
+  - Apply immutability comprehensively; use Readonly<T> in TS, frozen dataclasses in Python
+  - Prefer composition over inheritance
+
+  Architecture:
+  - Clean Architecture with strict layered dependency rules
+  - Domain layer: entities (frozen dataclasses), repository interfaces (Protocols), use cases — zero infrastructure dependencies
+  - Data layer: SQLite repository implementations, BGG HTTP client
+  - API layer: FastAPI routes — wiring only, no business logic
+  - CLI layer: Typer commands — wiring only, shares data layer with API (direct DB access)
+  - Frontend: React SPA — components contain zero business logic, API client is the only backend communication channel
+
+  Git workflow:
+  - Feature branches start from `development` and merge back to `development`
+  - Branch naming: feature/<name> for features, fix/<name> for bugs
+  - Commits follow Conventional Commits
+
+  Non-goals (do NOT introduce these):
+  - Due dates, overdue tracking, or reminders
+  - Reservation or waitlist system
+  - Email notifications
+  - i18n infrastructure (UI is Catalan-only in V1)
+  - Pagination (collection is small enough to load at once)
+  - CSS-in-JS or UI component framework (plain CSS with design tokens)
+
+  Extension principles:
+  - New entities: add frozen dataclass in domain/entities/, Protocol in domain/repositories/, SQLite implementation in data/repositories/, migration SQL file
+  - New use cases: add in domain/use_cases/, wire in api/dependencies.py or cli/main.py
+  - New API routes: add in api/routes/, mount in api/app.py
+  - New pages: add in frontend/src/pages/, add route in App.tsx
+
+  Testing strategy:
+  - Domain use case tests: pytest with in-memory fake repositories (dict-backed Protocol implementations)
+  - Data layer tests: pytest with real SQLite :memory: database
+  - API tests: FastAPI TestClient with dependency overrides
+  - CLI tests: Typer CliRunner
+  - Frontend unit tests: Vitest + React Testing Library
+  - E2E tests: Playwright for critical user flows
+  - All tests assert concrete values, not just truthiness
+  - Tests live in a parallel tests/ directory (backend) and frontend/tests/ (frontend)
+
+  Code style:
+  - Prefer functional/declarative patterns over imperative loops with mutable state
+  - Use list comprehensions, generator expressions, map/filter in Python instead of manual loops with mutable accumulators
+  - Use flatMap, find, reduce, map, filter in TypeScript instead of for...of + push/break
+  - Avoid mutating function arguments or shared state — return new objects/arrays
+  - Apply immutability comprehensively
+  - Prefer composition over inheritance
+
+rules:
+  project:
+    - "Specs first: before modifying any behavior, check openspec/specs/ for existing specs. If behavior is unclear, read the spec. If no spec exists, propose one under changes/."
+    - Follow code conventions as defined in the project context above.
+    - "New code goes in the correct directory per the architecture."
+    - "Clean Architecture: domain layer must have no framework or infrastructure dependencies. All external access goes through repository interfaces (Python Protocols)."
+    - "Git: always branch from `development` unless the feature depends on an unmerged branch. Use feature/<name> for features, fix/<name> for bugs. All commits must follow Conventional Commits."
+    - "Definition of Done: a change is complete when specs are updated, code aligns with specs, tests pass, and no breaking surfaces are altered without a proposal."
+    - "Boy Scout Rule: leave every file you touch cleaner than you found it."
+
+  proposal:
+    - Must include: Goals, Non-goals, User impact, Compatibility, and Rollback plan.
+    - If changing public interfaces, explicitly list old vs new.
+
+  design:
+    - Must describe: data flow through the architecture layers.
+    - Note known constraints when relevant.
+
+  tasks:
+    - Include at least one task for tests when behavior changes.
+    - Include a task to update specs/ when behavior changes.
+    - "Tag each task with the responsible agent role: [BE], [FE], [DB], [CR], or other as applicable."
+
+  specs:
+    - "Tests are the behavioral source of truth. Specs provide design context that tests cannot express (goals, non-goals, design decisions, rationale)."
+    - "Specs and tests are complementary: specs capture the 'why', tests capture the 'what'."
+    - "Keep specs lean: avoid duplicating in markdown what is already asserted by well-named tests."
