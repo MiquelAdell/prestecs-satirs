@@ -1,6 +1,6 @@
 # Prestecs Satirs
 
-A web application to manage board game lending for the **Refugio del Satyro** RPG association.
+A web application to manage board game lending for the **Refugio del Sátiro** RPG association.
 
 Members can browse the catalog, borrow games, and return them. The catalog is imported from [BoardGameGeek](https://boardgamegeek.com/collection/user/RefugioDelSatiro?subtype=boardgame&own=1&ff=1).
 

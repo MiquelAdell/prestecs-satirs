@@ -20,7 +20,7 @@ class EmailClient:
 <html>
 <body style="font-family: system-ui, sans-serif; color: #1f2937; max-width: 600px; margin: 0 auto;">
     <h2>Hola {display_name}!</h2>
-    <p>Benvingut/da a <strong>Prestecs Satirs</strong>, l'aplicació de préstec de jocs del Refugio del Satyro.</p>
+    <p>Benvingut/da a <strong>Prestecs Satirs</strong>, l'aplicació de préstec de jocs del Refugio del Sátiro.</p>
     <p>Per accedir-hi, fes clic al següent enllaç per establir la teva contrasenya:</p>
     <p style="margin: 24px 0;">
         <a href="{url}"

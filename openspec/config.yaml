@@ -4,7 +4,7 @@ context: |
   Project: Prestecs Satirs
 
   What it is:
-  - A web interface to manage board/role-playing game lending for the "Refugio del Satyro" RPG group
+  - A web interface to manage board/role-playing game lending for the "Refugio del Sátiro" RPG group
   - Members can browse available games, request loans, and track who has what
 
   Tech stack:
