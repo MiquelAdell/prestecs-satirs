@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 import { apiFetch } from "../api/client";
 import type {
@@ -12,6 +13,7 @@ import "./AdminMembersPage.css";
 
 export function AdminMembersPage() {
   const { member, loading: authLoading } = useAuth();
+  const { t } = useTranslation();
   const [members, setMembers] = useState<AdminMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -55,11 +57,11 @@ export function AdminMembersPage() {
       setMembers(data);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error carregant els socis.");
+      setError(err instanceof Error ? err.message : t("admin.errorLoadingMembers"));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     if (member?.is_admin) {
@@ -76,7 +78,7 @@ export function AdminMembersPage() {
       });
       await fetchMembers();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error actualitzant l'estat.");
+      setError(err instanceof Error ? err.message : t("admin.errorUpdatingStatus"));
     } finally {
       setActionLoading(null);
     }
@@ -92,15 +94,15 @@ export function AdminMembersPage() {
         { method: "POST" }
       );
       if (res.email_sent) {
-        setSuccessMessage(`Correu enviat a ${m.email}`);
+        setSuccessMessage(t("admin.emailSent", { email: m.email }));
       } else {
         setTokenBanner({
           url: res.token_url,
-          label: `Enllaç d'accés per a ${m.display_name}:`,
+          label: t("admin.accessLinkFor", { name: m.display_name }),
         });
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error enviant l'enllaç.");
+      setError(err instanceof Error ? err.message : t("admin.errorSendingLink"));
     } finally {
       setActionLoading(null);
     }
@@ -113,7 +115,7 @@ export function AdminMembersPage() {
   if (authLoading) {
     return (
       <div className="admin-members-page">
-        <p className="admin-loading">Carregant...</p>
+        <p className="admin-loading">{t("admin.loading")}</p>
       </div>
     );
   }
@@ -121,15 +123,23 @@ export function AdminMembersPage() {
   if (!member?.is_admin) {
     return (
       <div className="admin-members-page">
-        <p className="admin-restricted">Accés restringit</p>
+        <p className="admin-restricted">{t("admin.restricted")}</p>
       </div>
     );
   }
 
+  const columnHeaders: readonly (readonly [keyof AdminMember, string])[] = [
+    ["display_name", t("admin.colName")],
+    ["email", t("admin.colEmail")],
+    ["member_number", t("admin.colMemberNumber")],
+    ["is_active", t("admin.colStatus")],
+    ["active_loan_count", t("admin.colActiveLoans")],
+  ];
+
   return (
     <div className="admin-members-page">
       <div className="admin-members-header">
-        <h1>Gestió de socis</h1>
+        <h1>{t("admin.title")}</h1>
         <button
           className="btn btn-primary"
           onClick={() => {
@@ -138,7 +148,7 @@ export function AdminMembersPage() {
             setSuccessMessage(null);
           }}
         >
-          {showCreateForm ? "Cancel·lar" : "Crear soci"}
+          {showCreateForm ? t("admin.cancel") : t("admin.createMember")}
         </button>
       </div>
 
@@ -155,7 +165,7 @@ export function AdminMembersPage() {
               className="btn btn-secondary btn-sm"
               onClick={() => void handleCopy(tokenBanner.url)}
             >
-              Copiar
+              {t("admin.copy")}
             </button>
           </div>
         </div>
@@ -167,7 +177,7 @@ export function AdminMembersPage() {
             setShowCreateForm(false);
             setTokenBanner({
               url: res.token_url,
-              label: `Enllaç d'accés per a ${res.member.display_name}:`,
+              label: t("admin.accessLinkFor", { name: res.member.display_name }),
             });
             void fetchMembers();
           }}
@@ -176,23 +186,17 @@ export function AdminMembersPage() {
       )}
 
       {loading ? (
-        <p className="admin-loading">Carregant socis...</p>
+        <p className="admin-loading">{t("admin.loadingMembers")}</p>
       ) : error ? (
         <p className="admin-error">{error}</p>
       ) : members.length === 0 ? (
-        <p className="admin-empty">No hi ha socis registrats.</p>
+        <p className="admin-empty">{t("admin.empty")}</p>
       ) : (
         <div className="admin-table-wrapper">
           <table className="admin-table">
             <thead>
               <tr>
-                {([
-                  ["display_name", "Nom"],
-                  ["email", "Email"],
-                  ["member_number", "Nº Soci"],
-                  ["is_active", "Estat"],
-                  ["active_loan_count", "Préstecs actius"],
-                ] as const).map(([key, label]) => (
+                {columnHeaders.map(([key, label]) => (
                   <th
                     key={key}
                     className="admin-th-sortable"
@@ -201,7 +205,7 @@ export function AdminMembersPage() {
                     {label} {sortKey === key ? (sortAsc ? "▲" : "▼") : ""}
                   </th>
                 ))}
-                <th>Accions</th>
+                <th>{t("admin.colActions")}</th>
               </tr>
             </thead>
             <tbody>
@@ -216,7 +220,7 @@ export function AdminMembersPage() {
                         m.is_active ? "admin-badge--active" : "admin-badge--inactive"
                       }`}
                     >
-                      {m.is_active ? "Actiu" : "Desactivat"}
+                      {m.is_active ? t("admin.statusActive") : t("admin.statusInactive")}
                     </span>
                   </td>
                   <td>{m.active_loan_count}</td>
@@ -227,14 +231,14 @@ export function AdminMembersPage() {
                         onClick={() => void handleToggleActive(m)}
                         disabled={actionLoading === m.id}
                       >
-                        {m.is_active ? "Desactivar" : "Activar"}
+                        {m.is_active ? t("admin.deactivate") : t("admin.activate")}
                       </button>
                       <button
                         className="btn-sm btn-primary"
                         onClick={() => void handleSendLink(m)}
                         disabled={actionLoading === m.id}
                       >
-                        Enviar enllaç d'accés
+                        {t("admin.sendAccessLink")}
                       </button>
                     </div>
                   </td>
@@ -256,6 +260,7 @@ interface CreateMemberFormProps {
 }
 
 function CreateMemberForm({ onCreated, onCancel }: CreateMemberFormProps) {
+  const { t } = useTranslation();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -270,7 +275,7 @@ function CreateMemberForm({ onCreated, onCancel }: CreateMemberFormProps) {
     setFormError(null);
 
     if (!firstName.trim() || !lastName.trim() || !email.trim()) {
-      setFormError("Nom, cognoms i email són obligatoris.");
+      setFormError(t("admin.requiredFields"));
       return;
     }
 
@@ -291,7 +296,7 @@ function CreateMemberForm({ onCreated, onCancel }: CreateMemberFormProps) {
       });
       onCreated(res);
     } catch (err) {
-      setFormError(err instanceof Error ? err.message : "Error creant el soci.");
+      setFormError(err instanceof Error ? err.message : t("admin.errorCreating"));
     } finally {
       setSubmitting(false);
     }
@@ -299,10 +304,10 @@ function CreateMemberForm({ onCreated, onCancel }: CreateMemberFormProps) {
 
   return (
     <form className="admin-create-form" onSubmit={(e) => void handleSubmit(e)}>
-      <h2>Nou soci</h2>
+      <h2>{t("admin.newMemberTitle")}</h2>
       <div className="admin-form-grid">
         <div className="admin-form-field">
-          <label htmlFor="cf-first-name">Nom *</label>
+          <label htmlFor="cf-first-name">{t("admin.firstName")}</label>
           <input
             id="cf-first-name"
             type="text"
@@ -312,7 +317,7 @@ function CreateMemberForm({ onCreated, onCancel }: CreateMemberFormProps) {
           />
         </div>
         <div className="admin-form-field">
-          <label htmlFor="cf-last-name">Cognoms *</label>
+          <label htmlFor="cf-last-name">{t("admin.lastName")}</label>
           <input
             id="cf-last-name"
             type="text"
@@ -322,7 +327,7 @@ function CreateMemberForm({ onCreated, onCancel }: CreateMemberFormProps) {
           />
         </div>
         <div className="admin-form-field">
-          <label htmlFor="cf-email">Email *</label>
+          <label htmlFor="cf-email">{t("admin.emailField")}</label>
           <input
             id="cf-email"
             type="email"
@@ -332,7 +337,7 @@ function CreateMemberForm({ onCreated, onCancel }: CreateMemberFormProps) {
           />
         </div>
         <div className="admin-form-field">
-          <label htmlFor="cf-nickname">Sobrenom</label>
+          <label htmlFor="cf-nickname">{t("admin.nickname")}</label>
           <input
             id="cf-nickname"
             type="text"
@@ -341,7 +346,7 @@ function CreateMemberForm({ onCreated, onCancel }: CreateMemberFormProps) {
           />
         </div>
         <div className="admin-form-field">
-          <label htmlFor="cf-phone">Telèfon</label>
+          <label htmlFor="cf-phone">{t("admin.phone")}</label>
           <input
             id="cf-phone"
             type="tel"
@@ -350,7 +355,7 @@ function CreateMemberForm({ onCreated, onCancel }: CreateMemberFormProps) {
           />
         </div>
         <div className="admin-form-field">
-          <label htmlFor="cf-member-number">Nº Soci</label>
+          <label htmlFor="cf-member-number">{t("admin.memberNumber")}</label>
           <input
             id="cf-member-number"
             type="number"
@@ -361,7 +366,7 @@ function CreateMemberForm({ onCreated, onCancel }: CreateMemberFormProps) {
         {formError && <p className="admin-form-error">{formError}</p>}
         <div className="admin-form-actions">
           <button className="btn btn-primary" type="submit" disabled={submitting}>
-            {submitting ? "Creant..." : "Crear soci"}
+            {submitting ? t("admin.creating") : t("admin.createMember")}
           </button>
           <button
             className="btn btn-secondary"
@@ -369,7 +374,7 @@ function CreateMemberForm({ onCreated, onCancel }: CreateMemberFormProps) {
             onClick={onCancel}
             disabled={submitting}
           >
-            Cancel·lar
+            {t("admin.cancel")}
           </button>
         </div>
       </div>

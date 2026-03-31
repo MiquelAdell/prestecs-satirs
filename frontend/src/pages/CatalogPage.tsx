@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useGames } from "../hooks/useGames";
 import { GameCard } from "../components/GameCard";
 import { SearchBar } from "../components/SearchBar";
@@ -10,6 +11,7 @@ export function CatalogPage() {
   const { games, loading, error, refetch } = useGames();
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<FilterValue>("all");
+  const { t } = useTranslation();
 
   const filteredGames = useMemo(() => {
     let result: readonly GameWithStatus[] = games;
@@ -31,7 +33,7 @@ export function CatalogPage() {
   if (loading) {
     return (
       <div className="catalog-page">
-        <p className="catalog-loading">Carregant jocs...</p>
+        <p className="catalog-loading">{t("catalog.loading")}</p>
       </div>
     );
   }
@@ -47,7 +49,7 @@ export function CatalogPage() {
   return (
     <div className="catalog-page">
       <div className="catalog-header">
-        <h1>Catàleg de jocs</h1>
+        <h1>{t("catalog.title")}</h1>
         <div className="catalog-controls">
           <SearchBar value={search} onChange={setSearch} />
           <FilterControl value={filter} onChange={setFilter} />
@@ -55,7 +57,7 @@ export function CatalogPage() {
       </div>
 
       {filteredGames.length === 0 ? (
-        <p className="catalog-empty">No s'han trobat jocs.</p>
+        <p className="catalog-empty">{t("catalog.empty")}</p>
       ) : (
         <div className="catalog-grid">
           {filteredGames.map((game) => (

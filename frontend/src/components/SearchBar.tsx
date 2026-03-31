@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./SearchBar.css";
 
 interface SearchBarProps {
@@ -7,7 +8,9 @@ interface SearchBarProps {
   readonly placeholder?: string;
 }
 
-export function SearchBar({ value, onChange, placeholder = "Cercar jocs..." }: SearchBarProps) {
+export function SearchBar({ value, onChange, placeholder }: SearchBarProps) {
+  const { t } = useTranslation();
+  const resolvedPlaceholder = placeholder ?? t("catalog.searchPlaceholder");
   const [localValue, setLocalValue] = useState(value);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -42,8 +45,8 @@ export function SearchBar({ value, onChange, placeholder = "Cercar jocs..." }: S
         type="text"
         value={localValue}
         onChange={handleChange}
-        placeholder={placeholder}
-        aria-label={placeholder}
+        placeholder={resolvedPlaceholder}
+        aria-label={resolvedPlaceholder}
       />
     </div>
   );

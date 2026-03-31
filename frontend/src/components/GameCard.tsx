@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 import { apiFetch } from "../api/client";
 import { ConfirmDialog } from "./ConfirmDialog";
@@ -13,6 +14,7 @@ interface GameCardProps {
 
 export function GameCard({ game, onAction }: GameCardProps) {
   const { member } = useAuth();
+  const { t } = useTranslation();
   const [confirmAction, setConfirmAction] = useState<"borrow" | "return" | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -76,8 +78,8 @@ export function GameCard({ game, onAction }: GameCardProps) {
           )}
           <span className={`game-card-status ${game.status}`}>
             {game.status === "available"
-              ? "Disponible"
-              : `Prestat a ${game.borrower_display_name}`}
+              ? t("game.available")
+              : t("game.lentTo", { name: game.borrower_display_name })}
           </span>
         </div>
       </Link>
@@ -89,7 +91,7 @@ export function GameCard({ game, onAction }: GameCardProps) {
             onClick={() => setConfirmAction("borrow")}
             disabled={loading}
           >
-            Agafar en préstec
+            {t("game.borrow")}
           </button>
         )}
         {canReturn && (
@@ -98,26 +100,26 @@ export function GameCard({ game, onAction }: GameCardProps) {
             onClick={() => setConfirmAction("return")}
             disabled={loading}
           >
-            Retornar
+            {t("game.return")}
           </button>
         )}
       </div>
 
       {confirmAction === "borrow" && (
         <ConfirmDialog
-          message={`Vols agafar en préstec "${game.name}"?`}
+          message={t("game.confirmBorrow", { name: game.name })}
           onConfirm={() => void handleBorrow()}
           onCancel={() => setConfirmAction(null)}
-          confirmLabel="Agafar en préstec"
+          confirmLabel={t("game.borrow")}
         />
       )}
 
       {confirmAction === "return" && (
         <ConfirmDialog
-          message={`Vols retornar "${game.name}"?`}
+          message={t("game.confirmReturn", { name: game.name })}
           onConfirm={() => void handleReturn()}
           onCancel={() => setConfirmAction(null)}
-          confirmLabel="Retornar"
+          confirmLabel={t("game.return")}
         />
       )}
     </div>

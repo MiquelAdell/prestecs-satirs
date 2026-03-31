@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import "./ConfirmDialog.css";
 
 interface ConfirmDialogProps {
@@ -13,11 +14,15 @@ export function ConfirmDialog({
   message,
   onConfirm,
   onCancel,
-  confirmLabel = "Confirmar",
-  cancelLabel = "Cancel\u00b7lar",
+  confirmLabel,
+  cancelLabel,
 }: ConfirmDialogProps) {
+  const { t } = useTranslation();
   const dialogRef = useRef<HTMLDivElement>(null);
   const confirmBtnRef = useRef<HTMLButtonElement>(null);
+
+  const resolvedConfirmLabel = confirmLabel ?? t("confirm.confirm");
+  const resolvedCancelLabel = cancelLabel ?? t("confirm.cancel");
 
   useEffect(() => {
     confirmBtnRef.current?.focus();
@@ -63,10 +68,10 @@ export function ConfirmDialog({
         <p>{message}</p>
         <div className="confirm-dialog-actions">
           <button className="btn btn-secondary" onClick={onCancel}>
-            {cancelLabel}
+            {resolvedCancelLabel}
           </button>
           <button className="btn btn-primary" onClick={onConfirm} ref={confirmBtnRef}>
-            {confirmLabel}
+            {resolvedConfirmLabel}
           </button>
         </div>
       </div>

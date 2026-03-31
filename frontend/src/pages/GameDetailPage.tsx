@@ -1,4 +1,5 @@
 import { Link, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useGameHistory } from "../hooks/useGameHistory";
 import { LoanHistoryEntry } from "../components/LoanHistoryEntry";
 import "./GameDetailPage.css";
@@ -6,11 +7,12 @@ import "./GameDetailPage.css";
 export function GameDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { game, history, loading, error } = useGameHistory(id);
+  const { t } = useTranslation();
 
   if (loading) {
     return (
       <div className="game-detail-page">
-        <p className="game-detail-loading">Carregant...</p>
+        <p className="game-detail-loading">{t("gameDetail.loading")}</p>
       </div>
     );
   }
@@ -19,9 +21,9 @@ export function GameDetailPage() {
     return (
       <div className="game-detail-page">
         <Link to="/" className="game-detail-back">
-          &larr; Tornar al catàleg
+          &larr; {t("gameDetail.backToCatalog")}
         </Link>
-        <p className="game-detail-error">{error ?? "Joc no trobat."}</p>
+        <p className="game-detail-error">{error ?? t("gameDetail.notFound")}</p>
       </div>
     );
   }
@@ -29,7 +31,7 @@ export function GameDetailPage() {
   return (
     <div className="game-detail-page">
       <Link to="/" className="game-detail-back">
-        &larr; Tornar al catàleg
+        &larr; {t("gameDetail.backToCatalog")}
       </Link>
 
       <div className="game-detail-header">
@@ -43,8 +45,8 @@ export function GameDetailPage() {
           <div className="game-detail-year">{game.year_published}</div>
           <span className={`game-detail-status ${game.status}`}>
             {game.status === "available"
-              ? "Disponible"
-              : `Prestat a ${game.borrower_display_name}`}
+              ? t("game.available")
+              : t("game.lentTo", { name: game.borrower_display_name })}
           </span>
           <div className="game-detail-bgg">
             <a
@@ -52,17 +54,17 @@ export function GameDetailPage() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Veure a BoardGameGeek
+              {t("gameDetail.viewOnBGG")}
             </a>
           </div>
         </div>
       </div>
 
       <div className="game-detail-history">
-        <h2>Historial de préstecs</h2>
+        <h2>{t("gameDetail.historyTitle")}</h2>
         {history.length === 0 ? (
           <p className="game-detail-no-history">
-            Aquest joc no ha estat mai prestat.
+            {t("gameDetail.noHistory")}
           </p>
         ) : (
           <div className="game-detail-history-list">
