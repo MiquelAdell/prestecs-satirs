@@ -238,50 +238,46 @@ export function CatalogPage() {
 
         {/* Row 3: Players + Time + Rating */}
         <div className="catalog-filters-row3">
-          {hasPlayerData && (
-            <div className="catalog-filter-group">
-              <label className="catalog-filter-label">{t("catalog.players")}</label>
-              <div className="catalog-players-inputs">
-                <input
-                  type="number"
-                  className="catalog-number-input"
-                  placeholder={t("catalog.playersMin")}
-                  min={0}
-                  value={playersMin}
-                  onChange={(e) => setPlayersMin(e.target.value)}
-                  aria-label={t("catalog.playersMin")}
-                />
-                <span className="catalog-range-sep">–</span>
-                <input
-                  type="number"
-                  className="catalog-number-input"
-                  placeholder={t("catalog.playersMax")}
-                  min={0}
-                  value={playersMax}
-                  onChange={(e) => setPlayersMax(e.target.value)}
-                  aria-label={t("catalog.playersMax")}
-                />
-              </div>
+          <div className="catalog-filter-group">
+            <label className="catalog-filter-label">{t("catalog.players")}</label>
+            <div className="catalog-players-inputs">
+              <input
+                type="number"
+                className="catalog-number-input"
+                placeholder={t("catalog.playersMin")}
+                min={0}
+                value={playersMin}
+                onChange={(e) => setPlayersMin(e.target.value)}
+                aria-label={t("catalog.playersMin")}
+              />
+              <span className="catalog-range-sep">–</span>
+              <input
+                type="number"
+                className="catalog-number-input"
+                placeholder={t("catalog.playersMax")}
+                min={0}
+                value={playersMax}
+                onChange={(e) => setPlayersMax(e.target.value)}
+                aria-label={t("catalog.playersMax")}
+              />
             </div>
-          )}
+          </div>
 
-          {hasTimeData && (
-            <div className="catalog-filter-group">
-              <label className="catalog-filter-label">{t("catalog.sortTime")}</label>
-              <div className="filter-control" role="group" aria-label={t("catalog.sortTime")}>
-                {TIME_PRESETS.map((preset) => (
-                  <button
-                    key={preset.value}
-                    className={timePreset === preset.value ? "active" : ""}
-                    onClick={() => setTimePreset(preset.value)}
-                    aria-pressed={timePreset === preset.value}
-                  >
-                    {t(preset.i18nKey)}
-                  </button>
-                ))}
-              </div>
+          <div className="catalog-filter-group">
+            <label className="catalog-filter-label">{t("catalog.sortTime")}</label>
+            <div className="filter-control" role="group" aria-label={t("catalog.sortTime")}>
+              {TIME_PRESETS.map((preset) => (
+                <button
+                  key={preset.value}
+                  className={timePreset === preset.value ? "active" : ""}
+                  onClick={() => setTimePreset(preset.value)}
+                  aria-pressed={timePreset === preset.value}
+                >
+                  {t(preset.i18nKey)}
+                </button>
+              ))}
             </div>
-          )}
+          </div>
 
           <div className="catalog-filter-group">
             <label className="catalog-filter-label" htmlFor="min-rating-input">
