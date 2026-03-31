@@ -1,23 +1,23 @@
 # Prestecs Satyrs
 
-Aplicació web per gestionar el préstec de jocs de taula de l'associació **Refugio del Satyro**.
+A web application to manage board game lending for the **Refugio del Satyro** RPG association.
 
-Els socis poden navegar pel catàleg, agafar jocs en préstec i retornar-los. El catàleg s'importa des de [BoardGameGeek](https://boardgamegeek.com/collection/user/RefugioDelSatiro?subtype=boardgame&own=1&ff=1).
+Members can browse the catalog, borrow games, and return them. The catalog is imported from [BoardGameGeek](https://boardgamegeek.com/collection/user/RefugioDelSatiro?subtype=boardgame&own=1&ff=1).
 
-## Stack tecnològic
+## Tech Stack
 
 - **Backend:** Python 3.12+ / FastAPI / SQLite
 - **Frontend:** React / TypeScript / Vite
 - **CLI:** Typer (`game-lending`)
 - **Tests:** pytest (backend), Vitest (frontend), Playwright (e2e)
 
-## Requisits
+## Requirements
 
 - Python 3.12+
 - Node.js 18+
 - pip
 
-## Instal·lació
+## Installation
 
 ```bash
 # Backend
@@ -27,35 +27,35 @@ pip install -e ".[dev]"
 cd frontend && npm install && cd ..
 ```
 
-## Desenvolupament
+## Development
 
 ```bash
-# Migrar la base de dades
+# Run database migrations
 game-lending migrate
 
-# Importar jocs (des de fitxer JSON)
+# Import games (from JSON seed file)
 game-lending import-games data/bgg_collection.json
 
-# Importar socis
+# Import members
 game-lending import-members members.csv --base-url http://localhost:5173
 
-# Arrencar el backend (port 8000)
+# Start the backend (port 8000)
 uvicorn backend.api.app:create_app --factory --reload --port 8000
 
-# Arrencar el frontend (port 5173, amb proxy a /api)
+# Start the frontend (port 5173, proxies /api to backend)
 cd frontend && npm run dev
 ```
 
-Obre http://localhost:5173 per veure l'aplicació.
+Open http://localhost:5173 to view the application.
 
 ## CLI
 
 ```bash
-game-lending migrate                          # Executar migracions
-game-lending import-games data/bgg_collection.json  # Importar jocs des de JSON
-game-lending import-games                     # Importar jocs des de l'API de BGG (requereix BGG_BEARER_TOKEN)
-game-lending import-members members.csv       # Importar socis des de CSV
-game-lending import-members --email x@y.com --name "Nom Cognom"  # Afegir un soci manualment
+game-lending migrate                          # Run migrations
+game-lending import-games data/bgg_collection.json  # Import games from JSON
+game-lending import-games                     # Import games from BGG API (requires BGG_BEARER_TOKEN)
+game-lending import-members members.csv       # Import members from CSV
+game-lending import-members --email x@y.com --name "First Last"  # Add a single member
 ```
 
 ## Tests
@@ -68,45 +68,45 @@ pytest --cov=backend --cov-report=term-missing
 # Frontend
 cd frontend && npm test
 
-# Lint i format
+# Lint and format
 ruff check backend/ tests/
 black backend/ tests/
 cd frontend && npm run lint
 ```
 
-## Arquitectura
+## Architecture
 
-Clean Architecture amb capes estrictes:
+Clean Architecture with strict layered dependencies:
 
 ```
 backend/
-├── domain/          # Entitats, Protocols, Casos d'ús (sense dependències d'infraestructura)
-├── data/            # Repositoris SQLite, client BGG
-├── api/             # FastAPI (rutes, auth, dependències)
-├── cli/             # Comandes Typer
-├── config.py        # Configuració (variables d'entorn)
-└── migrations/      # Fitxers SQL versionats
+├── domain/          # Entities, Protocols, Use cases (zero infrastructure deps)
+├── data/            # SQLite repositories, BGG client
+├── api/             # FastAPI (routes, auth, dependencies)
+├── cli/             # Typer commands
+├── config.py        # Settings (env vars)
+└── migrations/      # Versioned SQL files
 
 frontend/
 ├── src/
-│   ├── api/         # Client HTTP tipat
-│   ├── components/  # Components React reutilitzables
+│   ├── api/         # Typed HTTP client
+│   ├── components/  # Reusable React components
 │   ├── context/     # AuthContext
-│   ├── hooks/       # Hooks de dades
-│   ├── pages/       # Pàgines (Catàleg, Detall, Préstecs, Login)
-│   └── types/       # Tipus TypeScript
+│   ├── hooks/       # Data fetching hooks
+│   ├── pages/       # Pages (Catalog, Detail, My Loans, Login)
+│   └── types/       # TypeScript interfaces
 ```
 
-## Variables d'entorn
+## Environment Variables
 
-| Variable | Descripció | Per defecte |
-|----------|-----------|-------------|
-| `PRESTECS_DB_PATH` | Ruta del fitxer SQLite | `prestecs.db` |
-| `PRESTECS_JWT_SECRET` | Secret per signar JWT | (dev secret) |
-| `PRESTECS_BASE_URL` | URL pública de l'app | `http://localhost:8000` |
-| `BGG_BEARER_TOKEN` | Token de l'API de BGG (opcional) | — |
-| `VITE_API_URL` | URL base de l'API al frontend | `/api` |
+| Variable | Description | Default |
+|----------|------------|---------|
+| `PRESTECS_DB_PATH` | SQLite database file path | `prestecs.db` |
+| `PRESTECS_JWT_SECRET` | JWT signing secret | (dev secret) |
+| `PRESTECS_BASE_URL` | App public URL | `http://localhost:8000` |
+| `BGG_BEARER_TOKEN` | BGG API bearer token (optional) | — |
+| `VITE_API_URL` | Frontend API base URL | `/api` |
 
-## Llicència
+## License
 
 GPL-3.0
