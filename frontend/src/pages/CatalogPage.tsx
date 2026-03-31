@@ -71,17 +71,8 @@ export function CatalogPage() {
 
   // Compute player range bounds from data
   const playerBounds = useMemo(() => {
-    let min = 1;
-    let max = 12;
-    const withPlayers = games.filter((g) => g.min_players > 0 || g.max_players > 0);
-    if (withPlayers.length > 0) {
-      min = Math.min(...withPlayers.map((g) => g.min_players).filter((v) => v > 0));
-      max = Math.max(...withPlayers.map((g) => g.max_players).filter((v) => v > 0));
-      if (min < 1) min = 1;
-      if (max < min) max = min;
-    }
-    return { min, max };
-  }, [games]);
+    return { min: 1, max: 12 };
+  }, []);
 
   const [playersMin, setPlayersMin] = useState<number | null>(null);
   const [playersMax, setPlayersMax] = useState<number | null>(null);
@@ -174,7 +165,9 @@ export function CatalogPage() {
     if (!isAtExtremes) {
       result = result.filter((g) => {
         if (g.min_players <= 0 && g.max_players <= 0) return false;
-        if (g.min_players > pMax) return false;
+        // When max slider is at 12 (12+), don't cap — include any game supporting pMin or more
+        const effectivePMax = pMax >= 12 ? Infinity : pMax;
+        if (g.min_players > effectivePMax) return false;
         if (g.max_players > 0 && g.max_players < pMin) return false;
         return true;
       });
@@ -241,9 +234,10 @@ export function CatalogPage() {
 
   const currentSortLabel = SORT_OPTIONS.find((o) => o.value === sort);
   const isPlayerRangeAll = effectiveMin <= playerBounds.min && effectiveMax >= playerBounds.max;
+  const playerMaxLabel = effectiveMax >= 12 ? "12+" : String(effectiveMax);
   const playerRangeLabel = isPlayerRangeAll
     ? t("catalog.playerRangeAll")
-    : t("catalog.playerRange", { min: effectiveMin, max: effectiveMax });
+    : t("catalog.playerRange", { min: effectiveMin, max: playerMaxLabel });
 
   const filtersToggleLabel = activeFilterCount > 0
     ? t("catalog.filtersCount", { count: activeFilterCount })
