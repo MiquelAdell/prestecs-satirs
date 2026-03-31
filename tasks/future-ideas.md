@@ -11,3 +11,10 @@ Import association members from a Google Spreadsheet via the Google Sheets API (
 - Re-runnable to sync additions/updates; does NOT auto-delete removed members
 
 Previously tracked as US-003 in the PRD before being deferred.
+
+## UI translations (Spanish and English)
+V1 UI is in Catalan only. Add i18n infrastructure and translations for:
+- Spanish (Castilian) — most members likely speak it
+- English — for broader accessibility
+
+Requires choosing an i18n library (e.g., react-i18next), extracting all UI strings, and providing translation files.
