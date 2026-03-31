@@ -1,10 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { NavBar } from "./components/NavBar";
-
-function Placeholder({ name }: { readonly name: string }) {
-  return <div style={{ padding: "2rem" }}>{name} — pendent d'implementar</div>;
-}
+import { CatalogPage } from "./pages/CatalogPage";
+import { GameDetailPage } from "./pages/GameDetailPage";
+import { MyLoansPage } from "./pages/MyLoansPage";
+import { LoginPage } from "./pages/LoginPage";
+import { SetPasswordPage } from "./pages/SetPasswordPage";
 
 export default function App() {
   return (
@@ -13,11 +14,11 @@ export default function App() {
         <NavBar />
         <main>
           <Routes>
-            <Route path="/" element={<Placeholder name="Catàleg" />} />
-            <Route path="/games/:id" element={<Placeholder name="Detall del joc" />} />
-            <Route path="/my-loans" element={<Placeholder name="Els meus préstecs" />} />
-            <Route path="/login" element={<Placeholder name="Iniciar sessió" />} />
-            <Route path="/set-password" element={<Placeholder name="Establir contrasenya" />} />
+            <Route path="/" element={<CatalogPage />} />
+            <Route path="/games/:id" element={<GameDetailPage />} />
+            <Route path="/my-loans" element={<MyLoansPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/set-password" element={<SetPasswordPage />} />
           </Routes>
         </main>
       </AuthProvider>
