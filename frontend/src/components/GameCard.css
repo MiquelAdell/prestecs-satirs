@@ -30,6 +30,16 @@
   background-color: var(--color-bg);
 }
 
+.game-card-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-primary);
+  color: white;
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+}
+
 .game-card-body {
   padding: var(--space-md);
   display: flex;

@@ -26,12 +26,14 @@ _BROWSER_HEADERS = {
 
 class BggClient:
     XML_API_URL = "https://boardgamegeek.com/xmlapi2/collection"
+    THING_API_URL = "https://boardgamegeek.com/xmlapi2/thing"
     WEB_URL = "https://boardgamegeek.com/collection/user"
     MAX_RETRIES = 5
     INITIAL_BACKOFF = 5.0
 
-    def __init__(self, username: str) -> None:
+    def __init__(self, username: str, bearer_token: str | None = None) -> None:
         self._username = username
+        self._bearer_token = bearer_token
 
     def fetch_owned_games(self) -> list[BggGame]:
         """Try XML API first, fall back to HTML scraping if blocked."""
@@ -40,13 +42,19 @@ class BggClient:
             return games
         return self._scrape_collection_page()
 
+    def _get_auth_headers(self) -> dict[str, str]:
+        if self._bearer_token:
+            return {"Authorization": f"Bearer {self._bearer_token}"}
+        return {}
+
     def _try_xml_api(self) -> list[BggGame] | None:
         url = f"{self.XML_API_URL}?username={self._username}&own=1&stats=0"
+        headers = self._get_auth_headers()
         backoff = self.INITIAL_BACKOFF
 
         for attempt in range(self.MAX_RETRIES):
             try:
-                response = httpx.get(url, timeout=30.0)
+                response = httpx.get(url, headers=headers, timeout=30.0)
             except httpx.HTTPError:
                 return None
 

@@ -97,10 +97,17 @@ def import_games(
 
             typer.echo(f"Done. {created} new, {updated} updated, {len(bgg_games)} total.")
         else:
-            # Import from BGG API
+            # Import from BGG API (requires BGG_BEARER_TOKEN env var)
             from backend.data.bgg_client import BggClient
 
-            bgg_client = BggClient(username="RefugioDelSatiro")
+            if not settings.bgg_bearer_token:
+                typer.echo(
+                    "Tip: set BGG_BEARER_TOKEN env var for authenticated API access. "
+                    "Without it, the API may be blocked and will fall back to HTML scraping.",
+                    err=True,
+                )
+
+            bgg_client = BggClient(username="RefugioDelSatiro", bearer_token=settings.bgg_bearer_token)
             use_case = ImportGamesUseCase(game_repo, bgg_client)
 
             typer.echo("Fetching games from BGG (this may take a moment)...")

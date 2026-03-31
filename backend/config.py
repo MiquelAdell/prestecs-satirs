@@ -9,3 +9,4 @@ class Settings:
     db_path: str = os.environ.get("PRESTECS_DB_PATH", "prestecs.db")
     jwt_secret: str = os.environ.get("PRESTECS_JWT_SECRET", "dev-secret-change-in-production-minimum-32-bytes")
     base_url: str = os.environ.get("PRESTECS_BASE_URL", "http://localhost:8000")
+    bgg_bearer_token: str | None = os.environ.get("BGG_BEARER_TOKEN")

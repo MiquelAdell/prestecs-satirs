@@ -57,15 +57,23 @@ export function GameCard({ game, onAction }: GameCardProps) {
   return (
     <div className="game-card">
       <Link to={`/games/${game.id}`} className="game-card-link">
-        <img
-          className="game-card-thumbnail"
-          src={game.thumbnail_url}
-          alt={game.name}
-          loading="lazy"
-        />
+        {game.thumbnail_url ? (
+          <img
+            className="game-card-thumbnail"
+            src={game.thumbnail_url}
+            alt={game.name}
+            loading="lazy"
+          />
+        ) : (
+          <div className="game-card-thumbnail game-card-placeholder">
+            <span>{game.name.charAt(0)}</span>
+          </div>
+        )}
         <div className="game-card-body">
           <div className="game-card-name">{game.name}</div>
-          <div className="game-card-year">{game.year_published}</div>
+          {game.year_published > 0 && (
+            <div className="game-card-year">{game.year_published}</div>
+          )}
           <span className={`game-card-status ${game.status}`}>
             {game.status === "available"
               ? "Disponible"
@@ -81,7 +89,7 @@ export function GameCard({ game, onAction }: GameCardProps) {
             onClick={() => setConfirmAction("borrow")}
             disabled={loading}
           >
-            Manllevar
+            Agafar en préstec
           </button>
         )}
         {canReturn && (
@@ -97,10 +105,10 @@ export function GameCard({ game, onAction }: GameCardProps) {
 
       {confirmAction === "borrow" && (
         <ConfirmDialog
-          message={`Vols manllevar "${game.name}"?`}
+          message={`Vols agafar en préstec "${game.name}"?`}
           onConfirm={() => void handleBorrow()}
           onCancel={() => setConfirmAction(null)}
-          confirmLabel="Manllevar"
+          confirmLabel="Agafar en préstec"
         />
       )}
 
