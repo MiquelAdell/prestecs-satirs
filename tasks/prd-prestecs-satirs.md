@@ -128,6 +128,35 @@ Prestecs Satyrs is a web application for the "Refugio del Satyro" RPG associatio
 - [ ] Typecheck/lint passes
 - [ ] Verify in browser using dev-browser skill
 
+### US-009: Admin panel — member management
+**Description:** As an admin, I want a web interface to manage members so that I don't need CLI access.
+
+**Acceptance Criteria:**
+- [ ] `/admin/members` page shows all members in a table: display name, email, member number, status (active/disabled), active loan count
+- [ ] "Create member" form: display name, email, optional fields (nickname, phone, member number)
+- [ ] Creating a member generates a one-time password URL (shown to admin)
+- [ ] Disable/Enable toggle per member (soft disable: can't log in, active loans remain)
+- [ ] "Send access link" button per member — generates a new password token and sends email via SMTP
+- [ ] If SMTP is not configured, the button shows/copies the URL instead of sending email
+- [ ] NavBar shows "Administració" link only for admins
+- [ ] Non-admin users redirected away from `/admin/*` routes
+- [ ] Disabled members cannot log in (auth rejects them)
+- [ ] Admins can re-enable disabled members
+- [ ] All UI text in Catalan
+- [ ] Typecheck/lint passes
+- [ ] Verify in browser using dev-browser skill
+
+### US-010: Send access link via email
+**Description:** As an admin, I want to send a password-set link to a member by email so that they can set up their account without me sharing URLs manually.
+
+**Acceptance Criteria:**
+- [ ] Admin clicks "Send access link" for a member
+- [ ] System generates a new password token (48h expiry)
+- [ ] Email sent via configured SMTP with the one-time URL
+- [ ] Email body is in Catalan, simple HTML template
+- [ ] If SMTP is not configured, the URL is returned in the API response for manual sharing
+- [ ] Typecheck/lint passes
+
 ## Functional Requirements
 
 - FR-1: CLI command (`game-lending import-games`) imports owned games from BGG profile `RefugioDelSatiro` via the BGG XML API v2 (`own=1`)
@@ -147,6 +176,10 @@ Prestecs Satyrs is a web application for the "Refugio del Satyro" RPG associatio
 - FR-12: The catalog page supports text search by game name and filter by availability (client-side, all games loaded at once)
 - FR-13: All API endpoints that modify data require authentication
 - FR-14: The catalog is visible to unauthenticated users (read-only browsing)
+- FR-15: Member record includes `is_active` (boolean, default true). Disabled members cannot log in.
+- FR-16: Admin panel at `/admin/members` — list, create, disable/enable members (admin only)
+- FR-17: Admins can generate new password-set tokens for any member and send them via email
+- FR-18: Email sending via SMTP (configurable: `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM`). If not configured, URLs are returned for manual sharing.
 
 ## Non-Goals
 
@@ -154,8 +187,8 @@ Prestecs Satyrs is a web application for the "Refugio del Satyro" RPG associatio
 - No reservation or waitlist system
 - No admin approval workflow for loans
 - No fine or penalty system
-- No email notifications
-- No admin-only UI beyond the return-on-behalf override in V1
+- No bulk email sending (one member at a time)
+- No self-registration (admin creates members)
 - No game ratings or reviews
 - No mobile-specific app (responsive web only)
 - No internationalization infrastructure in V1 — UI is in Catalan only (Spanish and English translations are a future idea)
