@@ -20,7 +20,7 @@ class EmailClient:
 <html>
 <body style="font-family: system-ui, sans-serif; color: #1f2937; max-width: 600px; margin: 0 auto;">
     <h2>Hola {display_name}!</h2>
-    <p>Benvingut/da a <strong>Prestecs Satirs</strong>, l'aplicació de préstec de jocs del Refugio del Sátiro.</p>
+    <p>Benvingut/da a <strong>Préstecs Sàtirs</strong>, l'aplicació de préstec de jocs del Refugio del Sátiro.</p>
     <p>Per accedir-hi, fes clic al següent enllaç per establir la teva contrasenya:</p>
     <p style="margin: 24px 0;">
         <a href="{url}"
@@ -39,7 +39,7 @@ class EmailClient:
 </html>"""
 
         msg = MIMEMultipart("alternative")
-        msg["Subject"] = "Prestecs Satirs — Accés al teu compte"
+        msg["Subject"] = "Préstecs Sàtirs — Accés al teu compte"
         msg["From"] = self._settings.smtp_from  # type: ignore[assignment]
         msg["To"] = to_email
         msg.attach(MIMEText(html, "html"))

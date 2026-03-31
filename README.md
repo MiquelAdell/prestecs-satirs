@@ -1,4 +1,4 @@
-# Prestecs Satirs
+# Préstecs Sàtirs
 
 A web application to manage board game lending for the **Refugio del Sátiro** RPG association.
 

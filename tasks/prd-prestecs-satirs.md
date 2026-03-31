@@ -1,8 +1,8 @@
-# PRD: Prestecs Satirs — Game Lending Manager
+# PRD: Préstecs Sàtirs — Game Lending Manager
 
 ## Introduction
 
-Prestecs Satirs is a web application for the "Refugio del Sátiro" RPG association to track board and role-playing game lending. The association owns a collection of games (cataloged in BoardGameGeek) and lends them to its members. The app provides a self-service interface where members can log in, browse the catalog, check out games, and mark returns — giving the group clear visibility into who has what at any time.
+Préstecs Sàtirs is a web application for the "Refugio del Sátiro" RPG association to track board and role-playing game lending. The association owns a collection of games (cataloged in BoardGameGeek) and lends them to its members. The app provides a self-service interface where members can log in, browse the catalog, check out games, and mark returns — giving the group clear visibility into who has what at any time.
 
 ## Goals
 
