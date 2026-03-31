@@ -1,0 +1,96 @@
+schema: spec-driven
+
+context: |
+  Project: Prestecs Satyrs
+
+  What it is:
+  - A web interface to manage board/role-playing game lending for the "Refugio del Satyro" RPG group
+  - Members can browse available games, request loans, and track who has what
+
+  Tech stack:
+  - Python 3.12+ for the backend (FastAPI or similar — to be decided in planning)
+  - SQLite for persistence (file-based, no server required)
+  - React with TypeScript (strict mode) for the frontend
+  - Vite for frontend dev server and builds
+  - Black + Ruff for Python formatting and linting
+  - ESLint + Prettier for TypeScript/React linting and formatting
+  - pytest + pytest-cov for backend testing
+  - Vitest + React Testing Library for frontend testing
+  - Playwright for end-to-end testing
+
+  Directory structure:
+  - To be defined during planning phase
+
+  Configuration:
+  - To be defined during planning phase
+
+  Canonical commands:
+  - To be defined once project structure is set up
+
+  Code conventions:
+  - Python: PEP 8, enforced by Black (formatter) and Ruff (linter)
+  - TypeScript/React: ESLint + Prettier with strict TypeScript
+  - Prefer functional/declarative patterns over imperative loops with mutable state
+  - Apply immutability comprehensively; use Readonly<T> in TS, frozen dataclasses or NamedTuples in Python
+  - Prefer composition over inheritance
+
+  Architecture:
+  - Clean Architecture with strict layered dependency rules
+  - Domain layer: entities, repository interfaces (protocols in Python), use cases — no infrastructure dependencies
+  - Data layer: concrete repository implementations (SQLite repositories)
+  - API / Presentation layer: route handlers (backend) and React UI (frontend) — wiring only, no business logic
+
+  Git workflow:
+  - Feature branches start from `development` and merge back to `development`
+  - Branch naming: feature/<name> for features, fix/<name> for bugs
+  - Commits follow Conventional Commits
+
+  Non-goals (do NOT introduce these):
+  - To be defined during planning phase
+
+  Extension principles:
+  - To be defined during planning phase
+
+  Testing strategy:
+  - Backend unit tests: pytest, testing use cases and domain logic in isolation
+  - Backend integration tests: pytest with a test SQLite database
+  - Frontend unit tests: Vitest + React Testing Library for components and hooks
+  - End-to-end tests: Playwright for critical user flows
+  - All tests assert concrete values, not just truthiness
+  - Test files live alongside source files or in a parallel tests/ directory (to be decided)
+
+  Code style:
+  - Prefer functional/declarative patterns over imperative loops with mutable state
+  - Use list comprehensions, generator expressions, map/filter in Python instead of manual loops with mutable accumulators
+  - Use flatMap, find, reduce, map, filter in TypeScript instead of for...of + push/break
+  - Avoid mutating function arguments or shared state — return new objects/arrays
+  - Apply immutability comprehensively
+  - Prefer composition over inheritance
+
+rules:
+  project:
+    - "Specs first: before modifying any behavior, check openspec/specs/ for existing specs. If behavior is unclear, read the spec. If no spec exists, propose one under changes/."
+    - Follow code conventions as defined in the project context above.
+    - "New code goes in the correct directory per the architecture."
+    - "Clean Architecture: domain layer must have no framework or infrastructure dependencies. All external access goes through repository interfaces (Python Protocols)."
+    - "Git: always branch from `development` unless the feature depends on an unmerged branch. Use feature/<name> for features, fix/<name> for bugs. All commits must follow Conventional Commits."
+    - "Definition of Done: a change is complete when specs are updated, code aligns with specs, tests pass, and no breaking surfaces are altered without a proposal."
+    - "Boy Scout Rule: leave every file you touch cleaner than you found it."
+
+  proposal:
+    - Must include: Goals, Non-goals, User impact, Compatibility, and Rollback plan.
+    - If changing public interfaces, explicitly list old vs new.
+
+  design:
+    - Must describe: data flow through the architecture layers.
+    - Note known constraints when relevant.
+
+  tasks:
+    - Include at least one task for tests when behavior changes.
+    - Include a task to update specs/ when behavior changes.
+    - "Tag each task with the responsible agent role: [BE], [FE], [DB], [CR], or other as applicable."
+
+  specs:
+    - "Tests are the behavioral source of truth. Specs provide design context that tests cannot express (goals, non-goals, design decisions, rationale)."
+    - "Specs and tests are complementary: specs capture the 'why', tests capture the 'what'."
+    - "Keep specs lean: avoid duplicating in markdown what is already asserted by well-named tests."
