@@ -15,6 +15,7 @@
   margin-bottom: var(--space-lg);
 }
 
+/* Row 1: Search + Sort */
 .catalog-controls {
   display: flex;
   gap: var(--space-md);
@@ -25,7 +26,15 @@
   flex: 1;
 }
 
-.catalog-sort {
+/* Sort dropdown wrapper */
+.catalog-sort-wrapper {
+  position: relative;
+}
+
+.catalog-sort-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
   padding: var(--space-xs) var(--space-md);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -34,20 +43,129 @@
   font-size: var(--font-size-sm);
   font-weight: 500;
   cursor: pointer;
-  appearance: auto;
+  white-space: nowrap;
+  height: 100%;
 }
 
-.catalog-sort:focus {
+.catalog-sort-btn:hover {
+  background-color: var(--color-bg);
+}
+
+.catalog-sort-btn:focus {
   outline: 2px solid var(--color-primary);
   outline-offset: -1px;
 }
 
+.catalog-sort-icon {
+  font-size: var(--font-size-md);
+  line-height: 1;
+}
+
+.catalog-sort-panel {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 20;
+  min-width: 220px;
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-xs) 0;
+}
+
+.catalog-sort-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  border: none;
+  background: none;
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  text-align: left;
+}
+
+.catalog-sort-option:hover {
+  background-color: var(--color-bg);
+}
+
+.catalog-sort-option.selected {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.catalog-sort-radio {
+  font-size: var(--font-size-sm);
+  color: var(--color-primary);
+}
+
+/* Row 2: Availability + Location filters */
 .catalog-filters {
   display: flex;
   gap: var(--space-md);
   margin-top: var(--space-md);
 }
 
+/* Row 3: Players + Time + Rating */
+.catalog-filters-row3 {
+  display: flex;
+  gap: var(--space-lg);
+  margin-top: var(--space-md);
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.catalog-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.catalog-filter-label {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+/* Player count inputs */
+.catalog-players-inputs {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.catalog-number-input {
+  width: 60px;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-card);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  text-align: center;
+}
+
+.catalog-number-input:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -1px;
+}
+
+.catalog-range-sep {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+/* Rating slider */
+.catalog-rating-slider {
+  width: 140px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+/* Grid */
 .catalog-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -85,6 +203,15 @@
 
   .catalog-filters {
     flex-direction: column;
+  }
+
+  .catalog-filters-row3 {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .catalog-rating-slider {
+    width: 100%;
   }
 
   .catalog-grid {
