@@ -59,23 +59,42 @@ export function GameCard({ game, onAction }: GameCardProps) {
   return (
     <div className="game-card">
       <Link to={`/games/${game.id}`} className="game-card-link">
-        {game.thumbnail_url ? (
-          <img
-            className="game-card-thumbnail"
-            src={game.thumbnail_url}
-            alt={game.name}
-            loading="lazy"
-          />
-        ) : (
-          <div className="game-card-thumbnail game-card-placeholder">
-            <span>{game.name.charAt(0)}</span>
-          </div>
-        )}
+        <div className="game-card-thumbnail-wrapper">
+          {game.thumbnail_url ? (
+            <img
+              className="game-card-thumbnail"
+              src={game.thumbnail_url}
+              alt={game.name}
+              loading="lazy"
+            />
+          ) : (
+            <div className="game-card-thumbnail game-card-placeholder">
+              <span>{game.name.charAt(0)}</span>
+            </div>
+          )}
+          {game.bgg_rating > 0 && (
+            <span className="game-card-rating">
+              {t("game.rating", { rating: game.bgg_rating.toFixed(1) })}
+            </span>
+          )}
+        </div>
         <div className="game-card-body">
           <div className="game-card-name">{game.name}</div>
           {game.year_published > 0 && (
             <div className="game-card-year">{game.year_published}</div>
           )}
+          <div className="game-card-meta">
+            {game.min_players > 0 && game.max_players > 0 && (
+              <span className="game-card-players">
+                {t("game.players", { min: game.min_players, max: game.max_players })}
+              </span>
+            )}
+            {game.playing_time > 0 && (
+              <span className="game-card-time">
+                {t("game.playingTime", { time: game.playing_time })}
+              </span>
+            )}
+          </div>
           <span className={`game-card-status ${game.status}`}>
             {game.status === "available"
               ? t("game.available")

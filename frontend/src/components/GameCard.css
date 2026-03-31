@@ -23,11 +23,29 @@
   text-decoration: none;
 }
 
+.game-card-thumbnail-wrapper {
+  position: relative;
+}
+
+.game-card-rating {
+  position: absolute;
+  top: var(--space-xs);
+  right: var(--space-xs);
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #fbbf24;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  padding: 2px var(--space-xs);
+  border-radius: var(--radius-sm);
+  line-height: 1.4;
+}
+
 .game-card-thumbnail {
   width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
   background-color: var(--color-bg);
+  display: block;
 }
 
 .game-card-placeholder {
@@ -58,6 +76,19 @@
 .game-card-year {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
+}
+
+.game-card-meta {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.game-card-players,
+.game-card-time {
+  white-space: nowrap;
 }
 
 .game-card-status {
