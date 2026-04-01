@@ -1,5 +1,5 @@
 {
-  "nav.brand": "Prestecs Satirs",
+  "nav.brand": "Préstecs Sàtirs",
   "nav.catalog": "Catàleg",
   "nav.myLoans": "Els meus préstecs",
   "nav.admin": "Administració",
@@ -65,7 +65,7 @@
   "myLoans.title": "Els meus préstecs",
   "myLoans.loading": "Carregant...",
   "myLoans.empty": "No tens cap joc en préstec.",
-  "myLoans.borrowedOn": "Manllevat el {{date}}",
+  "myLoans.borrowedOn": "Prestat el {{date}}",
   "myLoans.return": "Retornar",
   "myLoans.confirmReturn": "Vols retornar \"{{name}}\"?",
 

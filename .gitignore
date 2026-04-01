@@ -40,6 +40,9 @@ htmlcov/
 # Playwright MCP (browser logs, screenshots, downloads)
 .playwright-mcp/
 
+# Sensitive data
+members.csv
+
 # Environment
 .env
 .env.local
