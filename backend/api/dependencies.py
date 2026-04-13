@@ -17,6 +17,7 @@ from backend.domain.entities.member import Member
 from backend.domain.use_cases.authenticate import AuthenticateUseCase
 from backend.domain.use_cases.get_game_history import GetGameHistoryUseCase
 from backend.domain.use_cases.list_games import ListGamesUseCase
+from backend.domain.use_cases.request_password_reset import RequestPasswordResetUseCase
 from backend.domain.use_cases.set_password import SetPasswordUseCase
 from backend.migrations.runner import run_migrations
 
@@ -85,6 +86,17 @@ def get_set_password_use_case(
     token_repo: TokenRepo,
 ) -> SetPasswordUseCase:
     return SetPasswordUseCase(member_repo, token_repo)
+
+
+def get_request_password_reset_use_case(
+    member_repo: MemberRepo,
+    token_repo: TokenRepo,
+) -> RequestPasswordResetUseCase:
+    from backend.data.email_client import EmailClient
+
+    return RequestPasswordResetUseCase(
+        member_repo, token_repo, EmailClient(_settings), _settings
+    )
 
 
 def get_current_member(request: Request, member_repo: MemberRepo) -> Member | None:

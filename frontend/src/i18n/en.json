@@ -74,7 +74,16 @@
   "login.password": "Password",
   "login.submit": "Log in",
   "login.submitting": "Logging in...",
+  "login.forgotPassword": "Forgot your password?",
   "login.unknownError": "Unknown error",
+
+  "forgotPassword.title": "Reset password",
+  "forgotPassword.instructions": "Enter your email address and we'll send you a link to reset your password.",
+  "forgotPassword.submit": "Send",
+  "forgotPassword.submitting": "Sending...",
+  "forgotPassword.successMessage": "If an account with that email exists, we've sent a password reset link. Check your inbox.",
+  "forgotPassword.backToLogin": "Back to login",
+  "forgotPassword.unknownError": "Unknown error",
 
   "setPassword.title": "Set password",
   "setPassword.successTitle": "Password set",
