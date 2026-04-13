@@ -1,0 +1,30 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    volumes:
+      - app-data:/app/data/db
+    environment:
+      - PRESTECS_DB_PATH=/app/data/db/prestecs.db
+      - PRESTECS_JWT_SECRET=${PRESTECS_JWT_SECRET}
+      - PRESTECS_BASE_URL=${PRESTECS_BASE_URL:-http://localhost}
+    expose:
+      - "8000"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - app
+
+volumes:
+  app-data:
+  caddy-data:
+  caddy-config:

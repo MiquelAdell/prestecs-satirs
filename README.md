@@ -107,6 +107,57 @@ frontend/
 | `BGG_BEARER_TOKEN` | BGG API bearer token (optional) | — |
 | `VITE_API_URL` | Frontend API base URL | `/api` |
 
+## Deployment (VPS with Docker)
+
+The project includes Docker and Docker Compose configuration for deployment on any VPS (tested on RackNerd, Hetzner).
+
+### First-time server setup
+
+```bash
+# SSH into your VPS as root and run the setup script:
+bash <(curl -sSL https://raw.githubusercontent.com/<user>/prestecs-satirs/development/deploy/setup-server.sh)
+```
+
+This installs Docker, creates a `deploy` user, and configures the firewall.
+
+### Deploy the app
+
+```bash
+# SSH as deploy user
+ssh deploy@<server-ip>
+
+# Clone and configure
+git clone <repo-url> ~/prestecs-satirs
+cd ~/prestecs-satirs
+cp .env.production .env
+# Edit .env — set PRESTECS_JWT_SECRET and DOMAIN
+nano .env
+
+# Start everything
+docker compose up -d
+
+# Import data
+docker compose exec app game-lending migrate
+docker compose exec app game-lending import-games data/bgg_collection.json
+```
+
+### Update after changes
+
+```bash
+cd ~/prestecs-satirs
+./deploy/deploy.sh
+```
+
+### What the stack runs
+
+- **App container**: Python 3.12 + FastAPI serving API and built React frontend
+- **Caddy container**: Reverse proxy with automatic HTTPS via Let's Encrypt
+- **Persistent volume**: SQLite database survives container restarts
+
+### Alternative: Render
+
+A [`render.yaml`](render.yaml) blueprint is also included for deployment to [Render](https://render.com) (free tier with limitations).
+
 ## License
 
 GPL-3.0
