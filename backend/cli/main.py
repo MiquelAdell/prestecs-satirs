@@ -123,6 +123,46 @@ def import_games(
 
 
 @app.command()
+def enrich_games() -> None:
+    """Fetch full details (images, player count, time, rating) from BGG for all games."""
+    from backend.data.bgg_client import BggClient
+    from backend.data.repositories.sqlite_game_repository import SqliteGameRepository
+
+    settings = _get_settings()
+    conn = get_connection(settings.db_path)
+    try:
+        run_migrations(conn)
+        game_repo = SqliteGameRepository(conn)
+        bgg_client = BggClient(username="RefugioDelSatiro", bearer_token=settings.bgg_bearer_token)
+
+        games = game_repo.list_all()
+        bgg_ids = [g.bgg_id for g in games if g.bgg_id]
+        typer.echo(f"Fetching details for {len(bgg_ids)} games...")
+
+        details = bgg_client.fetch_details(bgg_ids)
+        updated = 0
+        for game in games:
+            if game.bgg_id in details:
+                d = details[game.bgg_id]
+                game_repo.upsert_by_bgg_id(
+                    bgg_id=game.bgg_id,
+                    name=game.name,
+                    thumbnail_url=d.image_url or game.thumbnail_url,
+                    year_published=game.year_published,
+                    min_players=d.min_players,
+                    max_players=d.max_players,
+                    playing_time=d.playing_time,
+                    bgg_rating=d.bgg_rating,
+                    location=game.location,
+                )
+                updated += 1
+
+        typer.echo(f"Done. {updated} games enriched with full details.")
+    finally:
+        conn.close()
+
+
+@app.command()
 def import_members(
     csv_path: Annotated[
         Optional[str],
