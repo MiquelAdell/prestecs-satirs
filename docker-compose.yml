@@ -13,6 +13,7 @@ services:
       - SMTP_USER=${SMTP_USER:-}
       - SMTP_PASSWORD=${SMTP_PASSWORD:-}
       - SMTP_FROM=${SMTP_FROM:-}
+      - BGG_BEARER_TOKEN=${BGG_BEARER_TOKEN:-}
     expose:
       - "8000"
 

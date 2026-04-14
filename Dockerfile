@@ -11,10 +11,9 @@ FROM python:3.12-slim
 WORKDIR /app
 
 COPY pyproject.toml ./
-RUN pip install --no-cache-dir .
-
 COPY backend/ ./backend/
 COPY data/ ./data/
+RUN pip install --no-cache-dir .
 COPY --from=frontend-build /app/frontend/dist ./frontend/dist
 
 EXPOSE 8000
