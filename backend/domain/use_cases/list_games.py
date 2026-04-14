@@ -15,6 +15,7 @@ class GameWithStatus:
     bgg_id: int
     name: str
     thumbnail_url: str
+    image_url: str
     year_published: int
     min_players: int
     max_players: int
@@ -55,6 +56,7 @@ class ListGamesUseCase:
                         bgg_id=game.bgg_id,
                         name=game.name,
                         thumbnail_url=game.thumbnail_url,
+                        image_url=game.image_url,
                         year_published=game.year_published,
                         min_players=game.min_players,
                         max_players=game.max_players,
@@ -75,6 +77,7 @@ class ListGamesUseCase:
                         bgg_id=game.bgg_id,
                         name=game.name,
                         thumbnail_url=game.thumbnail_url,
+                        image_url=game.image_url,
                         year_published=game.year_published,
                         min_players=game.min_players,
                         max_players=game.max_players,

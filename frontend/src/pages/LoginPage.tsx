@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 import "./LoginPage.css";
@@ -63,6 +63,10 @@ export function LoginPage() {
         <button className="btn btn-primary" type="submit" disabled={loading}>
           {loading ? t("login.submitting") : t("login.submit")}
         </button>
+
+        <p style={{ marginTop: "var(--space-md)", textAlign: "center", fontSize: "var(--font-size-sm)" }}>
+          <Link to="/forgot-password">{t("login.forgotPassword")}</Link>
+        </p>
       </form>
     </div>
   );

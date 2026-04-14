@@ -10,6 +10,7 @@ class Game:
     bgg_id: int
     name: str
     thumbnail_url: str
+    image_url: str
     year_published: int
     min_players: int
     max_players: int

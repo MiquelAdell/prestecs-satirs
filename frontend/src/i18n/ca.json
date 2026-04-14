@@ -74,7 +74,16 @@
   "login.password": "Contrasenya",
   "login.submit": "Entrar",
   "login.submitting": "Entrant...",
+  "login.forgotPassword": "Has oblidat la contrasenya?",
   "login.unknownError": "Error desconegut",
+
+  "forgotPassword.title": "Recuperar contrasenya",
+  "forgotPassword.instructions": "Introdueix el teu correu electrònic i t'enviarem un enllaç per restablir la contrasenya.",
+  "forgotPassword.submit": "Enviar",
+  "forgotPassword.submitting": "Enviant...",
+  "forgotPassword.successMessage": "Si existeix un compte amb aquest correu electrònic, hem enviat un enllaç per restablir la contrasenya. Revisa la teva safata d'entrada.",
+  "forgotPassword.backToLogin": "Tornar a iniciar sessió",
+  "forgotPassword.unknownError": "Error desconegut",
 
   "setPassword.title": "Establir contrasenya",
   "setPassword.successTitle": "Contrasenya establerta",

@@ -25,7 +25,8 @@ class FakeGameRepository:
         return list(self._games.values())
 
     def upsert_by_bgg_id(
-        self, bgg_id: int, name: str, thumbnail_url: str, year_published: int
+        self, bgg_id: int, name: str, thumbnail_url: str, image_url: str = "",
+        year_published: int = 0,
     ) -> Game:
         raise NotImplementedError
 
@@ -90,6 +91,7 @@ def _make_game(id: int, name: str = "Test Game") -> Game:
         bgg_id=id * 100,
         name=name,
         thumbnail_url=f"https://example.com/{id}.jpg",
+        image_url=f"https://example.com/{id}_full.jpg",
         year_published=2020,
         min_players=2,
         max_players=4,

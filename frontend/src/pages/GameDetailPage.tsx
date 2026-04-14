@@ -37,7 +37,7 @@ export function GameDetailPage() {
       <div className="game-detail-header">
         <img
           className="game-detail-thumbnail"
-          src={game.thumbnail_url}
+          src={game.image_url || game.thumbnail_url}
           alt={game.name}
         />
         <div className="game-detail-info">

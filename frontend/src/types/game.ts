@@ -3,6 +3,7 @@ export interface Game {
   readonly bgg_id: number;
   readonly name: string;
   readonly thumbnail_url: string;
+  readonly image_url: string;
   readonly year_published: number;
   readonly min_players: number;
   readonly max_players: number;

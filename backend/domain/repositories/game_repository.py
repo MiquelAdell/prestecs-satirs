@@ -17,5 +17,6 @@ class GameRepository(Protocol):
         bgg_id: int,
         name: str,
         thumbnail_url: str,
+        image_url: str,
         year_published: int,
     ) -> Game: ...

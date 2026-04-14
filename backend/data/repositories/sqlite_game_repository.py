@@ -13,6 +13,7 @@ def _row_to_game(row: sqlite3.Row) -> Game:
         bgg_id=row["bgg_id"],
         name=row["name"],
         thumbnail_url=row["thumbnail_url"],
+        image_url=row["image_url"] if "image_url" in keys else "",
         year_published=row["year_published"],
         min_players=row["min_players"] if "min_players" in keys else 0,
         max_players=row["max_players"] if "max_players" in keys else 0,
@@ -49,7 +50,8 @@ class SqliteGameRepository:
         bgg_id: int,
         name: str,
         thumbnail_url: str,
-        year_published: int,
+        image_url: str = "",
+        year_published: int = 0,
         min_players: int = 0,
         max_players: int = 0,
         playing_time: int = 0,
@@ -59,11 +61,12 @@ class SqliteGameRepository:
         now = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
         self._conn.execute(
             """
-            INSERT INTO games (bgg_id, name, thumbnail_url, year_published, min_players, max_players, playing_time, bgg_rating, location, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO games (bgg_id, name, thumbnail_url, image_url, year_published, min_players, max_players, playing_time, bgg_rating, location, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(bgg_id) DO UPDATE SET
                 name = excluded.name,
                 thumbnail_url = excluded.thumbnail_url,
+                image_url = excluded.image_url,
                 year_published = excluded.year_published,
                 min_players = excluded.min_players,
                 max_players = excluded.max_players,
@@ -72,7 +75,7 @@ class SqliteGameRepository:
                 location = excluded.location,
                 updated_at = ?
             """,
-            (bgg_id, name, thumbnail_url, year_published, min_players, max_players, playing_time, bgg_rating, location, now, now, now),
+            (bgg_id, name, thumbnail_url, image_url, year_published, min_players, max_players, playing_time, bgg_rating, location, now, now, now),
         )
         self._conn.commit()
         game = self.get_by_bgg_id(bgg_id)

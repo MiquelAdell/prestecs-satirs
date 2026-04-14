@@ -74,7 +74,16 @@
   "login.password": "Contraseña",
   "login.submit": "Entrar",
   "login.submitting": "Entrando...",
+  "login.forgotPassword": "¿Olvidaste tu contraseña?",
   "login.unknownError": "Error desconocido",
+
+  "forgotPassword.title": "Recuperar contraseña",
+  "forgotPassword.instructions": "Introduce tu correo electrónico y te enviaremos un enlace para restablecer la contraseña.",
+  "forgotPassword.submit": "Enviar",
+  "forgotPassword.submitting": "Enviando...",
+  "forgotPassword.successMessage": "Si existe una cuenta con ese correo electrónico, hemos enviado un enlace para restablecer la contraseña. Revisa tu bandeja de entrada.",
+  "forgotPassword.backToLogin": "Volver a iniciar sesión",
+  "forgotPassword.unknownError": "Error desconocido",
 
   "setPassword.title": "Establecer contraseña",
   "setPassword.successTitle": "Contraseña establecida",

@@ -8,6 +8,12 @@ services:
       - PRESTECS_DB_PATH=/app/data/db/prestecs.db
       - PRESTECS_JWT_SECRET=${PRESTECS_JWT_SECRET}
       - PRESTECS_BASE_URL=${PRESTECS_BASE_URL:-http://localhost}
+      - SMTP_HOST=${SMTP_HOST:-}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USER=${SMTP_USER:-}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:-}
+      - SMTP_FROM=${SMTP_FROM:-}
+      - BGG_BEARER_TOKEN=${BGG_BEARER_TOKEN:-}
     expose:
       - "8000"
 
