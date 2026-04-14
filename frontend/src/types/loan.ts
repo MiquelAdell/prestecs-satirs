@@ -3,6 +3,7 @@ export interface ActiveLoan {
   readonly game_id: number;
   readonly game_name: string;
   readonly game_thumbnail_url: string;
+  readonly game_image_url: string;
   readonly borrowed_at: string;
 }
 

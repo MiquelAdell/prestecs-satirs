@@ -88,6 +88,7 @@ def import_games(
                     bgg_id=g["bgg_id"],
                     name=g["name"],
                     thumbnail_url=g.get("thumbnail_url", ""),
+                    image_url=g.get("image_url", ""),
                     year_published=g.get("year_published", 0),
                     min_players=g.get("min_players", 0),
                     max_players=g.get("max_players", 0),
@@ -147,7 +148,8 @@ def enrich_games() -> None:
                 game_repo.upsert_by_bgg_id(
                     bgg_id=game.bgg_id,
                     name=game.name,
-                    thumbnail_url=d.image_url or game.thumbnail_url,
+                    thumbnail_url=d.thumbnail_url or game.thumbnail_url,
+                    image_url=d.image_url or game.image_url or game.thumbnail_url,
                     year_published=game.year_published,
                     min_players=d.min_players,
                     max_players=d.max_players,

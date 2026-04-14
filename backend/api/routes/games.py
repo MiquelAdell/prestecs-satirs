@@ -18,6 +18,7 @@ class GameResponse(BaseModel):
     bgg_id: int
     name: str
     thumbnail_url: str
+    image_url: str
     year_published: int
     min_players: int
     max_players: int
@@ -48,6 +49,7 @@ def list_games(
             bgg_id=g.bgg_id,
             name=g.name,
             thumbnail_url=g.thumbnail_url,
+            image_url=g.image_url,
             year_published=g.year_published,
             min_players=g.min_players,
             max_players=g.max_players,

@@ -21,6 +21,7 @@ class BggGame:
 class BggGameDetails:
     bgg_id: int
     image_url: str
+    thumbnail_url: str
     min_players: int
     max_players: int
     playing_time: int
@@ -174,6 +175,8 @@ class BggClient:
                 bgg_id = int(item.get("id", "0"))
                 image_el = item.find("image")
                 image_url = image_el.text if image_el is not None and image_el.text else ""
+                thumb_el = item.find("thumbnail")
+                thumbnail_url = thumb_el.text if thumb_el is not None and thumb_el.text else ""
 
                 def _int_val(el_name: str) -> int:
                     el = item.find(el_name)
@@ -198,6 +201,7 @@ class BggClient:
                 details[bgg_id] = BggGameDetails(
                     bgg_id=bgg_id,
                     image_url=image_url,
+                    thumbnail_url=thumbnail_url,
                     min_players=min_p,
                     max_players=max_p,
                     playing_time=play_time,

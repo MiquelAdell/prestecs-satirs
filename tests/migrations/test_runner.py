@@ -39,7 +39,7 @@ class TestMigrationRunner:
         conn = get_memory_connection()
         first_run = run_migrations(conn)
         second_run = run_migrations(conn)
-        assert len(first_run) == 3
+        assert len(first_run) == 4
         assert len(second_run) == 0
         conn.close()
 
@@ -58,7 +58,7 @@ class TestMigrationRunner:
             for row in conn.execute("PRAGMA table_info(games)").fetchall()
         }
         assert columns == {
-            "id", "bgg_id", "name", "thumbnail_url",
+            "id", "bgg_id", "name", "thumbnail_url", "image_url",
             "year_published", "min_players", "max_players",
             "playing_time", "bgg_rating", "location",
             "created_at", "updated_at",

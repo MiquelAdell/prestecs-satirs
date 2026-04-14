@@ -30,7 +30,8 @@ class FakeGameRepository:
         return sorted(self._games.values(), key=lambda g: g.name)
 
     def upsert_by_bgg_id(
-        self, bgg_id: int, name: str, thumbnail_url: str, year_published: int,
+        self, bgg_id: int, name: str, thumbnail_url: str, image_url: str = "",
+        year_published: int = 0,
         min_players: int = 0, max_players: int = 0, playing_time: int = 0,
         bgg_rating: float = 0.0, location: str = "armari",
     ) -> Game:
@@ -39,7 +40,8 @@ class FakeGameRepository:
         if existing:
             game = Game(
                 id=existing.id, bgg_id=bgg_id, name=name,
-                thumbnail_url=thumbnail_url, year_published=year_published,
+                thumbnail_url=thumbnail_url, image_url=image_url,
+                year_published=year_published,
                 min_players=min_players, max_players=max_players,
                 playing_time=playing_time, bgg_rating=bgg_rating, location=location,
                 created_at=existing.created_at, updated_at=now,
@@ -48,7 +50,8 @@ class FakeGameRepository:
             return game
         game = Game(
             id=self._next_id, bgg_id=bgg_id, name=name,
-            thumbnail_url=thumbnail_url, year_published=year_published,
+            thumbnail_url=thumbnail_url, image_url=image_url,
+            year_published=year_published,
             min_players=min_players, max_players=max_players,
             playing_time=playing_time, bgg_rating=bgg_rating, location=location,
             created_at=now, updated_at=now,
