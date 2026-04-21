@@ -5,9 +5,9 @@ services:
     volumes:
       - app-data:/app/data/db
     environment:
-      - PRESTECS_DB_PATH=/app/data/db/prestecs.db
-      - PRESTECS_JWT_SECRET=${PRESTECS_JWT_SECRET}
-      - PRESTECS_BASE_URL=${PRESTECS_BASE_URL:-http://localhost}
+      - REFUGIO_DB_PATH=/app/data/db/refugio.db
+      - REFUGIO_JWT_SECRET=${REFUGIO_JWT_SECRET}
+      - REFUGIO_BASE_URL=${REFUGIO_BASE_URL:-http://localhost/prestecs}
       - SMTP_HOST=${SMTP_HOST:-}
       - SMTP_PORT=${SMTP_PORT:-587}
       - SMTP_USER=${SMTP_USER:-}
@@ -25,6 +25,7 @@ services:
       - "443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./deploy/wip:/srv/wip:ro
       - caddy-data:/data
       - caddy-config:/config
     environment:
@@ -34,5 +35,8 @@ services:
 
 volumes:
   app-data:
+    name: refugio_app_data
   caddy-data:
+    name: refugio_caddy_data
   caddy-config:
+    name: refugio_caddy_config

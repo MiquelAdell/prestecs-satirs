@@ -13,7 +13,7 @@ import "./i18n";
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/prestecs">
       <AuthProvider>
         <NavBar />
         <main>

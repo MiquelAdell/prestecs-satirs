@@ -19,7 +19,7 @@ Go to https://resend.com/signup and create a free account.
 
 1. Go to https://resend.com/api-keys
 2. Click "Create API Key"
-3. Name it `prestecs-satirs` and set permission to "Sending access"
+3. Name it `refugio-del-satiro` and set permission to "Sending access"
 4. Copy the key (starts with `re_`)
 
 ## 4. Update production .env
@@ -28,7 +28,7 @@ SSH into the server and update the SMTP variables:
 
 ```bash
 ssh root@45.95.175.19
-nano /root/prestecs-satirs/.env
+nano /root/refugio-del-satiro/.env
 ```
 
 Replace the SMTP lines with:
@@ -44,7 +44,7 @@ SMTP_FROM=prestecs@miqueladell.com
 Then restart:
 
 ```bash
-cd /root/prestecs-satirs && docker compose down && docker compose up -d
+cd /root/refugio-del-satiro && docker compose down && docker compose up -d
 ```
 
 ## 5. Test

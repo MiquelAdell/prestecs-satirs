@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "prestecs-satirs"
+name = "refugio-del-satiro"
 version = "0.1.0"
-description = "Game lending manager for Refugio del Sátiro"
+description = "Refugio del Sátiro association website (includes game lending)"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.115",
@@ -28,7 +28,7 @@ dev = [
 ]
 
 [project.scripts]
-game-lending = "backend.cli.main:app"
+refugio = "backend.cli.main:app"
 
 [tool.hatch.build.targets.wheel]
 packages = ["backend"]
