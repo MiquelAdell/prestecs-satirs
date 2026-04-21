@@ -23,6 +23,6 @@ jobs:
           script: |
             cd /root/prestecs-satirs
             git fetch --all
-            git checkout development
+            git checkout -f development
             git reset --hard origin/development
             ./deploy/deploy.sh
