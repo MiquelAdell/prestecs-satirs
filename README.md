@@ -148,6 +148,19 @@ cd ~/prestecs-satirs
 ./deploy/deploy.sh
 ```
 
+### Automatic deployment
+
+Pushes to `development` trigger [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml),
+which SSHes into the server and runs `deploy/deploy.sh`. Requires these GitHub
+Actions secrets on the repository:
+
+| Secret | Value |
+|--------|-------|
+| `DEPLOY_HOST` | Server hostname or IP (e.g. `45.95.175.19`) |
+| `DEPLOY_USER` | SSH user (e.g. `root`) |
+| `DEPLOY_SSH_KEY` | Private SSH key authorised on the server |
+| `DEPLOY_PORT` | SSH port, optional (defaults to `22`) |
+
 ### What the stack runs
 
 - **App container**: Python 3.12 + FastAPI serving API and built React frontend
