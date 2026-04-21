@@ -18,7 +18,7 @@ Préstecs Sàtirs is a web application for the "Refugio del Sátiro" RPG associa
 **Description:** As an admin, I want to import the association's game collection from BoardGameGeek so that the catalog is pre-populated without manual data entry.
 
 **Acceptance Criteria:**
-- [ ] CLI command (`game-lending import-games`) fetches owned games (`own=1`) from BGG profile `RefugioDelSatiro` via the BGG XML API
+- [ ] CLI command (`refugio import-games`) fetches owned games (`own=1`) from BGG profile `RefugioDelSatiro` via the BGG XML API
 - [ ] Each game is stored with: BGG ID, name, thumbnail URL, and year published
 - [ ] Duplicate imports update existing entries rather than creating duplicates
 - [ ] Import can be re-run to sync new additions
@@ -42,7 +42,7 @@ Préstecs Sàtirs is a web application for the "Refugio del Sátiro" RPG associa
 **Description:** As an admin, I want to import members from a CSV file so that I can onboard them in bulk.
 
 **Acceptance Criteria:**
-- [ ] CLI command (`game-lending import-members <csv-path>`) accepts the association's `members.csv` format
+- [ ] CLI command (`refugio import-members <csv-path>`) accepts the association's `members.csv` format
 - [ ] CSV columns: `Nº Socio`, `Apellidos`, `Nombre`, `Apodo`, `Telefóno`, `Email`, `admin`
 - [ ] Display name logic: use `Apodo` (nickname) if present and unique across all members; otherwise use `Nombre Apellidos`
 - [ ] All fields are stored: member number, last name, first name, nickname, phone, email, admin flag
@@ -51,7 +51,7 @@ Préstecs Sàtirs is a web application for the "Refugio del Sátiro" RPG associa
 - [ ] Duplicate emails are upserted: updates fields if email already exists
 - [ ] Members are stored sorted by member number (`Nº Socio`)
 - [ ] For each new member, command outputs a one-time URL to set their password
-- [ ] One-time URL base configurable via `--base-url` flag or `PRESTECS_BASE_URL` env var (default: `http://localhost:8000`)
+- [ ] One-time URL base configurable via `--base-url` flag or `REFUGIO_BASE_URL` env var (default: `http://localhost:8000`)
 - [ ] The one-time URL contains a secure token (cryptographic random hex) and expires after 48 hours
 - [ ] Admin flag is set to `true` for members with `yes` in the `admin` column
 - [ ] Command also supports adding a single member: `--name "Name" --email "email"` (plus optional `--nickname`, `--phone`, `--member-number`, `--admin` flags)
@@ -159,9 +159,9 @@ Préstecs Sàtirs is a web application for the "Refugio del Sátiro" RPG associa
 
 ## Functional Requirements
 
-- FR-1: CLI command (`game-lending import-games`) imports owned games from BGG profile `RefugioDelSatiro` via the BGG XML API v2 (`own=1`)
+- FR-1: CLI command (`refugio import-games`) imports owned games from BGG profile `RefugioDelSatiro` via the BGG XML API v2 (`own=1`)
 - FR-2: Each game record stores: `id` (auto-increment PK), `bgg_id` (unique), `name`, `thumbnail_url`, `year_published`, `created_at`, `updated_at`
-- FR-3: CLI command (`game-lending import-members`) imports members from a CSV file (association format) or adds a single member via flags. CLI accesses the database directly (no running server required).
+- FR-3: CLI command (`refugio import-members`) imports members from a CSV file (association format) or adds a single member via flags. CLI accesses the database directly (no running server required).
 - FR-4: Each member record stores: `id` (auto-increment PK), `member_number` (unique, nullable — managed externally), `first_name`, `last_name`, `nickname` (nullable), `phone` (nullable, stored as-is from CSV), `email` (unique), `display_name` (derived: nickname if unique, else "first last" — stored, recomputed on import), `password_hash` (nullable), `is_admin` (boolean, default false), `created_at`, `updated_at`
 - FR-4b: Members without an email in the CSV are silently skipped
 - FR-4c: Default sort order for members is by `member_number`
@@ -206,7 +206,7 @@ Préstecs Sàtirs is a web application for the "Refugio del Sátiro" RPG associa
 ## Technical Considerations
 
 - **Backend:** Python 3.12+ with FastAPI, Clean Architecture (domain/data/API layers)
-- **CLI:** Typer — commands accessed via `game-lending` console script (e.g., `game-lending import-games`, `game-lending import-members`). CLI accesses the database directly (shares data layer, no running server needed).
+- **CLI:** Typer — commands accessed via `refugio` console script (e.g., `refugio import-games`, `refugio import-members`). CLI accesses the database directly (shares data layer, no running server needed).
 - **Database:** SQLite — single file, no server. All tables use auto-increment `id` as PK. External identifiers (`bgg_id`, `member_number`) stored as unique columns. FK constraints use `ON DELETE RESTRICT`. Migrations via hand-rolled versioned SQL files (`001_initial.sql`, etc.) with a simple Python runner.
 - **Frontend:** React + TypeScript + Vite. Plain CSS with design tokens. Auth state via React Context, rehydrated from a `/me` endpoint on app load. API base URL via `VITE_API_URL` env var (default: `/api`).
 - **BGG integration:** BGG XML API v2 (`own=1`, username `RefugioDelSatiro`). Exponential backoff on 202 responses.
@@ -236,10 +236,10 @@ Préstecs Sàtirs is a web application for the "Refugio del Sátiro" RPG associa
 - **Members without email:** Silently skipped during import
 - **First login flow:** One-time tokenized URL (48h expiry) generated by CLI, shared by admin
 - **Python framework:** FastAPI
-- **CLI framework:** Typer, accessed via `game-lending` console script
+- **CLI framework:** Typer, accessed via `refugio` console script
 - **CLI DB access:** Direct (shares data layer, no server needed)
 - **Auth:** JWT (7-day, single token) in httpOnly cookie, bcrypt hashing
-- **One-time URL base:** `--base-url` flag / `PRESTECS_BASE_URL` env var / default `http://localhost:8000`
+- **One-time URL base:** `--base-url` flag / `REFUGIO_BASE_URL` env var / default `http://localhost:8000`
 - **One-time tokens:** Separate `password_tokens` table, cryptographic random hex
 - **Primary keys:** Auto-increment `id` for all tables. `member_number` is unique but nullable (externally managed). `bgg_id` is unique.
 - **Phone storage:** As-is from CSV, no normalization

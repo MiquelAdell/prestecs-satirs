@@ -1,3 +1,10 @@
 {$DOMAIN:localhost} {
-	reverse_proxy app:8000
+	handle_path /prestecs/* {
+		reverse_proxy app:8000
+	}
+
+	handle {
+		root * /srv/wip
+		file_server
+	}
 }

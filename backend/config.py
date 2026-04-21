@@ -10,9 +10,9 @@ load_dotenv()
 
 @dataclass(frozen=True)
 class Settings:
-    db_path: str = os.environ.get("PRESTECS_DB_PATH", "prestecs.db")
-    jwt_secret: str = os.environ.get("PRESTECS_JWT_SECRET", "dev-secret-change-in-production-minimum-32-bytes")
-    base_url: str = os.environ.get("PRESTECS_BASE_URL", "http://localhost:8000")
+    db_path: str = os.environ.get("REFUGIO_DB_PATH", "refugio.db")
+    jwt_secret: str = os.environ.get("REFUGIO_JWT_SECRET", "dev-secret-change-in-production-minimum-32-bytes")
+    base_url: str = os.environ.get("REFUGIO_BASE_URL", "http://localhost:5173/prestecs")
     bgg_bearer_token: str | None = os.environ.get("BGG_BEARER_TOKEN")
     smtp_host: str | None = os.environ.get("SMTP_HOST")
     smtp_port: int = int(os.environ.get("SMTP_PORT", "587"))

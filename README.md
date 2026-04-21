@@ -1,14 +1,18 @@
-# Préstecs Sàtirs
+# Refugio del Sátiro
 
-A web application to manage board game lending for the **Refugio del Sátiro** RPG association.
+Website for the **Refugio del Sátiro** RPG association.
 
-Members can browse the catalog, borrow games, and return them. The catalog is imported from [BoardGameGeek](https://boardgamegeek.com/collection/user/RefugioDelSatiro?subtype=boardgame&own=1&ff=1).
+Current scope: the game-lending feature (mounted at `/prestecs`). Members can
+browse the catalog, borrow games, and return them. The catalog is imported
+from [BoardGameGeek](https://boardgamegeek.com/collection/user/RefugioDelSatiro?subtype=boardgame&own=1&ff=1).
+
+The landing page at `/` is a work-in-progress placeholder served by Caddy.
 
 ## Tech Stack
 
 - **Backend:** Python 3.12+ / FastAPI / SQLite
 - **Frontend:** React / TypeScript / Vite
-- **CLI:** Typer (`game-lending`)
+- **CLI:** Typer (`refugio`)
 - **Tests:** pytest (backend), Vitest (frontend), Playwright (e2e)
 
 ## Requirements
@@ -31,31 +35,31 @@ cd frontend && npm install && cd ..
 
 ```bash
 # Run database migrations
-game-lending migrate
+refugio migrate
 
 # Import games (from JSON seed file)
-game-lending import-games data/bgg_collection.json
+refugio import-games data/bgg_collection.json
 
 # Import members
-game-lending import-members members.csv --base-url http://localhost:5173
+refugio import-members members.csv --base-url http://localhost:5173/prestecs
 
 # Start the backend (port 8000)
 uvicorn backend.api.app:create_app --factory --reload --port 8000
 
-# Start the frontend (port 5173, proxies /api to backend)
+# Start the frontend (port 5173, proxies /prestecs/api to backend)
 cd frontend && npm run dev
 ```
 
-Open http://localhost:5173 to view the application.
+Open http://localhost:5173/prestecs to view the lending app.
 
 ## CLI
 
 ```bash
-game-lending migrate                          # Run migrations
-game-lending import-games data/bgg_collection.json  # Import games from JSON
-game-lending import-games                     # Import games from BGG API (requires BGG_BEARER_TOKEN)
-game-lending import-members members.csv       # Import members from CSV
-game-lending import-members --email x@y.com --name "First Last"  # Add a single member
+refugio migrate                          # Run migrations
+refugio import-games data/bgg_collection.json  # Import games from JSON
+refugio import-games                     # Import games from BGG API (requires BGG_BEARER_TOKEN)
+refugio import-members members.csv       # Import members from CSV
+refugio import-members --email x@y.com --name "First Last"  # Add a single member
 ```
 
 ## Tests
@@ -101,11 +105,11 @@ frontend/
 
 | Variable | Description | Default |
 |----------|------------|---------|
-| `PRESTECS_DB_PATH` | SQLite database file path | `prestecs.db` |
-| `PRESTECS_JWT_SECRET` | JWT signing secret | (dev secret) |
-| `PRESTECS_BASE_URL` | App public URL | `http://localhost:8000` |
+| `REFUGIO_DB_PATH` | SQLite database file path | `refugio.db` |
+| `REFUGIO_JWT_SECRET` | JWT signing secret | (dev secret) |
+| `REFUGIO_BASE_URL` | Lending app public URL (used in reset-password emails) | `http://localhost:5173/prestecs` |
 | `BGG_BEARER_TOKEN` | BGG API bearer token (optional) | — |
-| `VITE_API_URL` | Frontend API base URL | `/api` |
+| `VITE_API_URL` | Frontend API base URL | `/prestecs/api` |
 
 ## Deployment (VPS with Docker)
 
@@ -115,7 +119,7 @@ The project includes Docker and Docker Compose configuration for deployment on a
 
 ```bash
 # SSH into your VPS as root and run the setup script:
-bash <(curl -sSL https://raw.githubusercontent.com/<user>/prestecs-satirs/development/deploy/setup-server.sh)
+bash <(curl -sSL https://raw.githubusercontent.com/<user>/refugio-del-satiro/development/deploy/setup-server.sh)
 ```
 
 This installs Docker, creates a `deploy` user, and configures the firewall.
@@ -127,24 +131,24 @@ This installs Docker, creates a `deploy` user, and configures the firewall.
 ssh deploy@<server-ip>
 
 # Clone and configure
-git clone <repo-url> ~/prestecs-satirs
-cd ~/prestecs-satirs
+git clone <repo-url> ~/refugio-del-satiro
+cd ~/refugio-del-satiro
 cp .env.production .env
-# Edit .env — set PRESTECS_JWT_SECRET and DOMAIN
+# Edit .env — set REFUGIO_JWT_SECRET and DOMAIN
 nano .env
 
 # Start everything
 docker compose up -d
 
 # Import data
-docker compose exec app game-lending migrate
-docker compose exec app game-lending import-games data/bgg_collection.json
+docker compose exec app refugio migrate
+docker compose exec app refugio import-games data/bgg_collection.json
 ```
 
 ### Update after changes
 
 ```bash
-cd ~/prestecs-satirs
+cd ~/refugio-del-satiro
 ./deploy/deploy.sh
 ```
 

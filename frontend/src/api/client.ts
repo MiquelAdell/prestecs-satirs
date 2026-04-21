@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL ?? "/api";
+const API_BASE = import.meta.env.VITE_API_URL ?? "/prestecs/api";
 
 export async function apiFetch<T>(
   path: string,

@@ -15,7 +15,7 @@ from backend.data.repositories.sqlite_password_token_repository import (
 from backend.domain.use_cases.import_members import ImportMembersUseCase
 from backend.migrations.runner import run_migrations
 
-app = typer.Typer(name="game-lending", help="Préstecs Sàtirs — game lending CLI")
+app = typer.Typer(name="refugio", help="Refugio del Sátiro — admin CLI")
 
 
 def _get_settings() -> Settings:

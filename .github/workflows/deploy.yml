@@ -21,7 +21,7 @@ jobs:
           port: ${{ secrets.DEPLOY_PORT || 22 }}
           script_stop: true
           script: |
-            cd /root/prestecs-satirs
+            cd /root/refugio-del-satiro
             git fetch --all
             git checkout -f development
             git reset --hard origin/development
