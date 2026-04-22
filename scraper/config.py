@@ -43,30 +43,25 @@ SKIP_PATHS: frozenset[str] = frozenset(
     }
 )
 
-# Content-shell selector. The new-Google-Sites markup wraps every page's
-# content sections in a single `<div jsname="ZBtY8b">`. The site chrome
-# (header nav, "Report abuse" trailer, Google Sites menu) lives outside it.
-CONTENT_ROOT_SELECTOR = 'div[jsname="ZBtY8b"]'
+# Strategy: keep the *entire* Sites document (head + body) so inline styles,
+# Google Fonts links, and the gstatic CSS bundle continue to style the page.
+# Strip only known Sites chrome that is either JS-only (non-functional without
+# scripts) or branded as "Google Sites" (Report-abuse trailer, Site-actions
+# bar, edit toolbar). Everything else — header nav, user footer, OG meta
+# tags, etc. — is preserved verbatim.
 
-# Safety-net selectors we remove from inside the extracted content tree. They
-# should not appear under the content root on today's pages — if a future
-# Sites template change starts rendering them there, these keep our output
-# clean without waiting for a code change.
-STRIP_SELECTORS_INSIDE_CONTENT: tuple[str, ...] = (
-    'header[role="banner"]',
-    "nav",
-    '[aria-label="Report abuse"]',
-    '[aria-label="Reporta un abús"]',
-    'a[href*="sites.google.com/abuse"]',
-    '[jsname="bN97Pc"]',  # cookie banner (JS-injected, but defensive)
-    '[role="menuitem"][aria-label="Report abuse"]',
-    "script",
-    "noscript",
-    'link[href*="fonts.gstatic.com"]',
-    'link[href*="fonts.googleapis.com"]',
-    'iframe[src*="accounts.google.com"]',
-    'iframe[src*="gstatic.com/atari/embeds"]',
-)
+# Deliberately empty: we keep Sites' output verbatim — scripts, iframes,
+# cookie notice, "Report abuse" trailer, "Last edited" indicator, everything.
+# The only transformations we perform are link rewriting (to canonical local
+# paths), image rehosting (to `_assets/`), and a `<base>` strip so those link
+# rewrites aren't undone. Notes + functionality match the live Sites site
+# 1:1.
+STRIP_SELECTORS: tuple[str, ...] = ()
+
+# The content shell we still use for *sanity checking* after a strip: if this
+# element isn't present in the resulting page, something went very wrong and
+# we'd rather fail loud than write a chrome-only page.
+SANITY_CONTENT_SELECTOR = 'div[jsname="ZBtY8b"]'
 
 # Host patterns we rehost locally (images + background-image urls).
 REHOSTED_IMAGE_HOST_SUBSTRINGS: tuple[str, ...] = (

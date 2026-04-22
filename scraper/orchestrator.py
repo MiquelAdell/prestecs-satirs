@@ -29,7 +29,6 @@ from scraper.writer import (
     purge_orphan_assets,
     purge_stale_files,
     read_previous_manifest,
-    write_asset_stylesheet,
     write_manifest,
     write_page,
 )
@@ -56,16 +55,15 @@ async def _emit(sink: EventSink | None, event: ScraperEvent) -> None:
         await result  # type: ignore[misc]
 
 
-async def _process_content_html(
+async def _rehost_and_rewrite(
     *,
     fetcher: Fetcher,
-    content_html: str,
+    soup: BeautifulSoup,
     image_urls: tuple[str, ...],
     assets_dir: Path,
     sink: EventSink | None,
     dry_run: bool,
-) -> tuple[str, tuple[str, ...], int, int]:
-    soup = BeautifulSoup(content_html, "lxml")
+) -> tuple[tuple[str, ...], int, int]:
     rehost_map: dict[str, str] = {}
     downloaded = 0
     reused = 0
@@ -76,8 +74,6 @@ async def _process_content_html(
         if url in rehost_map:
             continue
         if dry_run:
-            # In dry-run we still generate the rewrite mapping so the rendered
-            # HTML matches a real run, but we don't hit the network.
             import hashlib
 
             rehost_map[url] = (
@@ -120,7 +116,7 @@ async def _process_content_html(
                 ),
             )
 
-    # Rewrite <img> + srcset + inline background-image
+    # <img src> + srcset
     for img in soup.find_all("img"):
         if not isinstance(img, Tag):
             continue
@@ -136,9 +132,8 @@ async def _process_content_html(
                 descriptor = f" {parts[1]}" if len(parts) > 1 else ""
                 new_entries.append(f"{rehost_map.get(url, url)}{descriptor}")
             img["srcset"] = ", ".join(new_entries)
-        img.attrs.pop("loading", None)
-        img["loading"] = "lazy"
 
+    # inline background-image: url(...) and other style url() refs
     for node in soup.find_all(style=True):
         if not isinstance(node, Tag):
             continue
@@ -149,32 +144,59 @@ async def _process_content_html(
                 new_style = new_style.replace(remote, local)
             node["style"] = new_style
 
-    # Rewrite <a href>
-    for link in soup.find_all("a"):
+    # <link rel="icon|apple-touch-icon" href="...googleusercontent…"> — rehost.
+    for link in soup.find_all("link", rel=True):
         if not isinstance(link, Tag):
             continue
+        rels = link.get("rel")
+        rel_value = (
+            " ".join(rels) if isinstance(rels, list) else str(rels)
+        ).lower()
+        if "icon" not in rel_value:
+            continue
         href = link.get("href")
+        if isinstance(href, str) and href in rehost_map:
+            link["href"] = rehost_map[href]
+
+    # <meta property="og:image" content="…"> — rehost.
+    for meta in soup.find_all("meta"):
+        if not isinstance(meta, Tag):
+            continue
+        content = meta.get("content")
+        if isinstance(content, str) and content in rehost_map:
+            meta["content"] = rehost_map[content]
+
+    # <a href> — rewrite internal links, harden external.
+    for anchor in soup.find_all("a"):
+        if not isinstance(anchor, Tag):
+            continue
+        href = anchor.get("href")
         if not isinstance(href, str):
             continue
         if is_internal_href(href):
-            link["href"] = rewrite_href(href)
+            anchor["href"] = rewrite_href(href)
         else:
             if href.startswith(("mailto:", "tel:")):
                 continue
             if any(host in href for host in INTERNAL_HOSTS):
                 continue
-            link["target"] = "_blank"
-            existing_rel = link.get("rel", [])
+            anchor["target"] = "_blank"
+            existing_rel = anchor.get("rel", [])
             if isinstance(existing_rel, str):
                 existing_rel = existing_rel.split()
             rel = set(existing_rel) | {"noopener", "noreferrer"}
-            link["rel"] = " ".join(sorted(rel))
+            anchor["rel"] = " ".join(sorted(rel))
 
     assets_used = tuple(sorted({Path(path).name for path in rehost_map.values()}))
-    # lxml wraps fragments in <html><body>…</body></html>; extract inner HTML.
-    body = soup.body if soup.body is not None else soup
-    rendered = "".join(str(child) for child in body.children)
-    return rendered, assets_used, downloaded, reused
+    return assets_used, downloaded, reused
+
+
+def _render_document(soup: BeautifulSoup) -> str:
+    """Serialize the mutated document, keeping the DOCTYPE."""
+    output = soup.decode(formatter="html5")
+    if not output.lstrip().lower().startswith("<!doctype"):
+        output = "<!doctype html>\n" + output
+    return output
 
 
 async def run(
@@ -228,7 +250,6 @@ async def run(
         if not dry_run:
             output_dir.mkdir(parents=True, exist_ok=True)
             assets_dir.mkdir(parents=True, exist_ok=True)
-            write_asset_stylesheet(output_dir)
 
         new_pages: list[PageRecord] = []
         previous_manifest = (
@@ -298,14 +319,9 @@ async def run(
                 ),
             )
 
-            (
-                processed_html,
-                asset_filenames,
-                downloaded,
-                reused,
-            ) = await _process_content_html(
+            asset_filenames, downloaded, reused = await _rehost_and_rewrite(
                 fetcher=fetcher,
-                content_html=stripped.content_html,
+                soup=stripped.document,
                 image_urls=stripped.image_urls,
                 assets_dir=assets_dir,
                 sink=sink,
@@ -314,8 +330,9 @@ async def run(
             total_downloaded += downloaded
             total_reused += reused
 
+            document_html = _render_document(stripped.document)
             output_file = path_to_output(canonical, config.assets_subdir)
-            sha = content_sha(processed_html)
+            sha = content_sha(document_html)
             previous = previous_by_path.get(canonical)
             record = PageRecord(
                 url=url,
@@ -346,9 +363,7 @@ async def run(
                 write_page(
                     output_dir=output_dir,
                     output_file=output_file,
-                    title=stripped.title,
-                    canonical_path=canonical,
-                    content_html=processed_html,
+                    document_html=document_html,
                 )
                 pages_written += 1
                 await _emit(

@@ -3,12 +3,10 @@
 from __future__ import annotations
 
 import hashlib
-import shutil
 from pathlib import Path
 
 from scraper.config import ScraperConfig
 from scraper.manifest import Manifest, PageRecord, dump, load
-from scraper.template import render_page
 
 
 class DeletionGuardError(RuntimeError):
@@ -19,29 +17,15 @@ def content_sha(content_html: str) -> str:
     return hashlib.sha256(content_html.encode("utf-8")).hexdigest()
 
 
-def write_asset_stylesheet(output_dir: Path) -> None:
-    source = Path(__file__).resolve().parent / "template" / "content.css"
-    target = output_dir / "_assets" / "content.css"
-    target.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(source, target)
-
-
 def write_page(
     *,
     output_dir: Path,
     output_file: str,
-    title: str,
-    canonical_path: str,
-    content_html: str,
+    document_html: str,
 ) -> Path:
-    html = render_page(
-        title=title,
-        canonical_path=canonical_path,
-        content_html=content_html,
-    )
     target = output_dir / output_file
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(html, encoding="utf-8")
+    target.write_text(document_html, encoding="utf-8")
     return target
 
 
@@ -112,7 +96,6 @@ def purge_orphan_assets(
     if not assets_dir.is_dir():
         return []
     referenced = {name for page in manifest.pages for name in page.asset_filenames}
-    referenced.add("content.css")
     deleted: list[str] = []
     for entry in assets_dir.iterdir():
         if entry.is_file() and entry.name not in referenced:

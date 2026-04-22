@@ -88,66 +88,67 @@ Add a new page → nothing to do; the BFS will find it. If the page is
 mandatory (you want the scrape to fail loudly if Sites ever stops serving
 it), add it to `REQUIRED_PATHS` in `scraper/config.py`.
 
-Sites class names shifted and the stripper can't find content anymore →
-update `CONTENT_ROOT_SELECTOR` in `scraper/config.py`. The inspection ritual:
+Sites renamed the content-shell class and the sanity check fails →
+update `SANITY_CONTENT_SELECTOR` in `scraper/config.py` to whatever div
+wraps all the page sections today. A quick inspection ritual:
 
 ```bash
-# Fetch one page and look at its structure
 curl -s -H "User-Agent: Mozilla/5.0" https://www.refugiodelsatiro.es/ > /tmp/home.html
-
-# Look for the first div that wraps ALL page sections (header + footer stripped)
 python -c "
 import re
 html = open('/tmp/home.html').read()
-# Find candidate content wrappers
 for pat in [r'jsname=\"([A-Za-z0-9_-]+)\"', r'role=\"main\"']:
     print(pat, set(m.group(0) for m in re.finditer(pat, html)))
 "
 ```
 
-Then set `CONTENT_ROOT_SELECTOR = 'div[jsname="<new-value>"]'`.
+Want to start stripping something Sites ships (e.g. the Report-abuse
+trailer) → add a CSS selector to `STRIP_SELECTORS` in
+`scraper/config.py`. Today it's empty — we mirror Sites 1:1.
 
 Add a host we want to rehost → add the substring to
-`REHOSTED_IMAGE_HOST_SUBSTRINGS` in `scraper/config.py`.
+`REHOSTED_IMAGE_HOST_SUBSTRINGS`.
 
 ## Triggers
 
-- **CLI**: `python -m scraper` locally.
-- **Admin button**: `POST /api/admin/content/resync` (admin-only) in the
-  React app. Streams progress via SSE at
-  `GET /api/admin/content/events`. The button writes to the VPS
-  `content-cache` volume that Caddy serves — it does **not** touch the git
-  checkout. Only the nightly cron commits.
-- **GitHub Actions cron**: `.github/workflows/content-sync.yml` runs at
-  03:17 UTC daily, commits any diff to `development`, which triggers
-  `deploy.yml` and re-seeds the VPS cache from the newly-committed copy.
-  Also available as `workflow_dispatch` from the GitHub Actions tab.
-
-Until the nightly cron is in place on GitHub (requires the
-`CONTENT_SYNC_PAT` repo secret), run `python -m scraper` locally and
-commit manually.
+- **CLI (persist to repo)**: `python -m scraper run` locally, then commit
+  the diff under `frontend/public/content-mirror/`. This is how content
+  changes enter the repo; nothing automated commits for us.
+- **Admin button (ephemeral VPS refresh)**: `POST /api/admin/content/resync`
+  (admin-only) in the lending React app, at `/prestecs/admin/content`.
+  Streams progress via SSE at `GET /api/admin/content/events`. The button
+  writes to the VPS `content-cache` volume that Caddy serves — it does
+  **not** touch the git checkout. Useful for editors who want to see their
+  Sites edits on the live VPS immediately without waiting for a dev to run
+  the CLI + commit. On the next deploy the VPS cache is re-seeded from the
+  most recent git commit, so anything that didn't make it into git is lost.
 
 ## Known gotchas
 
+- **Every run writes all 19 pages.** Sites' inline scripts embed per-request
+  timestamps (`DOCS_timing`, `WIZ_global_data`, session tokens). They're
+  preserved verbatim because they drive Sites' JS runtime — including the
+  nav menu — so every scrape produces byte-different HTML even when the
+  real content is unchanged. You'll see a diff every time you run the CLI;
+  only commit when the meaningful parts (text, images, layout) actually
+  changed. A future improvement would normalize those specific fields
+  before hashing.
 - **Per-request image URLs.** Google Sites rotates `googleusercontent.com`
   URLs per fetch. We content-address assets so the files-on-disk set is
-  stable across runs.
-- **Calendar iframe.** `/calendario` embeds Google Calendar; the iframe is
-  preserved. That means loading the page sets Google cookies. A cookie
-  banner is a separate task (listed in `TODO.md`).
-- **Nonces.** Sites embeds `nonce="…"` in dozens of `<script>` tags on
-  every response. They change per request and would produce a no-op commit
-  every run — but we strip `<script>` before hashing, so page content
-  hashes are stable and idempotent re-runs write nothing.
+  stable across runs — image filenames only change when the image bytes do.
+- **Calendar iframe + Google JS.** `/calendario` embeds Google Calendar,
+  and every page loads Sites' runtime from `gstatic.com`. Loading the
+  mirror hits Google on every view. The Sites-provided cookie banner is
+  preserved (JS-injected) so the GDPR story is the same as the live site.
+- **Nav menu is Sites' JS.** We keep Sites' scripts intact so the header
+  nav, dropdowns, hamburger, and cookie banner all work identically to
+  the live site. If Google changes their runtime, our nav changes with it.
 - **Deletion guard.** If more than 50 % of previously mirrored pages would
   disappear in a single run, the writer aborts. Pass
   `python -m scraper run --force-delete` to override — e.g. if Sites
   legitimately removed many pages at once.
 - **Accented URLs.** `/juegos-de-rol/campañas` is mirrored at
   `/juegos-de-rol/campanas`. Caddy 301s the accented form.
-- **Asset cache not pruned across runs.** Orphan assets (referenced by no
-  page in the new manifest) are deleted on every run, so `_assets/` stays
-  tidy.
 - **Every run re-downloads every image**, because we need to hash the
-  content to know the filename. Cheap for ~170 images; would need tuning
+  bytes to know the filename. Cheap for ~170 images; would need tuning
   if the site grows an order of magnitude.
