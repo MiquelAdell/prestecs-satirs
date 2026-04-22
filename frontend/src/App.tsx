@@ -9,6 +9,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
 import { SetPasswordPage } from "./pages/SetPasswordPage";
 import { AdminMembersPage } from "./pages/AdminMembersPage";
+import { AdminContentPage } from "./pages/AdminContentPage";
 import "./i18n";
 
 export default function App() {
@@ -25,6 +26,7 @@ export default function App() {
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/set-password" element={<SetPasswordPage />} />
             <Route path="/admin/members" element={<AdminMembersPage />} />
+            <Route path="/admin/content" element={<AdminContentPage />} />
           </Routes>
         </main>
         <LanguageSelector />
