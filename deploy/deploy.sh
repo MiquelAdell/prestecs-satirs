@@ -16,5 +16,17 @@ echo "==> Importing and enriching games from BGG"
 docker compose exec app refugio import-games
 docker compose exec app refugio enrich-games
 
+echo "==> Seeding content mirror from git-checked-in copy"
+# Seeds /srv/content (the shared volume Caddy serves) from the version Vite
+# bundled into the frontend at build time. Admin-triggered syncs will
+# overwrite this on the VPS until the next deploy re-seeds.
+docker compose exec app sh -c '
+    set -e
+    if [ -d /app/frontend/dist/content-mirror ]; then
+        mkdir -p /srv/content
+        cp -R /app/frontend/dist/content-mirror/. /srv/content/
+    fi
+'
+
 echo "==> Deploy complete!"
 echo "    App is running at $(grep REFUGIO_BASE_URL .env | cut -d= -f2)"

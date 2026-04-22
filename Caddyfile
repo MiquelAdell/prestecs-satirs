@@ -1,10 +1,31 @@
 {$DOMAIN:localhost} {
+	# App (lending flow) — keeps its /prestecs prefix.
 	handle_path /prestecs/* {
 		reverse_proxy app:8000
 	}
 
+	# 301 redirects for legacy Google Sites slugs.
+	redir /inicio                           /                           permanent
+	redir /inicio/                          /                           permanent
+	redir /socios/ludoteca                  /ludoteca                   permanent
+	redir /socios/ludoteca/                 /ludoteca                   permanent
+	redir /Validacion-Membresia             /validacion                 permanent
+	redir /Validacion-Membresia/            /validacion                 permanent
+	redir /juegos-de-rol/campa%C3%B1as      /juegos-de-rol/campanas     permanent
+	redir /juegos-de-rol/campañas           /juegos-de-rol/campanas     permanent
+
+	# Content mirror served from a VPS volume. The volume is seeded from the
+	# git-checked-in content on every deploy; admin-triggered syncs rewrite it
+	# live without needing a commit.
 	handle {
-		root * /srv/wip
+		root * /srv/content
+		try_files {path} {path}/ {path}/index.html
 		file_server
+		encode gzip zstd
+
+		@assets path /_assets/*
+		header @assets Cache-Control "public, max-age=31536000, immutable"
+		@html path *.html
+		header @html Cache-Control "public, max-age=300"
 	}
 }
