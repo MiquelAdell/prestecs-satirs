@@ -140,8 +140,9 @@ export function AdminContentPage() {
         <h1>Resincronitzar contingut</h1>
         <p className="admin-content-description">
           Extrau les pàgines públiques de Google Sites i actualitza el mirror
-          servit per Caddy. Els canvis són visibles immediatament al VPS. El
-          checkout de Git només s'actualitza quan el cron nocturn commit.
+          servit per Caddy. Els canvis són visibles immediatament al VPS. Per
+          persistir-los al repositori, executa <code>python -m scraper run</code>
+          en local i fes commit manualment.
         </p>
       </header>
 

@@ -174,15 +174,19 @@ Actions secrets on the repository:
 | `DEPLOY_USER` | SSH user (e.g. `root`) |
 | `DEPLOY_SSH_KEY` | Private SSH key authorised on the server |
 | `DEPLOY_PORT` | SSH port, optional (defaults to `22`) |
-| `CONTENT_SYNC_PAT` | Fine-grained PAT (`contents: write`) used by the nightly content-sync workflow to commit back to `development`. The default `GITHUB_TOKEN` can't trigger downstream workflows on its own pushes. |
 
-### Content sync (nightly)
+### Content sync (manual)
 
-[`.github/workflows/content-sync.yml`](.github/workflows/content-sync.yml) runs
-the scraper at 03:17 UTC every day, commits any diff under
-`frontend/public/content-mirror/` to `development`, and relies on
-`deploy.yml` to pick the new commit up. Can be triggered manually via
-`workflow_dispatch` in the GitHub Actions tab.
+Content changes on `www.refugiodelsatiro.es` flow into this repo manually:
+
+1. Run `python -m scraper run` locally (or `refugio content run`).
+2. Review the diff under `frontend/public/content-mirror/`.
+3. Commit and push if it looks good.
+
+Editors can also hit the admin-only "Resync" button at `/prestecs/admin/content`
+to refresh the VPS cache immediately — changes are visible on
+`www.refugiodelsatiro.es` right away, but don't reach the repo until someone
+runs the local workflow above.
 
 ### What the stack runs
 
