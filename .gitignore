@@ -47,3 +47,10 @@ members.csv
 .env
 .env.local
 .env.*.local
+
+# other project things
+references
+references/*
+
+# Reference screenshots too large for GitHub (>100 MB). Kept locally only.
+tasks/lending-redesign/existing-site/pythonanywhere-catalog.png
