@@ -6,7 +6,8 @@ Current scope: the game-lending feature (mounted at `/prestecs`). Members can
 browse the catalog, borrow games, and return them. The catalog is imported
 from [BoardGameGeek](https://boardgamegeek.com/collection/user/RefugioDelSatiro?subtype=boardgame&own=1&ff=1).
 
-The landing page at `/` is a work-in-progress placeholder served by Caddy.
+Everything else under `/` is mirrored from the club's Google Sites site by a
+small scraper (see `scraper/`) and served as static files by Caddy.
 
 ## Tech Stack
 
@@ -60,7 +61,15 @@ refugio import-games data/bgg_collection.json  # Import games from JSON
 refugio import-games                     # Import games from BGG API (requires BGG_BEARER_TOKEN)
 refugio import-members members.csv       # Import members from CSV
 refugio import-members --email x@y.com --name "First Last"  # Add a single member
+
+refugio content run                      # Scrape Google Sites → frontend/public/content-mirror/
+refugio content run --dry-run            # Preview, don't write anything
+refugio content list-urls                # Enumerate pages without scraping
+python -m scraper                        # Equivalent to `refugio content run`
 ```
+
+See [`scraper/README.md`](scraper/README.md) for the content-mirror
+architecture, extension points, and gotchas.
 
 ## Tests
 
@@ -108,6 +117,7 @@ frontend/
 | `REFUGIO_DB_PATH` | SQLite database file path | `refugio.db` |
 | `REFUGIO_JWT_SECRET` | JWT signing secret | (dev secret) |
 | `REFUGIO_BASE_URL` | Lending app public URL (used in reset-password emails) | `http://localhost:5173/prestecs` |
+| `REFUGIO_CONTENT_MIRROR_DIR` | Where the admin "Resync content" button writes scraped pages | `frontend/public/content-mirror` (dev) / `/srv/content` (prod) |
 | `BGG_BEARER_TOKEN` | BGG API bearer token (optional) | — |
 | `VITE_API_URL` | Frontend API base URL | `/prestecs/api` |
 
@@ -164,6 +174,15 @@ Actions secrets on the repository:
 | `DEPLOY_USER` | SSH user (e.g. `root`) |
 | `DEPLOY_SSH_KEY` | Private SSH key authorised on the server |
 | `DEPLOY_PORT` | SSH port, optional (defaults to `22`) |
+| `CONTENT_SYNC_PAT` | Fine-grained PAT (`contents: write`) used by the nightly content-sync workflow to commit back to `development`. The default `GITHUB_TOKEN` can't trigger downstream workflows on its own pushes. |
+
+### Content sync (nightly)
+
+[`.github/workflows/content-sync.yml`](.github/workflows/content-sync.yml) runs
+the scraper at 03:17 UTC every day, commits any diff under
+`frontend/public/content-mirror/` to `development`, and relies on
+`deploy.yml` to pick the new commit up. Can be triggered manually via
+`workflow_dispatch` in the GitHub Actions tab.
 
 ### What the stack runs
 
