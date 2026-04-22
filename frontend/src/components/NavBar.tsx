@@ -16,6 +16,7 @@ export function NavBar() {
         <Link to="/">{t("nav.catalog")}</Link>
         {member && <Link to="/my-loans">{t("nav.myLoans")}</Link>}
         {member?.is_admin && <Link to="/admin/members">{t("nav.admin")}</Link>}
+        {member?.is_admin && <Link to="/admin/content">Contingut</Link>}
       </div>
       <div className="navbar-auth">
         {member ? (

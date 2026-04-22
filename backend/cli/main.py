@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import csv
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Annotated
 
 import typer
 
@@ -16,6 +16,10 @@ from backend.domain.use_cases.import_members import ImportMembersUseCase
 from backend.migrations.runner import run_migrations
 
 app = typer.Typer(name="refugio", help="Refugio del Sátiro — admin CLI")
+
+from scraper.cli import app as _content_scraper_app  # noqa: E402
+
+app.add_typer(_content_scraper_app, name="content", help="Content-mirror commands.")
 
 
 def _get_settings() -> Settings:
@@ -42,7 +46,7 @@ def migrate() -> None:
 @app.command()
 def import_games(
     json_file: Annotated[
-        Optional[str],
+        str | None,
         typer.Argument(help="Path to JSON seed file (alternative to BGG API)"),
     ] = None,
 ) -> None:
@@ -101,7 +105,9 @@ def import_games(
                 else:
                     updated += 1
 
-            typer.echo(f"Done. {created} new, {updated} updated, {len(bgg_games)} total.")
+            typer.echo(
+                f"Done. {created} new, {updated} updated, {len(bgg_games)} total."
+            )
         else:
             # Import from BGG API (requires BGG_BEARER_TOKEN env var)
             from backend.data.bgg_client import BggClient
@@ -113,12 +119,16 @@ def import_games(
                     err=True,
                 )
 
-            bgg_client = BggClient(username="RefugioDelSatiro", bearer_token=settings.bgg_bearer_token)
+            bgg_client = BggClient(
+                username="RefugioDelSatiro", bearer_token=settings.bgg_bearer_token
+            )
             use_case = ImportGamesUseCase(game_repo, bgg_client)
 
             typer.echo("Fetching games from BGG (this may take a moment)...")
             result = use_case.execute()
-            typer.echo(f"Done. {result.created} new, {result.updated} updated, {result.total} total.")
+            typer.echo(
+                f"Done. {result.created} new, {result.updated} updated, {result.total} total."
+            )
     finally:
         conn.close()
 
@@ -134,7 +144,9 @@ def enrich_games() -> None:
     try:
         run_migrations(conn)
         game_repo = SqliteGameRepository(conn)
-        bgg_client = BggClient(username="RefugioDelSatiro", bearer_token=settings.bgg_bearer_token)
+        bgg_client = BggClient(
+            username="RefugioDelSatiro", bearer_token=settings.bgg_bearer_token
+        )
 
         games = game_repo.list_all()
         bgg_ids = [g.bgg_id for g in games if g.bgg_id]
@@ -167,7 +179,7 @@ def enrich_games() -> None:
 @app.command()
 def import_members(
     csv_path: Annotated[
-        Optional[str],
+        str | None,
         typer.Argument(help="Path to CSV file to import"),
     ] = None,
     base_url: Annotated[
@@ -178,23 +190,25 @@ def import_members(
         ),
     ] = "",
     name: Annotated[
-        Optional[str],
-        typer.Option("--name", help="Full name for single member add (Nombre Apellidos)"),
+        str | None,
+        typer.Option(
+            "--name", help="Full name for single member add (Nombre Apellidos)"
+        ),
     ] = None,
     email: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--email", help="Email for single member add"),
     ] = None,
     nickname: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--nickname", help="Nickname for single member add"),
     ] = None,
     phone: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--phone", help="Phone for single member add"),
     ] = None,
     member_number: Annotated[
-        Optional[int],
+        int | None,
         typer.Option("--member-number", help="Member number for single member add"),
     ] = None,
     admin: Annotated[

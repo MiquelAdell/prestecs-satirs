@@ -8,6 +8,7 @@ from backend.api.routes.auth_routes import router as auth_router
 from backend.api.routes.games import router as games_router
 from backend.api.routes.loans import router as loans_router
 from backend.api.routes.admin import router as admin_router
+from backend.api.routes.content import router as content_router
 from backend.api.routes.members import router as members_router
 
 FRONTEND_DIR = Path(__file__).resolve().parent.parent.parent / "frontend" / "dist"
@@ -21,6 +22,7 @@ def create_app() -> FastAPI:
     app.include_router(loans_router)
     app.include_router(members_router)
     app.include_router(admin_router)
+    app.include_router(content_router)
 
     @app.get("/api/health")
     def health() -> dict[str, str]:

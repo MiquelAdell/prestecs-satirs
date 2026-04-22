@@ -12,6 +12,7 @@ WORKDIR /app
 
 COPY pyproject.toml ./
 COPY backend/ ./backend/
+COPY scraper/ ./scraper/
 COPY data/ ./data/
 RUN pip install --no-cache-dir .
 COPY --from=frontend-build /app/frontend/dist ./frontend/dist

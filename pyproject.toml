@@ -15,6 +15,8 @@ dependencies = [
     "bcrypt>=4.1",
     "httpx>=0.27",
     "python-dotenv>=1.0",
+    "beautifulsoup4>=4.12",
+    "lxml>=5.0",
 ]
 
 [project.optional-dependencies]
@@ -31,7 +33,7 @@ dev = [
 refugio = "backend.cli.main:app"
 
 [tool.hatch.build.targets.wheel]
-packages = ["backend"]
+packages = ["backend", "scraper"]
 
 [tool.black]
 line-length = 88
