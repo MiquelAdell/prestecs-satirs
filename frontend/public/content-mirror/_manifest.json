@@ -1,0 +1,384 @@
+{
+  "generated_at": "2026-04-22T07:35:44+00:00",
+  "pages": [
+    {
+      "asset_filenames": [
+        "32f4ad511b5f14ed.jpg",
+        "81d17a59cd5d6ca6.jpg",
+        "9dad249ef228bb0c.jpg",
+        "d1a962e0aafb8758.png",
+        "efa23e602c90cdc8.jpg"
+      ],
+      "content_sha256": "01e5a0234ce86e04b86363efd408350c89f72ee0c260e46bfbbaad9147d9a63a",
+      "output_file": "index.html",
+      "path": "/",
+      "scraped_at": "2026-04-22T07:35:08+00:00",
+      "title": "El Refugio del Sátiro",
+      "url": "https://www.refugiodelsatiro.es/"
+    },
+    {
+      "asset_filenames": [
+        "9dad249ef228bb0c.jpg"
+      ],
+      "content_sha256": "510cd920d52fbf7ee972ed77e669ee05afe5173a211f99042fb403a0c0af8735",
+      "output_file": "calendario/index.html",
+      "path": "/calendario",
+      "scraped_at": "2026-04-22T07:35:08+00:00",
+      "title": "Calendario",
+      "url": "https://www.refugiodelsatiro.es/calendario"
+    },
+    {
+      "asset_filenames": [
+        "0009131e77203d37.jpg",
+        "0cbc8a699804387d.jpg",
+        "4d31d88dbb54eb75.png",
+        "6ca4fa8f09afd9a6.jpg",
+        "9dad249ef228bb0c.jpg",
+        "e7405fe8b26a55ea.jpg"
+      ],
+      "content_sha256": "4a20128bccb83500b5a7caf936dfd23693faad490640ed4c97c91a083aa7a0e6",
+      "output_file": "eventos/index.html",
+      "path": "/eventos",
+      "scraped_at": "2026-04-22T07:35:09+00:00",
+      "title": "Eventos",
+      "url": "https://www.refugiodelsatiro.es/eventos"
+    },
+    {
+      "asset_filenames": [
+        "2fd23f6b8b85eecb.jpg",
+        "5d580540b81364f9.jpg",
+        "941762f360338318.jpg",
+        "bc5fd6d8a2a58520.jpg",
+        "c75b68394954bddb.jpg",
+        "dd01e6ef9dd85aa7.png",
+        "ea8d4101c9a0945b.jpg"
+      ],
+      "content_sha256": "8f8e21107c8008ba168e824ec6d3a5c923ad138081d13ede8698f63cc4e29d8b",
+      "output_file": "eventos/24h-mesa/index.html",
+      "path": "/eventos/24h-mesa",
+      "scraped_at": "2026-04-22T07:35:12+00:00",
+      "title": "24h Juegos de Mesa",
+      "url": "https://www.refugiodelsatiro.es/eventos/24h-mesa"
+    },
+    {
+      "asset_filenames": [
+        "66d212d0038a6323.png",
+        "8f7ff70224e6fe6a.jpg"
+      ],
+      "content_sha256": "5c39ccc754ff7a5ac4f73488945ea29b30d3d8dfdc9155341911a01e1d9e266d",
+      "output_file": "eventos/diurnes-satir/index.html",
+      "path": "/eventos/diurnes-satir",
+      "scraped_at": "2026-04-22T07:35:13+00:00",
+      "title": "Diürnes del Sàtir",
+      "url": "https://www.refugiodelsatiro.es/eventos/diurnes-satir"
+    },
+    {
+      "asset_filenames": [
+        "1345d76550dab592.jpg",
+        "32161d5397cfe447.png",
+        "bde9474288677cb6.jpg"
+      ],
+      "content_sha256": "95023706da9298fd226ef8b11a3ff2fd6fae5a8edf0761645bc368914a89d5ba",
+      "output_file": "eventos/festa-major/index.html",
+      "path": "/eventos/festa-major",
+      "scraped_at": "2026-04-22T07:35:13+00:00",
+      "title": "Festa Major de Sabadell",
+      "url": "https://www.refugiodelsatiro.es/eventos/festa-major"
+    },
+    {
+      "asset_filenames": [
+        "200953ee27cc922e.png",
+        "9dad249ef228bb0c.jpg"
+      ],
+      "content_sha256": "a9924e9ca0265a20029fadeac41ac3e315d868acd2e02906e5c21863c1fd927e",
+      "output_file": "faq/index.html",
+      "path": "/faq",
+      "scraped_at": "2026-04-22T07:35:14+00:00",
+      "title": "FAQ",
+      "url": "https://www.refugiodelsatiro.es/faq"
+    },
+    {
+      "asset_filenames": [
+        "2802183489b66f8d.jpg",
+        "2994aea489ade798.jpg",
+        "9dad249ef228bb0c.jpg",
+        "a792bdb7523ada10.jpg",
+        "d4433e0f6e807b8f.jpg"
+      ],
+      "content_sha256": "a41c0ea1ca1044bde98e93855f5a01f0df35e25595a4f557aaebf955007a7fa5",
+      "output_file": "faq/normas-de-conducta/index.html",
+      "path": "/faq/normas-de-conducta",
+      "scraped_at": "2026-04-22T07:35:14+00:00",
+      "title": "Normas de conducta",
+      "url": "https://www.refugiodelsatiro.es/faq/normas-de-conducta"
+    },
+    {
+      "asset_filenames": [
+        "03fe99a45086bc34.png",
+        "32562b917190f3d7.jpg",
+        "48f98a15f31788ff.jpg",
+        "9dad249ef228bb0c.jpg",
+        "a719bd91091d19a4.jpg",
+        "be8fd9fb005659d1.jpg",
+        "db3fd2428e4a2c1f.jpg",
+        "deaec3ab0fd5df8c.jpg"
+      ],
+      "content_sha256": "e590368d81419d967eb0b1aed1bcebbcb423f1609ab98d86269fdadbc92eac38",
+      "output_file": "juegos-de-mesa/index.html",
+      "path": "/juegos-de-mesa",
+      "scraped_at": "2026-04-22T07:35:17+00:00",
+      "title": "Juegos de Mesa",
+      "url": "https://www.refugiodelsatiro.es/juegos-de-mesa"
+    },
+    {
+      "asset_filenames": [
+        "43de2dfa129d3421.jpg",
+        "9dad249ef228bb0c.jpg",
+        "a56b23515ed1dbd2.png",
+        "cac28c328263c688.jpg"
+      ],
+      "content_sha256": "9228126214f79d8f758f0187c6f9da8ca1e9dd2e532adb1452ae0bb780d2e557",
+      "output_file": "juegos-de-mesa/dias-de-juegos/index.html",
+      "path": "/juegos-de-mesa/dias-de-juegos",
+      "scraped_at": "2026-04-22T07:35:18+00:00",
+      "title": "Días de Juegos",
+      "url": "https://www.refugiodelsatiro.es/juegos-de-mesa/dias-de-juegos"
+    },
+    {
+      "asset_filenames": [
+        "06f683f3ffcf1fa0.jpg",
+        "2cfc30268b4a7f83.jpg",
+        "6b14bab8b29baa32.jpg",
+        "9dad249ef228bb0c.jpg",
+        "a9c604692afd89a9.png",
+        "b129e876ee9a08b4.jpg",
+        "ce9314f20b5d4614.jpg"
+      ],
+      "content_sha256": "4d382dfe80c1250031c4bd6778a9d9b038d0bdba944ee62ea836b3e07f20fed1",
+      "output_file": "juegos-de-rol/index.html",
+      "path": "/juegos-de-rol",
+      "scraped_at": "2026-04-22T07:35:20+00:00",
+      "title": "Juegos de Rol",
+      "url": "https://www.refugiodelsatiro.es/juegos-de-rol"
+    },
+    {
+      "asset_filenames": [
+        "0e1711f2b2b0a9ce.jpg",
+        "171f301b3dd62b33.png",
+        "66d212d0038a6323.png",
+        "989ecf9a148c4c9f.jpg",
+        "9dad249ef228bb0c.jpg"
+      ],
+      "content_sha256": "4121a9e4851277812a43ef59863a93cbbfe0e3e9842d8cf704b10d26fdd712f2",
+      "output_file": "juegos-de-rol/campanas/index.html",
+      "path": "/juegos-de-rol/campanas",
+      "scraped_at": "2026-04-22T07:35:21+00:00",
+      "title": "Campañas",
+      "url": "https://www.refugiodelsatiro.es/juegos-de-rol/campañas"
+    },
+    {
+      "asset_filenames": [
+        "01504074cf1d279b.jpg",
+        "027f41eb32839da5.jpg",
+        "0aeea8f7e5d5a596.jpg",
+        "0bd81ccf5addd564.png",
+        "0be59cc63d80551d.jpg",
+        "1d6912fe9eca07ac.jpg",
+        "24889c4719296248.jpg",
+        "372f611c920cfeb6.jpg",
+        "3f1c5d9727f0c6a3.jpg",
+        "4573d02faca569ec.png",
+        "50ec7f10bf861dd3.jpg",
+        "532af8637c2fde8d.jpg",
+        "5e1694758a8efa5d.png",
+        "5f25052b50562c71.jpg",
+        "68785a51c21b4af0.jpg",
+        "798e27cc80cc31cc.png",
+        "7ade2047e68fb29a.png",
+        "93ed2bd78613f634.jpg",
+        "9dad249ef228bb0c.jpg",
+        "a3ed1c33a925be41.jpg",
+        "a989d8db60877dd8.jpg",
+        "ae57ec63900297a1.jpg",
+        "bf0dbe3d94c3ceef.png",
+        "c5b1ec204f3c5a00.png",
+        "c95355ba1bd15ee4.jpg",
+        "dceeed1174840e18.jpg",
+        "dfded294bedd2a0b.png",
+        "e5bfd69aa622230a.jpg",
+        "f27e651a1be468c4.jpg",
+        "f34a57f58ca904bc.jpg",
+        "f6cb918f1b068696.jpg",
+        "f9d2110e3cafdf57.jpg"
+      ],
+      "content_sha256": "740a5acba5f3c702a05301eb2d061c6aba1b213661259c7aba83ed5cf32fac5d",
+      "output_file": "juegos-de-rol/campanas/campanas-pasadas/index.html",
+      "path": "/juegos-de-rol/campanas/campanas-pasadas",
+      "scraped_at": "2026-04-22T07:35:27+00:00",
+      "title": "Campañas pasadas",
+      "url": "https://www.refugiodelsatiro.es/juegos-de-rol/campañas/campañas-pasadas"
+    },
+    {
+      "asset_filenames": [
+        "66d212d0038a6323.png",
+        "72ad3bbf99231c7e.jpg",
+        "7aad7a75d042cb0b.jpg",
+        "9dad249ef228bb0c.jpg"
+      ],
+      "content_sha256": "d4d0a2ce75663657e28b14fea40375741f7a19c1785a0788176fac20796b9093",
+      "output_file": "juegos-de-rol/oneshots/index.html",
+      "path": "/juegos-de-rol/oneshots",
+      "scraped_at": "2026-04-22T07:35:28+00:00",
+      "title": "Oneshots",
+      "url": "https://www.refugiodelsatiro.es/juegos-de-rol/oneshots"
+    },
+    {
+      "asset_filenames": [
+        "043fa5b2546c7f9f.jpg",
+        "06fa265d67fb3bc4.jpg",
+        "0bdcfa910dd3c968.jpg",
+        "13056fab24e3249e.jpg",
+        "1be51765908af9d7.jpg",
+        "2237502fe2b1addd.jpg",
+        "3369b121732a45bf.jpg",
+        "37ba07085875f02a.jpg",
+        "3f197ba73316c8a1.jpg",
+        "41386fa4707acab7.png",
+        "56828a91c4f09756.jpg",
+        "850f685d6b4b6dfb.jpg",
+        "8df65b583fb02ab3.jpg",
+        "9b6054d79edb4f0c.jpg",
+        "9dad249ef228bb0c.jpg",
+        "a6c07baa79761009.jpg",
+        "a73c5ae52ee02b4b.jpg",
+        "b178483c5f8b4e1f.jpg",
+        "b1b929537b2c1b18.jpg",
+        "bf01053235286389.jpg",
+        "d9cce9a3aca5f181.jpg"
+      ],
+      "content_sha256": "e3c192b9d4e9f1fe7ec423b3af95248fdb11b1494e52e6821662a0ad7db45150",
+      "output_file": "juegos-de-rol/oneshots/2023-oneshots/index.html",
+      "path": "/juegos-de-rol/oneshots/2023-oneshots",
+      "scraped_at": "2026-04-22T07:35:35+00:00",
+      "title": "2023 - Oneshots",
+      "url": "https://www.refugiodelsatiro.es/juegos-de-rol/oneshots/2023-oneshots"
+    },
+    {
+      "asset_filenames": [
+        "06228e62a01e5394.png",
+        "28b04c71e4fa997f.png",
+        "33a8da1640852504.jpg",
+        "396dfe418cdcd888.png",
+        "3fd3d0cc0544b2cf.png",
+        "41386fa4707acab7.png",
+        "42645c05c70cd592.png",
+        "4bd30155bbaebad2.jpg",
+        "4d2e13eec7847f61.jpg",
+        "52407ece2d17bf02.png",
+        "54e7b2ec650086b3.jpg",
+        "6e79de4165c63d61.jpg",
+        "79fe5f866fe54337.jpg",
+        "7ff4aa1a3d3eb20b.jpg",
+        "892739e201f97c8a.png",
+        "8d39225868f24d9b.jpg",
+        "9dad249ef228bb0c.jpg",
+        "a4d80dfb22245a68.jpg",
+        "b1b929537b2c1b18.jpg",
+        "cdc37ae0a4c2fa73.jpg",
+        "d1d36c5c372624f6.png",
+        "d20f33e076687207.jpg",
+        "d5f55533568ace77.gif",
+        "dbfd836f46db3675.jpg",
+        "ddf3debb4d6e6454.jpg",
+        "e3cfbc1e9b5b4704.png",
+        "ee75db7022fb61ef.jpg",
+        "f27e93cd3f6af254.jpg",
+        "f5ef2e31aabd048f.jpg",
+        "fe620e9216c0ff43.jpg"
+      ],
+      "content_sha256": "24f2de47ea7d964c53d6cfda85f50e5220acd597efc53e14bb6b45b3243f8510",
+      "output_file": "juegos-de-rol/oneshots/2024-oneshots/index.html",
+      "path": "/juegos-de-rol/oneshots/2024-oneshots",
+      "scraped_at": "2026-04-22T07:35:39+00:00",
+      "title": "2024 - Oneshots",
+      "url": "https://www.refugiodelsatiro.es/juegos-de-rol/oneshots/2024-oneshots"
+    },
+    {
+      "asset_filenames": [
+        "03545eb3a2c6f7ff.jpg",
+        "06aef96e31bfd54b.jpg",
+        "238173dc31327e1a.jpg",
+        "25dc860a2ebd6da0.jpg",
+        "290f6ce5f709f181.jpg",
+        "37cb4d9f90d3565d.jpg",
+        "397fffcb2dbe3df0.jpg",
+        "3b3e9ae6115089a9.png",
+        "40b2b6d751664561.jpg",
+        "40d8e57bb1917c3d.jpg",
+        "436f17d3de3b24be.jpg",
+        "5fccbdfffd742b5e.jpg",
+        "630fc9b853733ea4.jpg",
+        "66279ceeabfc12eb.jpg",
+        "6631528aee060299.jpg",
+        "67ebfdccb6115c64.jpg",
+        "687fcd58c56284e8.jpg",
+        "76d320467c2114a9.jpg",
+        "7ca8cba913eb052e.jpg",
+        "8a30483a80a5178d.png",
+        "8fce1004587bd8e1.jpg",
+        "96fd3ad0568fd28d.jpg",
+        "989cef52e5a8efe8.jpg",
+        "9dad249ef228bb0c.jpg",
+        "9ee8231243973f5c.jpg",
+        "a6525510ba766fa8.jpg",
+        "a73c5ae52ee02b4b.jpg",
+        "a8b9187daa671e82.jpg",
+        "ae9354beae2848e9.jpg",
+        "b9887a89414eb31f.jpg",
+        "c95f53c6899e5c5a.jpg",
+        "d4748055774d26c3.jpg",
+        "e08001018f296304.png",
+        "f7e057bcd9cde9ca.jpg",
+        "f9d919e50c277213.png"
+      ],
+      "content_sha256": "632c24f258f4a05824479ae0c36324c4d5685763371e3e37b3149217e32c8fd1",
+      "output_file": "juegos-de-rol/oneshots/oneshots-pasadas/index.html",
+      "path": "/juegos-de-rol/oneshots/oneshots-pasadas",
+      "scraped_at": "2026-04-22T07:35:42+00:00",
+      "title": "Oneshots pasadas",
+      "url": "https://www.refugiodelsatiro.es/juegos-de-rol/oneshots/oneshots-pasadas"
+    },
+    {
+      "asset_filenames": [
+        "0e115dc946c2d45b.png",
+        "200953ee27cc922e.png",
+        "2cd1adae4b9d4124.jpg",
+        "32c5a9ca32a2bd28.png",
+        "35606dcc75321594.png",
+        "82b5308b5c6c32cb.png",
+        "9dad249ef228bb0c.jpg",
+        "caf06d6b8ccc0773.png",
+        "e4a4c8f183dc79aa.png",
+        "f50dd48203a4ef5a.jpg"
+      ],
+      "content_sha256": "c58d2d7de049ef5a5aa10c24eae481ec0c01ce8eb1d3e359351a5c04a8fa54c0",
+      "output_file": "socios/index.html",
+      "path": "/socios",
+      "scraped_at": "2026-04-22T07:35:44+00:00",
+      "title": "Socios",
+      "url": "https://www.refugiodelsatiro.es/socios"
+    },
+    {
+      "asset_filenames": [
+        "910dcb2377064dae.png",
+        "d06196255be0c5e3.png"
+      ],
+      "content_sha256": "c1dc3116500334a9bef5ba04bce42af430c3fae022eb367c643ffa7655e6ed12",
+      "output_file": "socios/entidades-amigas/index.html",
+      "path": "/socios/entidades-amigas",
+      "scraped_at": "2026-04-22T07:35:44+00:00",
+      "title": "Entidades Amigas",
+      "url": "https://www.refugiodelsatiro.es/socios/entidades-amigas"
+    }
+  ]
+}
