@@ -22,9 +22,9 @@
       "frameId": null,
       "index": "a0",
       "roundness": null,
-      "seed": 897367865,
+      "seed": 471750544,
       "version": 1,
-      "versionNonce": 470670040,
+      "versionNonce": 612803918,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -53,9 +53,9 @@
       "roundness": {
         "type": 2
       },
-      "seed": 920979633,
+      "seed": 854374484,
       "version": 1,
-      "versionNonce": 975194094,
+      "versionNonce": 537317007,
       "isDeleted": false,
       "boundElements": [
         {
@@ -74,8 +74,8 @@
     {
       "id": "cloud-t",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 564.8,
+      "y": 50.0,
       "width": 70.4,
       "height": 40.0,
       "angle": 0,
@@ -90,9 +90,9 @@
       "frameId": "frame-arch",
       "index": "a1",
       "roundness": null,
-      "seed": 476453231,
+      "seed": 835750744,
       "version": 1,
-      "versionNonce": 398211040,
+      "versionNonce": 758296282,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -129,9 +129,9 @@
       "roundness": {
         "type": 2
       },
-      "seed": 535034205,
+      "seed": 790532885,
       "version": 1,
-      "versionNonce": 921132934,
+      "versionNonce": 890707261,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -184,9 +184,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 940789719,
+      "seed": 458925551,
       "version": 1,
-      "versionNonce": 509861333,
+      "versionNonce": 336586383,
       "isDeleted": false,
       "boundElements": [
         {
@@ -221,9 +221,9 @@
       "frameId": "frame-arch",
       "index": "a1",
       "roundness": null,
-      "seed": 614131112,
+      "seed": 903012456,
       "version": 1,
-      "versionNonce": 145889031,
+      "versionNonce": 833734112,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -260,9 +260,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 205193423,
+      "seed": 790739952,
       "version": 1,
-      "versionNonce": 463117017,
+      "versionNonce": 946795080,
       "isDeleted": false,
       "boundElements": [
         {
@@ -277,8 +277,8 @@
     {
       "id": "caddy-title",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 236.05,
+      "y": 225,
       "width": 207.9,
       "height": 22.5,
       "angle": 0,
@@ -293,9 +293,9 @@
       "frameId": "frame-arch",
       "index": "a1",
       "roundness": null,
-      "seed": 348327086,
+      "seed": 516224228,
       "version": 1,
-      "versionNonce": 609015544,
+      "versionNonce": 266169943,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -332,9 +332,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 756950671,
+      "seed": 101703739,
       "version": 1,
-      "versionNonce": 101573101,
+      "versionNonce": 106964353,
       "isDeleted": false,
       "boundElements": [
         {
@@ -349,8 +349,8 @@
     {
       "id": "caddy-https-t",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 182.25,
+      "y": 287.5,
       "width": 115.50000000000001,
       "height": 35.0,
       "angle": 0,
@@ -365,9 +365,9 @@
       "frameId": "frame-arch",
       "index": "a1",
       "roundness": null,
-      "seed": 834225564,
+      "seed": 629233261,
       "version": 1,
-      "versionNonce": 447426240,
+      "versionNonce": 650826886,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -404,9 +404,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 884263213,
+      "seed": 680686584,
       "version": 1,
-      "versionNonce": 561793189,
+      "versionNonce": 523960388,
       "isDeleted": false,
       "boundElements": [
         {
@@ -425,8 +425,8 @@
     {
       "id": "caddy-r1-t",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 224.5,
+      "y": 376.25,
       "width": 231.00000000000003,
       "height": 17.5,
       "angle": 0,
@@ -441,9 +441,9 @@
       "frameId": "frame-arch",
       "index": "a1",
       "roundness": null,
-      "seed": 551452512,
+      "seed": 529068047,
       "version": 1,
-      "versionNonce": 225739315,
+      "versionNonce": 837425323,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -480,9 +480,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 428001225,
+      "seed": 642233071,
       "version": 1,
-      "versionNonce": 318752730,
+      "versionNonce": 431761393,
       "isDeleted": false,
       "boundElements": [
         {
@@ -497,9 +497,9 @@
     {
       "id": "caddy-r2-t",
       "type": "text",
-      "x": 0,
-      "y": 0,
-      "width": 277.20000000000005,
+      "x": 189.85,
+      "y": 446.25,
+      "width": 300.3,
       "height": 17.5,
       "angle": 0,
       "strokeColor": "#2f9e44",
@@ -513,21 +513,21 @@
       "frameId": "frame-arch",
       "index": "a1",
       "roundness": null,
-      "seed": 936003194,
+      "seed": 743119634,
       "version": 1,
-      "versionNonce": 331670354,
+      "versionNonce": 941796561,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
       "link": null,
       "locked": false,
-      "text": "/  ->  Static files (Ariadna's site)",
+      "text": "/  ->  Static files (the existing site)",
       "fontSize": 14,
       "fontFamily": 5,
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "caddy-route2",
-      "originalText": "/  ->  Static files (Ariadna's site)",
+      "originalText": "/  ->  Static files (the existing site)",
       "autoResize": true,
       "lineHeight": 1.25
     },
@@ -552,9 +552,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 989805630,
+      "seed": 757650238,
       "version": 1,
-      "versionNonce": 837860367,
+      "versionNonce": 855661935,
       "isDeleted": false,
       "boundElements": [
         {
@@ -569,8 +569,8 @@
     {
       "id": "caddy-ports-t",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 186.1,
+      "y": 526.25,
       "width": 107.80000000000001,
       "height": 17.5,
       "angle": 0,
@@ -585,9 +585,9 @@
       "frameId": "frame-arch",
       "index": "a1",
       "roundness": null,
-      "seed": 535481908,
+      "seed": 601518636,
       "version": 1,
-      "versionNonce": 831776013,
+      "versionNonce": 148638863,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -624,9 +624,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 114638381,
+      "seed": 980156298,
       "version": 1,
-      "versionNonce": 483439109,
+      "versionNonce": 365947714,
       "isDeleted": false,
       "boundElements": [
         {
@@ -645,8 +645,8 @@
     {
       "id": "app-title",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 795.65,
+      "y": 225,
       "width": 128.70000000000002,
       "height": 22.5,
       "angle": 0,
@@ -661,9 +661,9 @@
       "frameId": "frame-arch",
       "index": "a1",
       "roundness": null,
-      "seed": 669627156,
+      "seed": 552387209,
       "version": 1,
-      "versionNonce": 409459003,
+      "versionNonce": 113937947,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -700,9 +700,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 747313554,
+      "seed": 903460367,
       "version": 1,
-      "versionNonce": 706201702,
+      "versionNonce": 901373659,
       "isDeleted": false,
       "boundElements": [
         {
@@ -717,8 +717,8 @@
     {
       "id": "app-fastapi-t",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 698.4,
+      "y": 296.25,
       "width": 123.20000000000002,
       "height": 17.5,
       "angle": 0,
@@ -733,9 +733,9 @@
       "frameId": "frame-arch",
       "index": "a1",
       "roundness": null,
-      "seed": 261687961,
+      "seed": 105055834,
       "version": 1,
-      "versionNonce": 650833391,
+      "versionNonce": 467225526,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -772,9 +772,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 894874116,
+      "seed": 207447510,
       "version": 1,
-      "versionNonce": 271953328,
+      "versionNonce": 190912873,
       "isDeleted": false,
       "boundElements": [
         {
@@ -789,8 +789,8 @@
     {
       "id": "app-react-t",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 898.4,
+      "y": 296.25,
       "width": 123.20000000000002,
       "height": 17.5,
       "angle": 0,
@@ -805,9 +805,9 @@
       "frameId": "frame-arch",
       "index": "a1",
       "roundness": null,
-      "seed": 917911257,
+      "seed": 355104197,
       "version": 1,
-      "versionNonce": 620759327,
+      "versionNonce": 710436459,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -844,9 +844,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 563065224,
+      "seed": 862414284,
       "version": 1,
-      "versionNonce": 382453952,
+      "versionNonce": 971460254,
       "isDeleted": false,
       "boundElements": [
         {
@@ -861,8 +861,8 @@
     {
       "id": "app-api-t",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 682.9,
+      "y": 386.25,
       "width": 354.20000000000005,
       "height": 17.5,
       "angle": 0,
@@ -877,9 +877,9 @@
       "frameId": "frame-arch",
       "index": "a1",
       "roundness": null,
-      "seed": 143989250,
+      "seed": 787798187,
       "version": 1,
-      "versionNonce": 901137855,
+      "versionNonce": 651118463,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -916,9 +916,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 170453088,
+      "seed": 624352734,
       "version": 1,
-      "versionNonce": 290194717,
+      "versionNonce": 397976509,
       "isDeleted": false,
       "boundElements": [
         {
@@ -933,8 +933,8 @@
     {
       "id": "app-domain-t",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 729.1,
+      "y": 456.25,
       "width": 261.8,
       "height": 17.5,
       "angle": 0,
@@ -949,9 +949,9 @@
       "frameId": "frame-arch",
       "index": "a1",
       "roundness": null,
-      "seed": 101582173,
+      "seed": 723212009,
       "version": 1,
-      "versionNonce": 697732728,
+      "versionNonce": 586768367,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -988,9 +988,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 972375706,
+      "seed": 704814821,
       "version": 1,
-      "versionNonce": 712468007,
+      "versionNonce": 924142726,
       "isDeleted": false,
       "boundElements": [
         {
@@ -1005,8 +1005,8 @@
     {
       "id": "app-db-t",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 762.0,
+      "y": 550.0,
       "width": 176.0,
       "height": 20.0,
       "angle": 0,
@@ -1021,9 +1021,9 @@
       "frameId": "frame-arch",
       "index": "a1",
       "roundness": null,
-      "seed": 904442817,
+      "seed": 144174689,
       "version": 1,
-      "versionNonce": 472879053,
+      "versionNonce": 357589755,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -1058,9 +1058,9 @@
       "frameId": "frame-arch",
       "index": "a1",
       "roundness": null,
-      "seed": 485401552,
+      "seed": 514984270,
       "version": 1,
-      "versionNonce": 230401004,
+      "versionNonce": 639905894,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -1097,9 +1097,9 @@
       "roundness": {
         "type": 2
       },
-      "seed": 290784642,
+      "seed": 233951849,
       "version": 1,
-      "versionNonce": 131301062,
+      "versionNonce": 963130501,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -1150,9 +1150,9 @@
       "frameId": "frame-arch",
       "index": "a1",
       "roundness": null,
-      "seed": 547180335,
+      "seed": 623900801,
       "version": 1,
-      "versionNonce": 635669302,
+      "versionNonce": 228862165,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,

@@ -22,9 +22,9 @@
       "frameId": null,
       "index": "a0",
       "roundness": null,
-      "seed": 404780835,
+      "seed": 234626561,
       "version": 1,
-      "versionNonce": 357075542,
+      "versionNonce": 768029874,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -51,9 +51,9 @@
       "frameId": "frame-vision",
       "index": "a1",
       "roundness": null,
-      "seed": 878737909,
+      "seed": 124857258,
       "version": 1,
-      "versionNonce": 122037659,
+      "versionNonce": 487350754,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -90,9 +90,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 656860620,
+      "seed": 959283440,
       "version": 1,
-      "versionNonce": 839102521,
+      "versionNonce": 914851465,
       "isDeleted": false,
       "boundElements": [
         {
@@ -107,8 +107,8 @@
     {
       "id": "cur-static-title",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 171.2,
+      "y": 95,
       "width": 237.60000000000002,
       "height": 22.5,
       "angle": 0,
@@ -123,21 +123,21 @@
       "frameId": "frame-vision",
       "index": "a1",
       "roundness": null,
-      "seed": 305229051,
+      "seed": 966519233,
       "version": 1,
-      "versionNonce": 922246638,
+      "versionNonce": 341554973,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
       "link": null,
       "locked": false,
-      "text": "Ariadna's static website",
+      "text": "The existing static site",
       "fontSize": 18,
       "fontFamily": 5,
       "textAlign": "center",
       "verticalAlign": "top",
       "containerId": "cur-static",
-      "originalText": "Ariadna's static website",
+      "originalText": "The existing static site",
       "autoResize": true,
       "lineHeight": 1.25
     },
@@ -162,9 +162,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 963533408,
+      "seed": 300617943,
       "version": 1,
-      "versionNonce": 478944287,
+      "versionNonce": 484024235,
       "isDeleted": false,
       "boundElements": [
         {
@@ -179,8 +179,8 @@
     {
       "id": "cur-s1-t",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 135.35,
+      "y": 151.25,
       "width": 69.30000000000001,
       "height": 17.5,
       "angle": 0,
@@ -195,9 +195,9 @@
       "frameId": "frame-vision",
       "index": "a1",
       "roundness": null,
-      "seed": 404556086,
+      "seed": 416880602,
       "version": 1,
-      "versionNonce": 685637691,
+      "versionNonce": 308975808,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -234,9 +234,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 731350916,
+      "seed": 678442155,
       "version": 1,
-      "versionNonce": 117688506,
+      "versionNonce": 334056318,
       "isDeleted": false,
       "boundElements": [
         {
@@ -251,8 +251,8 @@
     {
       "id": "cur-s2-t",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 123.8,
+      "y": 206.25,
       "width": 92.4,
       "height": 17.5,
       "angle": 0,
@@ -267,9 +267,9 @@
       "frameId": "frame-vision",
       "index": "a1",
       "roundness": null,
-      "seed": 326221496,
+      "seed": 993857401,
       "version": 1,
-      "versionNonce": 154422524,
+      "versionNonce": 863855812,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -306,9 +306,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 785906921,
+      "seed": 428034251,
       "version": 1,
-      "versionNonce": 878318500,
+      "versionNonce": 455850108,
       "isDeleted": false,
       "boundElements": [
         {
@@ -323,8 +323,8 @@
     {
       "id": "cur-s3-t",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 104.55,
+      "y": 261.25,
       "width": 130.9,
       "height": 17.5,
       "angle": 0,
@@ -339,9 +339,9 @@
       "frameId": "frame-vision",
       "index": "a1",
       "roundness": null,
-      "seed": 378759093,
+      "seed": 489454673,
       "version": 1,
-      "versionNonce": 803767319,
+      "versionNonce": 898769382,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -378,9 +378,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 728986851,
+      "seed": 645948944,
       "version": 1,
-      "versionNonce": 847829978,
+      "versionNonce": 732613369,
       "isDeleted": false,
       "boundElements": [
         {
@@ -395,8 +395,8 @@
     {
       "id": "cur-s4-t",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 143.05,
+      "y": 316.25,
       "width": 53.900000000000006,
       "height": 17.5,
       "angle": 0,
@@ -411,9 +411,9 @@
       "frameId": "frame-vision",
       "index": "a1",
       "roundness": null,
-      "seed": 361433573,
+      "seed": 533061609,
       "version": 1,
-      "versionNonce": 353757315,
+      "versionNonce": 933916922,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -448,9 +448,9 @@
       "frameId": "frame-vision",
       "index": "a1",
       "roundness": null,
-      "seed": 725736341,
+      "seed": 839381830,
       "version": 1,
-      "versionNonce": 793862071,
+      "versionNonce": 932227936,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -487,9 +487,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 245865929,
+      "seed": 935839768,
       "version": 1,
-      "versionNonce": 259470698,
+      "versionNonce": 939569091,
       "isDeleted": false,
       "boundElements": [
         {
@@ -504,8 +504,8 @@
     {
       "id": "cur-lending-title",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 161.29999999999998,
+      "y": 405,
       "width": 257.40000000000003,
       "height": 22.5,
       "angle": 0,
@@ -520,9 +520,9 @@
       "frameId": "frame-vision",
       "index": "a1",
       "roundness": null,
-      "seed": 965419570,
+      "seed": 317779576,
       "version": 1,
-      "versionNonce": 769666293,
+      "versionNonce": 895122764,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -557,9 +557,9 @@
       "frameId": "frame-vision",
       "index": "a1",
       "roundness": null,
-      "seed": 356440724,
+      "seed": 666572057,
       "version": 1,
-      "versionNonce": 711740532,
+      "versionNonce": 637534144,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -594,9 +594,9 @@
       "frameId": "frame-vision",
       "index": "a1",
       "roundness": null,
-      "seed": 599150670,
+      "seed": 956712363,
       "version": 1,
-      "versionNonce": 498239587,
+      "versionNonce": 624912744,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -631,9 +631,9 @@
       "frameId": "frame-vision",
       "index": "a1",
       "roundness": null,
-      "seed": 930583871,
+      "seed": 300598651,
       "version": 1,
-      "versionNonce": 946062218,
+      "versionNonce": 344411801,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -670,9 +670,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 899666542,
+      "seed": 191973097,
       "version": 1,
-      "versionNonce": 478876213,
+      "versionNonce": 478630264,
       "isDeleted": false,
       "boundElements": [
         {
@@ -687,8 +687,8 @@
     {
       "id": "fut-site-title",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 785.5,
+      "y": 95,
       "width": 209.00000000000003,
       "height": 25.0,
       "angle": 0,
@@ -703,9 +703,9 @@
       "frameId": "frame-vision",
       "index": "a1",
       "roundness": null,
-      "seed": 126868998,
+      "seed": 904841546,
       "version": 1,
-      "versionNonce": 581273563,
+      "versionNonce": 767622712,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -742,9 +742,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 807210108,
+      "seed": 568135407,
       "version": 1,
-      "versionNonce": 385722226,
+      "versionNonce": 566463818,
       "isDeleted": false,
       "boundElements": [
         {
@@ -759,8 +759,8 @@
     {
       "id": "fut-nav-t",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 716.75,
+      "y": 151.25,
       "width": 346.5,
       "height": 17.5,
       "angle": 0,
@@ -775,9 +775,9 @@
       "frameId": "frame-vision",
       "index": "a1",
       "roundness": null,
-      "seed": 115221668,
+      "seed": 733527384,
       "version": 1,
-      "versionNonce": 574407713,
+      "versionNonce": 504758898,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -814,9 +814,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 214041453,
+      "seed": 889134165,
       "version": 1,
-      "versionNonce": 171918093,
+      "versionNonce": 745894291,
       "isDeleted": false,
       "boundElements": [
         {
@@ -831,8 +831,8 @@
     {
       "id": "fut-static-t",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 655,
+      "y": 222.5,
       "width": 292.6,
       "height": 105.0,
       "angle": 0,
@@ -847,21 +847,21 @@
       "frameId": "frame-vision",
       "index": "a1",
       "roundness": null,
-      "seed": 412572671,
+      "seed": 951108188,
       "version": 1,
-      "versionNonce": 435457408,
+      "versionNonce": 627985086,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
       "link": null,
       "locked": false,
-      "text": "Static pages (Ariadna's work):\n\n  /              Home page\n  /about         About the association\n  /events        Events and calendar\n  /contact       Contact info",
+      "text": "Static pages (the existing site):\n\n  /              Home page\n  /about         About the association\n  /events        Events and calendar\n  /contact       Contact info",
       "fontSize": 14,
       "fontFamily": 3,
       "textAlign": "left",
       "verticalAlign": "middle",
       "containerId": "fut-static-area",
-      "originalText": "Static pages (Ariadna's work):\n\n  /              Home page\n  /about         About the association\n  /events        Events and calendar\n  /contact       Contact info",
+      "originalText": "Static pages (the existing site):\n\n  /              Home page\n  /about         About the association\n  /events        Events and calendar\n  /contact       Contact info",
       "autoResize": true,
       "lineHeight": 1.25
     },
@@ -886,9 +886,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 704418286,
+      "seed": 746636782,
       "version": 1,
-      "versionNonce": 702401670,
+      "versionNonce": 746212235,
       "isDeleted": false,
       "boundElements": [
         {
@@ -903,8 +903,8 @@
     {
       "id": "fut-lending-t",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 655,
+      "y": 391.25,
       "width": 331.1,
       "height": 87.5,
       "angle": 0,
@@ -919,9 +919,9 @@
       "frameId": "frame-vision",
       "index": "a1",
       "roundness": null,
-      "seed": 824275300,
+      "seed": 487398936,
       "version": 1,
-      "versionNonce": 129560645,
+      "versionNonce": 543593929,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -958,9 +958,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 188924594,
+      "seed": 196366468,
       "version": 1,
-      "versionNonce": 517523132,
+      "versionNonce": 854739642,
       "isDeleted": false,
       "boundElements": [
         {
@@ -975,8 +975,8 @@
     {
       "id": "fut-shared-t",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 709.05,
+      "y": 537.5,
       "width": 361.90000000000003,
       "height": 35.0,
       "angle": 0,
@@ -991,9 +991,9 @@
       "frameId": "frame-vision",
       "index": "a1",
       "roundness": null,
-      "seed": 459721272,
+      "seed": 771997603,
       "version": 1,
-      "versionNonce": 199127089,
+      "versionNonce": 143385250,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -1030,9 +1030,9 @@
       "roundness": {
         "type": 2
       },
-      "seed": 121792594,
+      "seed": 738684301,
       "version": 1,
-      "versionNonce": 875412265,
+      "versionNonce": 616277706,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
@@ -1075,9 +1075,9 @@
       "roundness": {
         "type": 3
       },
-      "seed": 502320399,
+      "seed": 504016520,
       "version": 1,
-      "versionNonce": 222340924,
+      "versionNonce": 253516840,
       "isDeleted": false,
       "boundElements": [
         {
@@ -1092,8 +1092,8 @@
     {
       "id": "how-t",
       "type": "text",
-      "x": 0,
-      "y": 0,
+      "x": 45,
+      "y": 638.75,
       "width": 685.3000000000001,
       "height": 122.5,
       "angle": 0,
@@ -1108,21 +1108,21 @@
       "frameId": "frame-vision",
       "index": "a1",
       "roundness": null,
-      "seed": 490752733,
+      "seed": 493711173,
       "version": 1,
-      "versionNonce": 697894279,
+      "versionNonce": 247210497,
       "isDeleted": false,
       "boundElements": null,
       "updated": 1700000000000,
       "link": null,
       "locked": false,
-      "text": "How it connects:\n\nCaddy (the reverse proxy) routes traffic based on URL path:\n  /prestecs/*  ->  App container (FastAPI + React)     = dynamic, with database and login\n  everything else  ->  Static files                    = Ariadna's HTML/CSS pages\n\nBoth live on the same domain, same server. One Caddy config ties them together.",
+      "text": "How it connects:\n\nCaddy (the reverse proxy) routes traffic based on URL path:\n  /prestecs/*  ->  App container (FastAPI + React)     = dynamic, with database and login\n  everything else  ->  Static files                    = static HTML/CSS pages\n\nBoth live on the same domain, same server. One Caddy config ties them together.",
       "fontSize": 14,
       "fontFamily": 3,
       "textAlign": "left",
       "verticalAlign": "middle",
       "containerId": "how-box",
-      "originalText": "How it connects:\n\nCaddy (the reverse proxy) routes traffic based on URL path:\n  /prestecs/*  ->  App container (FastAPI + React)     = dynamic, with database and login\n  everything else  ->  Static files                    = Ariadna's HTML/CSS pages\n\nBoth live on the same domain, same server. One Caddy config ties them together.",
+      "originalText": "How it connects:\n\nCaddy (the reverse proxy) routes traffic based on URL path:\n  /prestecs/*  ->  App container (FastAPI + React)     = dynamic, with database and login\n  everything else  ->  Static files                    = static HTML/CSS pages\n\nBoth live on the same domain, same server. One Caddy config ties them together.",
       "autoResize": true,
       "lineHeight": 1.25
     }

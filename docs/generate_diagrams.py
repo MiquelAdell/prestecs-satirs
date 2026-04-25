@@ -1,4 +1,4 @@
-"""Generate Excalidraw diagrams for Ariadna's technical overview presentation."""
+"""Generate Excalidraw diagrams for the technical overview presentation."""
 
 from __future__ import annotations
 
@@ -205,12 +205,43 @@ def frame(id: str, x: float, y: float, w: float, h: float, name: str, *, index: 
     return el
 
 
+_BOUND_TEXT_PADDING = 5
+
+
+def _position_bound_texts(elements: list[dict]) -> list[dict]:
+    by_id = {el["id"]: el for el in elements}
+    def positioned(el: dict) -> dict:
+        if el.get("type") != "text" or not el.get("containerId"):
+            return el
+        if el["x"] != 0 or el["y"] != 0:
+            return el
+        container = by_id.get(el["containerId"])
+        if not container:
+            return el
+        cx, cy, cw, ch = container["x"], container["y"], container["width"], container["height"]
+        tw, th = el["width"], el["height"]
+        align = el.get("textAlign", "center")
+        valign = el.get("verticalAlign", "middle")
+        tx = (
+            cx + _BOUND_TEXT_PADDING if align == "left"
+            else cx + cw - tw - _BOUND_TEXT_PADDING if align == "right"
+            else cx + (cw - tw) / 2
+        )
+        ty = (
+            cy + _BOUND_TEXT_PADDING if valign == "top"
+            else cy + ch - th - _BOUND_TEXT_PADDING if valign == "bottom"
+            else cy + (ch - th) / 2
+        )
+        return {**el, "x": tx, "y": ty}
+    return [positioned(el) for el in elements]
+
+
 def wrap(elements: list[dict]) -> dict:
     return {
         "type": "excalidraw",
         "version": 2,
         "source": "claude-code",
-        "elements": elements,
+        "elements": _position_bound_texts(elements),
         "appState": {
             "gridSize": 20,
             "gridStep": 5,
@@ -271,7 +302,7 @@ def diagram_architecture() -> None:
 
     els.append(rect("caddy-route2", 150, 430, 380, 50, bg="#b2f2bb", stroke="#2f9e44", frame_id=fid,
                      bound=[{"id": "caddy-r2-t", "type": "text"}]))
-    els.append(text("caddy-r2-t", 0, 0, "/  ->  Static files (Ariadna's site)", size=14,
+    els.append(text("caddy-r2-t", 0, 0, "/  ->  Static files (the existing site)", size=14,
                      container_id="caddy-route2", stroke="#2f9e44", frame_id=fid))
 
     els.append(rect("caddy-ports", 150, 510, 180, 50, bg="#dee2e6", stroke="#868e96", frame_id=fid,
@@ -893,7 +924,7 @@ def diagram_agentic() -> None:
                      "It follows the same conventions a human\n"
                      "developer would — consistent code style,\n"
                      "architecture, and testing standards.\n\n"
-                     "When we integrate Ariadna's site, we'll\n"
+                     "When we integrate the existing site, we'll\n"
                      "create new change proposals here.",
                      size=15, container_id="key-point", stroke="#f08c00", align="left", frame_id=fid))
 
@@ -1035,10 +1066,10 @@ def diagram_integration() -> None:
     els.append(text("current-label", 40, 40, "CURRENT STATE", size=22, bold=True,
                      align="left", stroke="#e03131", frame_id=fid))
 
-    # Ariadna's site box
+    # Existing site box
     els.append(rect("cur-static", 40, 90, 500, 280, bg="#ffc9c9", stroke="#e03131", frame_id=fid,
                      bound=[{"id": "cur-static-title", "type": "text"}]))
-    els.append(text("cur-static-title", 0, 0, "Ariadna's static website", size=18,
+    els.append(text("cur-static-title", 0, 0, "The existing static site", size=18,
                      container_id="cur-static", stroke="#e03131", valign="top", frame_id=fid))
 
     els.append(rect("cur-s1", 70, 140, 200, 40, bg="#ffffff", stroke="#e03131", frame_id=fid,
@@ -1093,7 +1124,7 @@ def diagram_integration() -> None:
     els.append(rect("fut-static-area", 650, 200, 480, 150, bg="#ffffff", stroke="#2f9e44", frame_id=fid,
                      bound=[{"id": "fut-static-t", "type": "text"}]))
     els.append(text("fut-static-t", 0, 0,
-                     "Static pages (Ariadna's work):\n\n"
+                     "Static pages (the existing site):\n\n"
                      "  /              Home page\n"
                      "  /about         About the association\n"
                      "  /events        Events and calendar\n"
@@ -1129,7 +1160,7 @@ def diagram_integration() -> None:
                      "How it connects:\n\n"
                      "Caddy (the reverse proxy) routes traffic based on URL path:\n"
                      "  /prestecs/*  ->  App container (FastAPI + React)     = dynamic, with database and login\n"
-                     "  everything else  ->  Static files                    = Ariadna's HTML/CSS pages\n\n"
+                     "  everything else  ->  Static files                    = static HTML/CSS pages\n\n"
                      "Both live on the same domain, same server. One Caddy config ties them together.",
                      size=14, font=3, container_id="how-box", stroke="#f08c00", align="left", frame_id=fid))
 
