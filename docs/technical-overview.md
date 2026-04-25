@@ -261,8 +261,8 @@ Docker is a tool that packages an application with everything it needs to run
 
 Why use it?
 
-- **Reproducibility.** The container runs the same on my laptop, on Arianna's
-  laptop, and on the server. No "it works on my machine" problems.
+- **Reproducibility.** The container runs the same on my laptop, on a
+  colleague's laptop, and on the server. No "it works on my machine" problems.
 - **Isolation.** The app can't accidentally break the server's system files or
   other apps.
 - **Easy updates.** To update, we rebuild the container and restart it. If
@@ -285,7 +285,7 @@ they connect:
 │  │                      │  │                     │  │
 │  │  /prestecs/* ────────│──│→ FastAPI + React    │  │
 │  │  / ──→ static files  │  │                     │  │
-│  │  (Arianna's website) │  │  refugio.db 📁      │  │
+│  │  (the existing site) │  │  refugio.db 📁      │  │
 │  └──────────────────────┘  └─────────────────────┘  │
 │                                                     │
 └─────────────────────────────────────────────────────┘
@@ -293,7 +293,7 @@ they connect:
 
 **Key point for the future website integration:** Caddy currently serves the
 root path `/` from a folder of static files (`deploy/wip/`). This is where
-Arianna's website will live. Everything under `/prestecs/` gets forwarded to
+the existing site lives. Everything under `/prestecs/` gets forwarded to
 the lending app. Both coexist on the same domain.
 
 ### Comparison with PythonAnywhere
@@ -434,7 +434,7 @@ refugio-del-satiro/
 
 7. **The code is pushed** to GitHub, which triggers the automatic deployment.
 
-### What Arianna needs to know
+### What the site maintainer needs to know
 
 - The `.claude/CLAUDE.md` file is like a "briefing document" for the AI. It
   describes the project's rules so the AI follows them consistently.
@@ -444,7 +444,7 @@ refugio-del-satiro/
 - The `tasks/prd-refugio-del-satiro.md` file is the Product Requirements
   Document — the most complete description of what the lending system should
   do, written as user stories.
-- When we integrate Arianna's website with the lending system, we'll create
+- When we integrate the existing site with the lending system, we'll create
   new OpenSpec change proposals that describe what needs to change, break them
   into tasks, and implement them one by one.
 
@@ -486,8 +486,8 @@ refugio-del-satiro/
 │  │  Caddy              │     │  App (Docker container)      │        │
 │  │                     │     │                              │        │
 │  │  /  → static site   │     │  FastAPI (Python)            │        │
-│  │       (Arianna's    │     │    ├─ API routes             │        │
-│  │        website)     │     │    ├─ Domain logic            │        │
+│  │     (the existing  │     │    ├─ API routes             │        │
+│  │           site)     │     │    ├─ Domain logic            │        │
 │  │                     │     │    ├─ SQLite database         │        │
 │  │  /prestecs/* ──────────→  │    └─ React frontend (built) │        │
 │  │                     │     │                              │        │
