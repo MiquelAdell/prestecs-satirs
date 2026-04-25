@@ -4,6 +4,15 @@
 		reverse_proxy app:8000
 	}
 
+	# Public read-only catalog at /ludoteca. Same backend serves the same
+	# SPA bundle; the SPA detects the mount via window.location.pathname
+	# and renders <CatalogPage mode="public" />. Asset URLs in index.html
+	# are absolute (/prestamos/assets/...) so they continue to resolve via
+	# the /prestamos/* handler above.
+	handle_path /ludoteca/* {
+		reverse_proxy app:8000
+	}
+
 	# 301 redirects for legacy Google Sites slugs.
 	redir /inicio / permanent
 	redir /inicio/ / permanent
@@ -21,17 +30,20 @@
 	#
 	# Excluded:
 	#   - "/" itself (already canonical)
-	#   - "/prestamos/*" — the SPA owns its own routes (React Router would
-	#     break if /prestamos/games/1 redirected to /prestamos/games/1/)
+	#   - "/prestamos/*" and "/ludoteca/*" — the SPA owns its own routes
+	#     (React Router would break if /prestamos/games/1 redirected to
+	#     /prestamos/games/1/, and similarly for any /ludoteca sub-route)
 	#   - paths already ending in "/"
 	#   - paths with a "." in them (assumed to be files: /_assets/foo.css,
 	#     /favicon.ico, /manifest.json)
 	#
-	# Note: "/prestamos" (no slash) IS redirected here, since it does not
-	# match "/prestamos/*". Result: /prestamos → /prestamos/.
+	# Note: "/prestamos" and "/ludoteca" (no trailing slash) ARE redirected
+	# here, since they do not match the "/<prefix>/*" globs. Result:
+	# /prestamos → /prestamos/, /ludoteca → /ludoteca/.
 	@needs_trailing_slash {
 		not path /
 		not path /prestamos/*
+		not path /ludoteca/*
 		not path */
 		not path *.*
 	}

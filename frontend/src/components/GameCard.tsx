@@ -3,22 +3,30 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { apiFetch } from "../api/client";
 import { ConfirmDialog } from "./ConfirmDialog";
+import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
+import { Card } from "../ui/Card";
 import type { GameWithStatus } from "../types/game";
-import "./GameCard.css";
+import styles from "./GameCard.module.css";
+
+export type GameCardMode = "member" | "public";
 
 interface GameCardProps {
   readonly game: GameWithStatus;
   readonly onAction: () => void;
+  readonly mode?: GameCardMode;
 }
 
-export function GameCard({ game, onAction }: GameCardProps) {
+export function GameCard({ game, onAction, mode = "member" }: GameCardProps) {
   const { member } = useAuth();
   const [confirmAction, setConfirmAction] = useState<"borrow" | "return" | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const canBorrow = member !== null && game.status === "available";
+  const isPublic = mode === "public";
+  const canBorrow =
+    !isPublic && member !== null && game.status === "available";
   const canReturn =
+    !isPublic &&
     member !== null &&
     game.status === "lent" &&
     game.loan_id !== null &&
@@ -55,73 +63,84 @@ export function GameCard({ game, onAction }: GameCardProps) {
     }
   };
 
+  const availabilityLabel =
+    game.status === "available" ? "Disponible" : "Prestado";
+  const showActions = canBorrow || canReturn;
+
   return (
-    <div className="game-card">
-      <Link to={`/games/${game.id}`} className="game-card-link">
-        <div className="game-card-thumbnail-wrapper">
+    <Card className={styles.card}>
+      <Link to={`/games/${game.id}`} className={styles.link}>
+        <div className={styles.cover}>
           {game.thumbnail_url ? (
             <img
-              className="game-card-thumbnail"
+              className={styles.coverImage}
               src={game.thumbnail_url}
               alt={game.name}
               loading="lazy"
             />
           ) : (
-            <div className="game-card-thumbnail game-card-placeholder">
-              <span>{game.name.charAt(0)}</span>
+            <div className={`${styles.coverImage} ${styles.coverPlaceholder}`}>
+              <span aria-hidden="true">{game.name.charAt(0)}</span>
             </div>
           )}
+          <div className={styles.badgeAvailability}>
+            <Badge
+              variant={game.status === "available" ? "available" : "lent"}
+            >
+              {availabilityLabel}
+            </Badge>
+          </div>
           {game.bgg_rating > 0 && (
-            <span className="game-card-rating">
-              {`${game.bgg_rating.toFixed(1)} ★`}
-            </span>
+            <div className={styles.badgeRating}>
+              <Badge variant="rating">{`★ ${game.bgg_rating.toFixed(1)}`}</Badge>
+            </div>
           )}
         </div>
-        <div className="game-card-body">
-          <div className="game-card-name">{game.name}</div>
+        <div className={styles.body}>
+          <h3 className={styles.name}>{game.name}</h3>
           {game.year_published > 0 && (
-            <div className="game-card-year">{game.year_published}</div>
+            <div className={styles.year}>{game.year_published}</div>
           )}
-          <div className="game-card-meta">
+          <div className={styles.meta}>
             {game.min_players > 0 && game.max_players > 0 && (
-              <span className="game-card-players">
-                {`${game.min_players}-${game.max_players} jugadores`}
+              <span className={styles.metaItem}>
+                {`${game.min_players}–${game.max_players} jugadores`}
               </span>
             )}
             {game.playing_time > 0 && (
-              <span className="game-card-time">
-                {`${game.playing_time} min`}
-              </span>
+              <span className={styles.metaItem}>{`${game.playing_time} min`}</span>
             )}
           </div>
-          <span className={`game-card-status ${game.status}`}>
-            {game.status === "available"
-              ? "Disponible"
-              : `Prestado a ${game.borrower_display_name}`}
-          </span>
+          {game.status === "lent" && game.borrower_display_name && (
+            <div className={styles.lender}>
+              {`Prestado a ${game.borrower_display_name}`}
+            </div>
+          )}
         </div>
       </Link>
 
-      <div className="game-card-actions">
-        {canBorrow && (
-          <Button
-            variant="primary"
-            onClick={() => setConfirmAction("borrow")}
-            disabled={loading}
-          >
-            Tomar prestado
-          </Button>
-        )}
-        {canReturn && (
-          <Button
-            variant="secondary"
-            onClick={() => setConfirmAction("return")}
-            disabled={loading}
-          >
-            Devolver
-          </Button>
-        )}
-      </div>
+      {showActions && (
+        <div className={styles.actions}>
+          {canBorrow && (
+            <Button
+              variant="primary"
+              onClick={() => setConfirmAction("borrow")}
+              disabled={loading}
+            >
+              Tomar prestado
+            </Button>
+          )}
+          {canReturn && (
+            <Button
+              variant="secondary"
+              onClick={() => setConfirmAction("return")}
+              disabled={loading}
+            >
+              Devolver
+            </Button>
+          )}
+        </div>
+      )}
 
       {confirmAction === "borrow" && (
         <ConfirmDialog
@@ -140,6 +159,6 @@ export function GameCard({ game, onAction }: GameCardProps) {
           confirmLabel="Devolver"
         />
       )}
-    </div>
+    </Card>
   );
 }
