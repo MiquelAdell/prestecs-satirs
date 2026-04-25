@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { NavBar } from "./components/NavBar";
-import { LanguageSelector } from "./components/LanguageSelector";
 import { CatalogPage } from "./pages/CatalogPage";
 import { GameDetailPage } from "./pages/GameDetailPage";
 import { MyLoansPage } from "./pages/MyLoansPage";
@@ -10,7 +9,6 @@ import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
 import { SetPasswordPage } from "./pages/SetPasswordPage";
 import { AdminMembersPage } from "./pages/AdminMembersPage";
 import { AdminContentPage } from "./pages/AdminContentPage";
-import "./i18n";
 
 export default function App() {
   return (
@@ -29,7 +27,6 @@ export default function App() {
             <Route path="/admin/content" element={<AdminContentPage />} />
           </Routes>
         </main>
-        <LanguageSelector />
       </AuthProvider>
     </BrowserRouter>
   );

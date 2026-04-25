@@ -1,5 +1,7 @@
 # Claude Code local settings (per-user permissions, not shared)
 .claude/settings.local.json
+# Claude Code session worktrees (git worktrees created by isolated agent runs)
+.claude/worktrees/
 
 # OS files
 .DS_Store

@@ -12,7 +12,7 @@ small scraper (see `scraper/`) and served as static files by Caddy.
 ## Tech Stack
 
 - **Backend:** Python 3.12+ / FastAPI / SQLite
-- **Frontend:** React / TypeScript / Vite
+- **Frontend:** React / TypeScript / Vite. Design tokens in `frontend/src/tokens.css` (brand red `#BE0000`, Oswald + Open Sans, mobile-first spacing). Reusable UI primitives in `frontend/src/ui/` (`Button`, `Input`, `Select`, `Chip`, `Badge`, `Card`, `Dialog`) — new components should compose from these instead of redefining styles. Spanish only; no i18n runtime.
 - **CLI:** Typer (`refugio`)
 - **Tests:** pytest (backend), Vitest (frontend), Playwright (e2e)
 
@@ -197,6 +197,13 @@ runs the local workflow above.
 ### Alternative: Render
 
 A [`render.yaml`](render.yaml) blueprint is also included for deployment to [Render](https://render.com) (free tier with limitations).
+
+## Planned work
+
+- **Lending redesign (v1)** — visual + interaction rebuild of `/prestamos` to align with the club site (`refugiodelsatiro.es`) typography and color, based on the UOC TFM by Ariadna Ortega Rams. Roadmap and specs in [`openspec/changes/archive/2026-04-25-plan-lending-redesign/`](openspec/changes/archive/2026-04-25-plan-lending-redesign/). Implementation phases:
+  - Phase A: design tokens + primitives + drop i18n — **in progress** ([`openspec/changes/lending-design-tokens-and-primitives/`](openspec/changes/lending-design-tokens-and-primitives/)).
+  - Site shell with new "Préstamos" submenu — pending ([`openspec/changes/site-shell-from-scraped-html/`](openspec/changes/site-shell-from-scraped-html/)).
+  - Phase B (catalog rebuild), Phase B4+C1 (borrow with return date), Phase D (admin members restyle) — to be opened later.
 
 ## License
 
