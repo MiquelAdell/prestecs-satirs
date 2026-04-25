@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
-import random
 from typing import Any, Optional
 
 # --- Helpers ---
@@ -17,8 +17,12 @@ def _id(prefix: str = "el") -> str:
     return f"{prefix}-{_counter:03d}"
 
 
-def _seed() -> int:
-    return random.randint(100_000_000, 999_999_999)
+def _seed(salt: str) -> int:
+    # Deterministic seed derived from a stable salt (typically the element id),
+    # so regenerating the diagrams produces byte-identical output and git only
+    # diffs structural changes — not random renumbering.
+    digest = hashlib.md5(salt.encode("utf-8")).digest()
+    return 100_000_000 + (int.from_bytes(digest[:4], "big") % 900_000_000)
 
 
 def _base(
@@ -60,9 +64,9 @@ def _base(
         "frameId": frame_id,
         "index": index,
         "roundness": roundness,
-        "seed": _seed(),
+        "seed": _seed(id),
         "version": 1,
-        "versionNonce": _seed(),
+        "versionNonce": _seed(f"{id}#nonce"),
         "isDeleted": False,
         "boundElements": bound,
         "updated": 1700000000000,
@@ -266,26 +270,30 @@ def diagram_architecture() -> None:
     fid = "frame-arch"
     els.append(frame(fid, 0, 0, 1200, 800, "1. Server Architecture"))
 
-    # Internet cloud
-    els.append(ellipse("cloud", 480, 30, 240, 80, bg="#dee2e6", frame_id=fid,
+    # Internet cloud — centered above Caddy so the arrow stays straight.
+    els.append(ellipse("cloud", 220, 30, 240, 80, bg="#dee2e6", frame_id=fid,
                         bound=[{"id": "cloud-t", "type": "text"}, {"id": "arr-internet", "type": "arrow"}]))
     els.append(text("cloud-t", 0, 0, "Internet\n(users)", size=16, container_id="cloud", frame_id=fid))
 
-    # Arrow from cloud to server
-    els.append(arrow("arr-internet", 600, 110, [[0, 0], [0, 50]],
-                     start_id="cloud", end_id="server-box", stroke="#868e96", frame_id=fid))
+    # Arrow from cloud to Caddy (Caddy is the only thing exposed to the internet)
+    els.append(arrow("arr-internet", 340, 110, [[0, 0], [0, 110]],
+                     start_id="cloud", end_id="caddy-box", stroke="#868e96", frame_id=fid))
+
+    # HTTPS label next to the cloud→Caddy arrow
+    els.append(text("arr-internet-label", 350, 155, "HTTPS", size=12,
+                     stroke="#868e96", frame_id=fid))
 
     # Server box (VPS)
     els.append(rect("server-box", 80, 160, 1040, 600, bg="#f8f9fa", stroke="#868e96",
                      stroke_w=1, frame_id=fid,
-                     bound=[{"id": "server-t", "type": "text"}, {"id": "arr-internet", "type": "arrow"}]))
+                     bound=[{"id": "server-t", "type": "text"}]))
     els.append(text("server-t", 100, 170, "Server (VPS)", size=14, align="left", valign="top",
                      container_id="server-box", stroke="#868e96", frame_id=fid))
 
     # Caddy container
     els.append(rect("caddy-box", 120, 220, 440, 500, bg="#a5d8ff", stroke="#1971c2",
                      frame_id=fid,
-                     bound=[{"id": "caddy-title", "type": "text"}]))
+                     bound=[{"id": "caddy-title", "type": "text"}, {"id": "arr-internet", "type": "arrow"}]))
     els.append(text("caddy-title", 0, 0, "Caddy (reverse proxy)", size=18,
                      container_id="caddy-box", stroke="#1971c2", valign="top", frame_id=fid))
 
@@ -865,10 +873,10 @@ def diagram_agentic() -> None:
     # Flow
     y = 60
     steps = [
-        ("ag1", "Miquel describes\nwhat he wants", "#d0bfff", "#6741d9", 60),
+        ("ag1", "User describes\nwhat they want", "#d0bfff", "#6741d9", 60),
         ("ag2", "AI agent reads\nproject context", "#a5d8ff", "#1971c2", 280),
         ("ag3", "Agent proposes\nchanges", "#ffec99", "#f08c00", 500),
-        ("ag4", "Miquel reviews\n& approves", "#ffc9c9", "#e03131", 720),
+        ("ag4", "User reviews\n& approves", "#ffc9c9", "#e03131", 720),
         ("ag5", "Agent writes\ncode + tests", "#b2f2bb", "#2f9e44", 940),
     ]
 
