@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
-import random
 from typing import Any, Optional
 
 # --- Helpers ---
@@ -17,8 +17,12 @@ def _id(prefix: str = "el") -> str:
     return f"{prefix}-{_counter:03d}"
 
 
-def _seed() -> int:
-    return random.randint(100_000_000, 999_999_999)
+def _seed(salt: str) -> int:
+    # Deterministic seed derived from a stable salt (typically the element id),
+    # so regenerating the diagrams produces byte-identical output and git only
+    # diffs structural changes — not random renumbering.
+    digest = hashlib.md5(salt.encode("utf-8")).digest()
+    return 100_000_000 + (int.from_bytes(digest[:4], "big") % 900_000_000)
 
 
 def _base(
@@ -60,9 +64,9 @@ def _base(
         "frameId": frame_id,
         "index": index,
         "roundness": roundness,
-        "seed": _seed(),
+        "seed": _seed(id),
         "version": 1,
-        "versionNonce": _seed(),
+        "versionNonce": _seed(f"{id}#nonce"),
         "isDeleted": False,
         "boundElements": bound,
         "updated": 1700000000000,
