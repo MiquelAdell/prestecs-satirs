@@ -1,11 +1,11 @@
 import { useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
 import { apiFetch } from "../api/client";
+import { Button } from "../ui/Button";
 import "./LoginPage.css";
 
 export function ForgotPasswordPage() {
-  const { t } = useTranslation();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -23,7 +23,7 @@ export function ForgotPasswordPage() {
       });
       setSubmitted(true);
     } catch {
-      setError(t("forgotPassword.unknownError"));
+      setError("Error desconocido");
     } finally {
       setLoading(false);
     }
@@ -33,13 +33,17 @@ export function ForgotPasswordPage() {
     return (
       <div className="login-page">
         <div className="login-form">
-          <h1>{t("forgotPassword.title")}</h1>
+          <h1>Recuperar contraseña</h1>
           <p style={{ marginBottom: "var(--space-md)", lineHeight: 1.5 }}>
-            {t("forgotPassword.successMessage")}
+            Si existe una cuenta con ese correo electrónico, hemos enviado un enlace para restablecer la contraseña. Revisa tu bandeja de entrada.
           </p>
-          <Link to="/login" className="btn btn-primary" style={{ display: "block", textAlign: "center" }}>
-            {t("forgotPassword.backToLogin")}
-          </Link>
+          <Button
+            variant="primary"
+            onClick={() => navigate("/login")}
+            style={{ display: "block", width: "100%" }}
+          >
+            Volver a iniciar sesión
+          </Button>
         </div>
       </div>
     );
@@ -48,16 +52,16 @@ export function ForgotPasswordPage() {
   return (
     <div className="login-page">
       <form className="login-form" onSubmit={(e) => void handleSubmit(e)}>
-        <h1>{t("forgotPassword.title")}</h1>
+        <h1>Recuperar contraseña</h1>
 
         <p style={{ marginBottom: "var(--space-md)", fontSize: "var(--font-size-sm)", color: "var(--color-text-muted)" }}>
-          {t("forgotPassword.instructions")}
+          Introduce tu correo electrónico y te enviaremos un enlace para restablecer la contraseña.
         </p>
 
         {error && <div className="login-error">{error}</div>}
 
         <div className="login-field">
-          <label htmlFor="email">{t("login.email")}</label>
+          <label htmlFor="email">Correo electrónico</label>
           <input
             id="email"
             type="email"
@@ -69,12 +73,12 @@ export function ForgotPasswordPage() {
           />
         </div>
 
-        <button className="btn btn-primary" type="submit" disabled={loading}>
-          {loading ? t("forgotPassword.submitting") : t("forgotPassword.submit")}
-        </button>
+        <Button variant="primary" type="submit" disabled={loading}>
+          {loading ? "Enviando..." : "Enviar"}
+        </Button>
 
         <p style={{ marginTop: "var(--space-md)", textAlign: "center", fontSize: "var(--font-size-sm)" }}>
-          <Link to="/login">{t("forgotPassword.backToLogin")}</Link>
+          <Link to="/login">Volver a iniciar sesión</Link>
         </p>
       </form>
     </div>

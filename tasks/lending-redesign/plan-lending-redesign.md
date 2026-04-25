@@ -8,11 +8,11 @@ Owner: Miquel (solo) · target: 2026-Q2/Q3
 - **Design source** (authoritative): the three TFM references
   - `references/aortegarams_R4.pdf` (170 pages — master thesis)
   - `references/Presentació TFM.pdf` (43 pages — defence deck)
-  - Figma prototype
-    `figma.com/proto/75YAWEkSnwNWAbB0jJARnZ/TFM---Servei-de-pr%C3%A9stec-digital`
-    — public, no login required. Same screens as the PDFs but clickable;
-    useful during implementation to confirm interaction states, hover
-    behaviour, and flow transitions. Cover screenshot at
+  - Figma prototype (public, viewable, with starting node):
+    `https://www.figma.com/proto/75YAWEkSnwNWAbB0jJARnZ/TFM---Servei-de-pr%C3%A9stec-digital?page-id=810%3A21946&node-id=810-21986&starting-point-node-id=810%3A21986&show-proto-sidebar=1`
+    — same screens as the PDFs but clickable; useful during
+    implementation to confirm interaction states, hover behaviour, and
+    flow transitions. Cover screenshot at
     `mockups/figma-prototype-start.png`.
   Distilled into `tasks/lending-redesign/style-guide.md` and 11 mockup
   screenshots in `tasks/lending-redesign/mockups/`.
@@ -173,7 +173,9 @@ F1. Audit every new string for CA/ES/(EN?) translations (see Q1 in
 - Badge/insignia system.
 - RPG books catalog (ingestion + UI).
 
-## Resolved decisions (answered 2026-04-21)
+## Resolved decisions
+
+Answered 2026-04-21:
 
 - Routing: keep `/prestamos` for private flow, expose same component at
   `/ludoteca` for public read-only browsing.
@@ -183,7 +185,22 @@ F1. Audit every new string for CA/ES/(EN?) translations (see Q1 in
 - Member validation: our DB is the source of truth; import the Drive
   spreadsheet once.
 
+Answered 2026-04-25:
+
+- **L6 — Mobile-first** for v1 catalog and borrow. Phase B builds for
+  ≤480 px first, layers up to ≥1024 px with the side-panel filter
+  layout. Borrow date dialog is a bottom sheet on mobile, centered
+  modal on desktop. (See `openspec/changes/plan-lending-redesign/design.md` D8.)
+- **L7 — WCAG 2.1 AA** as the accessibility baseline. Lighthouse a11y
+  ≥90 (already an exit criterion below) maps to AA. (See design.md D9.)
+- **L9 — Figma access**: viewable proto URL with starting node
+  recorded in the design doc Context section.
+- **L10 — Illustrations**: no new illustration work for v1. Reuse the
+  TFM Flaticon assets where they apply, otherwise omit. (See design.md D10.)
+
 ## Open questions still outstanding
+
+These gate v2 work, not v1:
 
 - **L1. Scope of loan flow changes.** The TFM introduces reservation
   vs pickup vs finalise as three states (see style-guide §5.8), plus
@@ -200,20 +217,8 @@ F1. Audit every new string for CA/ES/(EN?) translations (see Q1 in
   "announcements" entity?
 - **L5. BGG sync frequency.** Manual (button only) v1? Or also a
   nightly cron? Ingest all of BGG or only a curated subset?
-- **L6. Mobile-first vs desktop-first.** Members mostly use phones at
-  the club — confirm mobile is the primary target for catalog + borrow
-  flow.
-- **L7. Accessibility target.** WCAG AA? AAA? Baseline needed so we
-  don't have to re-do it.
 - ~~**L8. Keeping the existing `/prestamos` path.**~~ Resolved in
-  `plan-replicate-existing-site.md`: keep `/prestamos/...` for the
-  private lending flow (members/admin), expose `/ludoteca` as a
-  public, read-only view of the same catalog component.
-- **L9. Figma access.** If you share a viewable link to the Figma
-  prototype, I can double-check screen interactions the PDFs don't
-  make obvious (animations, hover states).
-- **L10. Photos and illustrations.** Do we have the original assets
-  from the TFM, or do we have to re-create them?
+  `plan-replicate-existing-site.md`.
 
 ## Risks
 
@@ -237,3 +242,26 @@ F1. Audit every new string for CA/ES/(EN?) translations (see Q1 in
 - Lighthouse accessibility ≥90 on catalog, detail, my-loans, admin.
 - Style guide checked back into the repo and kept in sync with
   implementation.
+
+## v2 backlog
+
+These do not block v1. They are tracked here so they don't get lost
+when their gating decisions get answered. Each item references the
+corresponding open question (L*) above. Re-promote into a dedicated
+v2 plan once the question lands.
+
+- **Notify-me wishlist** (gates on **L2** — anonymous vs members-only
+  persistence, GDPR work for email capture).
+- **Request a new game** (gates on **L3** — moderation model:
+  public + upvotable vs private + admin-only queue).
+- **Reservation / pickup / finalise three-state loan flow** (gates on
+  **L1** — confirm we want three states or stay with two).
+- **Admin home dashboard** (gates on **L4** — events vs announcements:
+  reuse `/calendario` entity or add a separate "announcements" entity
+  for the admin home widgets).
+- **Admin BGG sync UI + backend task** (gates on **L5** — manual button
+  only vs nightly cron vs both; ingest all of BGG vs curated subset).
+- **Community page** (Socios / Próximos Eventos / Gustos Compartidos).
+- **Event management UI for admins**.
+- **Badge / insignia system**.
+- **RPG books catalog** (ingestion + UI).

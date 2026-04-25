@@ -1,5 +1,4 @@
 import { Link, useParams } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import { useGameHistory } from "../hooks/useGameHistory";
 import { LoanHistoryEntry } from "../components/LoanHistoryEntry";
 import "./GameDetailPage.css";
@@ -7,12 +6,11 @@ import "./GameDetailPage.css";
 export function GameDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { game, history, loading, error } = useGameHistory(id);
-  const { t } = useTranslation();
 
   if (loading) {
     return (
       <div className="game-detail-page">
-        <p className="game-detail-loading">{t("gameDetail.loading")}</p>
+        <p className="game-detail-loading">Cargando...</p>
       </div>
     );
   }
@@ -21,9 +19,9 @@ export function GameDetailPage() {
     return (
       <div className="game-detail-page">
         <Link to="/" className="game-detail-back">
-          &larr; {t("gameDetail.backToCatalog")}
+          &larr; Volver al catálogo
         </Link>
-        <p className="game-detail-error">{error ?? t("gameDetail.notFound")}</p>
+        <p className="game-detail-error">{error ?? "Juego no encontrado."}</p>
       </div>
     );
   }
@@ -31,7 +29,7 @@ export function GameDetailPage() {
   return (
     <div className="game-detail-page">
       <Link to="/" className="game-detail-back">
-        &larr; {t("gameDetail.backToCatalog")}
+        &larr; Volver al catálogo
       </Link>
 
       <div className="game-detail-header">
@@ -45,8 +43,8 @@ export function GameDetailPage() {
           <div className="game-detail-year">{game.year_published}</div>
           <span className={`game-detail-status ${game.status}`}>
             {game.status === "available"
-              ? t("game.available")
-              : t("game.lentTo", { name: game.borrower_display_name })}
+              ? "Disponible"
+              : `Prestado a ${game.borrower_display_name}`}
           </span>
           <div className="game-detail-bgg">
             <a
@@ -54,17 +52,17 @@ export function GameDetailPage() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              {t("gameDetail.viewOnBGG")}
+              Ver en BoardGameGeek
             </a>
           </div>
         </div>
       </div>
 
       <div className="game-detail-history">
-        <h2>{t("gameDetail.historyTitle")}</h2>
+        <h2>Historial de préstamos</h2>
         {history.length === 0 ? (
           <p className="game-detail-no-history">
-            {t("gameDetail.noHistory")}
+            Este juego nunca ha sido prestado.
           </p>
         ) : (
           <div className="game-detail-history-list">

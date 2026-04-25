@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { apiFetch } from "../api/client";
+import { Button } from "../ui/Button";
 import "./AdminContentPage.css";
 
 type SyncStartResponse = {
@@ -147,13 +148,13 @@ export function AdminContentPage() {
       </header>
 
       <section className="admin-content-actions">
-        <button
-          className="btn btn-primary"
+        <Button
+          variant="primary"
           onClick={() => void handleStart()}
           disabled={running || starting}
         >
           {running ? "En marxa…" : starting ? "Iniciant…" : "Iniciar resync"}
-        </button>
+        </Button>
         {status && (
           <dl className="admin-content-status">
             {status.started_at && (
