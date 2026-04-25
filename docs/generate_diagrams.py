@@ -1,4 +1,4 @@
-"""Generate Excalidraw diagrams for Arianna's technical overview presentation."""
+"""Generate Excalidraw diagrams for Ariadna's technical overview presentation."""
 
 from __future__ import annotations
 
@@ -271,7 +271,7 @@ def diagram_architecture() -> None:
 
     els.append(rect("caddy-route2", 150, 430, 380, 50, bg="#b2f2bb", stroke="#2f9e44", frame_id=fid,
                      bound=[{"id": "caddy-r2-t", "type": "text"}]))
-    els.append(text("caddy-r2-t", 0, 0, "/  ->  Static files (Arianna's site)", size=14,
+    els.append(text("caddy-r2-t", 0, 0, "/  ->  Static files (Ariadna's site)", size=14,
                      container_id="caddy-route2", stroke="#2f9e44", frame_id=fid))
 
     els.append(rect("caddy-ports", 150, 510, 180, 50, bg="#dee2e6", stroke="#868e96", frame_id=fid,
@@ -893,7 +893,7 @@ def diagram_agentic() -> None:
                      "It follows the same conventions a human\n"
                      "developer would — consistent code style,\n"
                      "architecture, and testing standards.\n\n"
-                     "When we integrate Arianna's site, we'll\n"
+                     "When we integrate Ariadna's site, we'll\n"
                      "create new change proposals here.",
                      size=15, container_id="key-point", stroke="#f08c00", align="left", frame_id=fid))
 
@@ -1035,10 +1035,10 @@ def diagram_integration() -> None:
     els.append(text("current-label", 40, 40, "CURRENT STATE", size=22, bold=True,
                      align="left", stroke="#e03131", frame_id=fid))
 
-    # Arianna's site box
+    # Ariadna's site box
     els.append(rect("cur-static", 40, 90, 500, 280, bg="#ffc9c9", stroke="#e03131", frame_id=fid,
                      bound=[{"id": "cur-static-title", "type": "text"}]))
-    els.append(text("cur-static-title", 0, 0, "Arianna's static website", size=18,
+    els.append(text("cur-static-title", 0, 0, "Ariadna's static website", size=18,
                      container_id="cur-static", stroke="#e03131", valign="top", frame_id=fid))
 
     els.append(rect("cur-s1", 70, 140, 200, 40, bg="#ffffff", stroke="#e03131", frame_id=fid,
@@ -1093,7 +1093,7 @@ def diagram_integration() -> None:
     els.append(rect("fut-static-area", 650, 200, 480, 150, bg="#ffffff", stroke="#2f9e44", frame_id=fid,
                      bound=[{"id": "fut-static-t", "type": "text"}]))
     els.append(text("fut-static-t", 0, 0,
-                     "Static pages (Arianna's work):\n\n"
+                     "Static pages (Ariadna's work):\n\n"
                      "  /              Home page\n"
                      "  /about         About the association\n"
                      "  /events        Events and calendar\n"
@@ -1129,7 +1129,7 @@ def diagram_integration() -> None:
                      "How it connects:\n\n"
                      "Caddy (the reverse proxy) routes traffic based on URL path:\n"
                      "  /prestecs/*  ->  App container (FastAPI + React)     = dynamic, with database and login\n"
-                     "  everything else  ->  Static files                    = Arianna's HTML/CSS pages\n\n"
+                     "  everything else  ->  Static files                    = Ariadna's HTML/CSS pages\n\n"
                      "Both live on the same domain, same server. One Caddy config ties them together.",
                      size=14, font=3, container_id="how-box", stroke="#f08c00", align="left", frame_id=fid))
 

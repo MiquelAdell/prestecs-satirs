@@ -1333,13 +1333,13 @@
       "updated": 1700000000000,
       "link": null,
       "locked": false,
-      "text": "Key idea:\n\nThe AI reads these files to understand\nthe project's rules and patterns.\n\nIt follows the same conventions a human\ndeveloper would \u2014 consistent code style,\narchitecture, and testing standards.\n\nWhen we integrate Arianna's site, we'll\ncreate new change proposals here.",
+      "text": "Key idea:\n\nThe AI reads these files to understand\nthe project's rules and patterns.\n\nIt follows the same conventions a human\ndeveloper would \u2014 consistent code style,\narchitecture, and testing standards.\n\nWhen we integrate Ariadna's site, we'll\ncreate new change proposals here.",
       "fontSize": 15,
       "fontFamily": 5,
       "textAlign": "left",
       "verticalAlign": "middle",
       "containerId": "key-point",
-      "originalText": "Key idea:\n\nThe AI reads these files to understand\nthe project's rules and patterns.\n\nIt follows the same conventions a human\ndeveloper would \u2014 consistent code style,\narchitecture, and testing standards.\n\nWhen we integrate Arianna's site, we'll\ncreate new change proposals here.",
+      "originalText": "Key idea:\n\nThe AI reads these files to understand\nthe project's rules and patterns.\n\nIt follows the same conventions a human\ndeveloper would \u2014 consistent code style,\narchitecture, and testing standards.\n\nWhen we integrate Ariadna's site, we'll\ncreate new change proposals here.",
       "autoResize": true,
       "lineHeight": 1.25
     }
