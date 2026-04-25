@@ -10,11 +10,11 @@ services:
         value: "3.12.3"
       - key: NODE_VERSION
         value: "20"
-      - key: PRESTECS_JWT_SECRET
+      - key: REFUGIO_JWT_SECRET
         generateValue: true
-      - key: PRESTECS_BASE_URL
+      - key: REFUGIO_BASE_URL
         value: https://prestamos-satirs.onrender.com
-      - key: PRESTECS_DB_PATH
+      - key: REFUGIO_DB_PATH
         value: /opt/render/project/data/prestamos.db
     disk:
       name: prestamos-data
