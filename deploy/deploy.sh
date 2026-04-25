@@ -9,8 +9,8 @@ git pull
 echo "==> Building and starting containers"
 docker compose up -d --build
 
-echo "==> Reloading Caddy config (bind-mounted Caddyfile is not picked up by 'up -d')"
-docker compose exec caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile
+echo "==> Restarting Caddy (bind-mounted Caddyfile is not picked up by 'up -d')"
+docker compose restart caddy
 
 echo "==> Running migrations"
 docker compose exec app refugio migrate
