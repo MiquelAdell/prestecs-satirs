@@ -34,24 +34,72 @@ cd frontend && npm install && cd ..
 
 ## Development
 
+Three local setups, depending on what you're working on. Pick the lightest one
+that exercises the feature you care about.
+
+### Lending app only (fastest iteration, HMR)
+
+Backend + Vite dev server. Best for day-to-day work on `/prestamos`.
+
 ```bash
-# Run database migrations
+# One-time: migrate and seed the DB
 refugio migrate
-
-# Import games (from JSON seed file)
 refugio import-games data/bgg_collection.json
-
-# Import members
 refugio import-members members.csv --base-url http://localhost:5173/prestamos
 
-# Start the backend (port 8000)
-uvicorn backend.api.app:create_app --factory --reload --port 8000
-
-# Start the frontend (port 5173, proxies /prestamos/api to backend)
-cd frontend && npm run dev
+# Two terminals:
+uvicorn backend.api.app:create_app --factory --reload --port 8000   # backend
+cd frontend && npm run dev                                          # frontend
 ```
 
-Open http://localhost:5173/prestamos to view the lending app.
+Open http://localhost:5173/prestamos. Vite proxies `/prestamos/api` to the
+backend on `:8000`. The scraped site is **not** served in this mode — links
+to `/`, `/inicio`, etc. will 404.
+
+### Scraped site only
+
+The output of `refugio content run` lives in
+[`frontend/public/content-mirror/`](frontend/public/content-mirror/) and its
+HTML uses absolute paths (`/_assets/…`, `/inicio`), so it must be served from
+the document root — opening `index.html` directly or browsing it under
+`/content-mirror/` will break asset and navigation links. Any static server
+works:
+
+```bash
+cd frontend/public/content-mirror && python -m http.server 8080
+```
+
+Open http://localhost:8080/. The lending app is not part of this — links to
+`/prestamos` will 404.
+
+### Full stack (production-like, via Docker)
+
+Mirrors the VPS setup: Caddy at `:80`/`:443` routing `/` to the scraped site
+and `/prestamos` to the FastAPI app, with HTTPS via Caddy's local CA. Use this
+to verify routing, redirects, or anything that depends on both halves living
+at the same origin.
+
+```bash
+# Requires Docker Desktop running and a .env with at least REFUGIO_JWT_SECRET set.
+docker compose up --build -d
+
+# First boot only: migrate and seed the content cache that Caddy serves.
+docker compose exec app refugio migrate
+docker compose exec app refugio import-games data/bgg_collection.json
+docker compose exec app sh -c 'mkdir -p /srv/content && cp -R /app/frontend/dist/content-mirror/. /srv/content/'
+```
+
+Open https://localhost/ (scraped site) and https://localhost/prestamos
+(lending app). The browser will warn about the cert — Caddy issues a
+self-signed cert from its local CA on first boot; click through to proceed,
+or install the CA in your keychain to silence it.
+
+The frontend is **baked into the image at build time**, so re-run
+`docker compose up --build -d` after frontend changes. For tight UI loops,
+use the lending-app-only setup above.
+
+Stop with `docker compose down` (volumes survive) or `docker compose down -v`
+(wipes the DB and content cache).
 
 ## CLI
 
