@@ -61,6 +61,8 @@ Recommendations for the implementation:
 
 ### 1.3 Tone and visual personality
 
+Mood: community-first, pragmatic, playful-not-cartoonish, legible, calm.
+
 Derived from the thesis (User Persona sheets, content copy, and the
 screens themselves):
 
@@ -310,6 +312,34 @@ breakpoints:
 Document for the frontend developer: at `sm`, filter bar tabs should
 wrap or turn into a dropdown, the admin 4-tile grid should stack to 1
 column, and detail-page history tables should become card-style lists.
+
+### 4.5 Depth & elevation
+
+The prototype is **flat by default** — no drop shadows on buttons, the
+nav, cards at rest, tabs, or pills. Depth comes from:
+
+- **Surface colour shifts** — `#FFFFFF` page over `#F5F5F5` secondary
+  surfaces; dark near-black nav over light page.
+- **1px hairline borders** at `color.border` (`#E0E0E0`) on cards,
+  tables, filter rows, and inactive tab pills.
+- **Type weight contrast** — bold uppercase titles against regular
+  body copy carry the visual hierarchy, not shadow stacks.
+
+Exceptions where a soft shadow is allowed:
+
+- **Cards on hover** — subtle lift to signal interactivity (see §5.6).
+- **Modal dialogs** — single soft shadow,
+  `0 8px 24px rgba(31, 31, 31, 0.08)`, anchoring the dialog above the
+  page (see §5.11).
+- **Dropdowns and popovers** — same treatment as modals at smaller
+  offset.
+
+Never use shadows for:
+
+- Buttons of any variant (primary, secondary, danger).
+- Score badges or ribbons on game covers.
+- Category pills, status pills, or kbd-style chips.
+- The top navigation bar.
 
 ---
 
@@ -880,6 +910,50 @@ before the frontend team starts coding.
 10. **Mobile design.** The prototype is desktop-only. All responsive
     behaviour described in §4 and §9 is proposed, not documented.
     Schedule a quick mobile pass once the desktop baseline is shipped.
+
+---
+
+## 11. Agent prompt guide
+
+A condensed, Claude-facing summary of the rules above. Paste at the top
+of any prompt that asks for UI generation in this style.
+
+Bias toward:
+
+- Brand red `#BE0000` as the single CTA colour, white text on red,
+  4px corner radius (rectangular, not pill).
+- Dark near-black nav (`#111111`) with white text and the small red
+  shield logo on the left.
+- Centred, constrained-width layout — 1120px max with generous side
+  margins even on desktop. The UI is meant to live inside an iframe.
+- Oswald uppercase titles with a short red underline (~120×3px)
+  centred under the H1.
+- Open Sans body at 14–15px, 1.5 line-height, `#333333` on `#FFFFFF`.
+- Flat surfaces, 1px grey borders, no drop shadows on cards or
+  buttons. Depth via colour shifts and type weight.
+- Pastel category pills mapped by family: green for nature, pink for
+  party/horror, blue for mystery/sci-fi, purple for sci-fi-leaning.
+  One pill colour per category family.
+- Line-art monochrome icons at 16–20px, always paired with a text
+  label.
+- Confirmation modals on every state-changing action.
+
+Reject:
+
+- Gradients of any kind, glassmorphism, neon glows.
+- Drop shadows on resting cards, buttons, ribbons, or pills.
+- Pill-shaped buttons or corner radii larger than 8px.
+- Multi-colour CTAs — red is the only primary action colour.
+- Hero imagery, full-bleed banners, marketing-site layouts.
+- Hamburger menus on desktop (collapse only below 600px).
+- Emoji in UI chrome.
+- Tinting BGG/RPGGeek game covers or forcing them to a uniform
+  aspect ratio — frame them in a neutral white card instead.
+- Icon-only affordances without a tooltip or `aria-label`.
+
+When generating, ask: "Would this slot cleanly into the current
+Refugio del Sátiro Google Sites page without looking out of place?"
+If not, start over.
 
 ---
 
