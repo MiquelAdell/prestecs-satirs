@@ -5,7 +5,7 @@ context: |
 
   What it is:
   - The website for the "Refugio del Sátiro" RPG association.
-  - Current scope: the game-lending app, mounted at `/prestecs`. Members can
+  - Current scope: the game-lending app, mounted at `/prestamos`. Members can
     browse available games, request loans, and track who has what.
   - The root path `/` serves a work-in-progress placeholder; the home page
     is planned as a future addition.
@@ -61,8 +61,8 @@ context: |
   Configuration:
   - REFUGIO_DB_PATH: SQLite database file path (default: refugio.db)
   - REFUGIO_JWT_SECRET: JWT signing secret (required in production)
-  - REFUGIO_BASE_URL: Lending app public URL, used in reset-password email links (default: http://localhost:5173/prestecs)
-  - VITE_API_URL: Frontend API base URL (default: /prestecs/api)
+  - REFUGIO_BASE_URL: Lending app public URL, used in reset-password email links (default: http://localhost:5173/prestamos)
+  - VITE_API_URL: Frontend API base URL (default: /prestamos/api)
 
   Canonical commands:
   - Backend install: pip install -e ".[dev]"

@@ -57,7 +57,7 @@ in two steps:
 
 ### Step 1: The browser downloads the "app shell"
 
-When you visit `/prestecs`, the browser downloads a single HTML file plus some
+When you visit `/prestamos`, the browser downloads a single HTML file plus some
 JavaScript and CSS. This is the React application — it's like a blank
 container that knows *how* to display games, loans, and members, but doesn't
 have the actual data yet.
@@ -68,7 +68,7 @@ Once the app shell is loaded, the JavaScript code says: "OK, now I need the
 list of games." It sends a request to the server:
 
 ```
-GET /prestecs/api/games
+GET /prestamos/api/games
 ```
 
 The server (Python, running FastAPI) receives this request, opens the database
@@ -125,7 +125,7 @@ from Maria, who already proved her identity 3 minutes ago."
 The login page is a form. When you click "Log in", the browser sends:
 
 ```
-POST /prestecs/api/login
+POST /prestamos/api/login
 Body: { "email": "maria@example.com", "password": "her-password" }
 ```
 
@@ -174,7 +174,7 @@ automatically attaches the cookie. The server reads the JWT from the cookie,
 verifies the signature, extracts "member #5", and knows who's asking.
 
 ```
-GET /prestecs/api/members/me
+GET /prestamos/api/members/me
 Cookie: session_token=eyJhbGciOi...
 → Server: "This is Maria (member #5), she's active, here's her profile"
 ```
@@ -225,7 +225,7 @@ Members don't "register" themselves. An admin imports them from a CSV file
 generates a unique, random, one-time link for each member:
 
 ```
-https://refugidelsatiro.cat/prestecs/set-password?token=a3f8c9d1e7...
+https://refugidelsatiro.cat/prestamos/set-password?token=a3f8c9d1e7...
 ```
 
 The admin shares this link with each member (by message, email, etc.). When
@@ -283,7 +283,7 @@ they connect:
 │  │  Ports 80/443 ←──────│──│→ Port 8000          │  │
 │  │  (internet-facing)   │  │  (internal only)    │  │
 │  │                      │  │                     │  │
-│  │  /prestecs/* ────────│──│→ FastAPI + React    │  │
+│  │  /prestamos/* ────────│──│→ FastAPI + React    │  │
 │  │  / ──→ static files  │  │                     │  │
 │  │  (the existing site) │  │  refugio.db 📁      │  │
 │  └──────────────────────┘  └─────────────────────┘  │
@@ -293,7 +293,7 @@ they connect:
 
 **Key point for the future website integration:** Caddy currently serves the
 root path `/` from a folder of static files (`deploy/wip/`). This is where
-the existing site lives. Everything under `/prestecs/` gets forwarded to
+the existing site lives. Everything under `/prestamos/` gets forwarded to
 the lending app. Both coexist on the same domain.
 
 ### Comparison with PythonAnywhere
@@ -489,7 +489,7 @@ refugio-del-satiro/
 │  │     (the existing  │     │    ├─ API routes             │        │
 │  │           site)     │     │    ├─ Domain logic            │        │
 │  │                     │     │    ├─ SQLite database         │        │
-│  │  /prestecs/* ──────────→  │    └─ React frontend (built) │        │
+│  │  /prestamos/* ──────────→  │    └─ React frontend (built) │        │
 │  │                     │     │                              │        │
 │  │  HTTPS (automatic)  │     │  refugio.db  📁              │        │
 │  └─────────────────────┘     └──────────────────────────────┘        │
@@ -501,7 +501,7 @@ refugio-del-satiro/
 │                         BROWSER (user)                               │
 │                                                                      │
 │  1. Loads React app (HTML + JS + CSS)                                │
-│  2. React fetches data from /prestecs/api/games → gets JSON          │
+│  2. React fetches data from /prestamos/api/games → gets JSON          │
 │  3. Renders game cards                                               │
 │  4. User logs in → gets a cookie (JWT)                               │
 │  5. Cookie sent automatically with every request                     │

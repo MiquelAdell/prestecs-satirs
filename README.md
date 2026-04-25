@@ -2,7 +2,7 @@
 
 Website for the **Refugio del Sátiro** RPG association.
 
-Current scope: the game-lending feature (mounted at `/prestecs`). Members can
+Current scope: the game-lending feature (mounted at `/prestamos`). Members can
 browse the catalog, borrow games, and return them. The catalog is imported
 from [BoardGameGeek](https://boardgamegeek.com/collection/user/RefugioDelSatiro?subtype=boardgame&own=1&ff=1).
 
@@ -42,16 +42,16 @@ refugio migrate
 refugio import-games data/bgg_collection.json
 
 # Import members
-refugio import-members members.csv --base-url http://localhost:5173/prestecs
+refugio import-members members.csv --base-url http://localhost:5173/prestamos
 
 # Start the backend (port 8000)
 uvicorn backend.api.app:create_app --factory --reload --port 8000
 
-# Start the frontend (port 5173, proxies /prestecs/api to backend)
+# Start the frontend (port 5173, proxies /prestamos/api to backend)
 cd frontend && npm run dev
 ```
 
-Open http://localhost:5173/prestecs to view the lending app.
+Open http://localhost:5173/prestamos to view the lending app.
 
 ## CLI
 
@@ -116,10 +116,10 @@ frontend/
 |----------|------------|---------|
 | `REFUGIO_DB_PATH` | SQLite database file path | `refugio.db` |
 | `REFUGIO_JWT_SECRET` | JWT signing secret | (dev secret) |
-| `REFUGIO_BASE_URL` | Lending app public URL (used in reset-password emails) | `http://localhost:5173/prestecs` |
+| `REFUGIO_BASE_URL` | Lending app public URL (used in reset-password emails) | `http://localhost:5173/prestamos` |
 | `REFUGIO_CONTENT_MIRROR_DIR` | Where the admin "Resync content" button writes scraped pages | `frontend/public/content-mirror` (dev) / `/srv/content` (prod) |
 | `BGG_BEARER_TOKEN` | BGG API bearer token (optional) | — |
-| `VITE_API_URL` | Frontend API base URL | `/prestecs/api` |
+| `VITE_API_URL` | Frontend API base URL | `/prestamos/api` |
 
 ## Deployment (VPS with Docker)
 
@@ -183,7 +183,7 @@ Content changes on `www.refugiodelsatiro.es` flow into this repo manually:
 2. Review the diff under `frontend/public/content-mirror/`.
 3. Commit and push if it looks good.
 
-Editors can also hit the admin-only "Resync" button at `/prestecs/admin/content`
+Editors can also hit the admin-only "Resync" button at `/prestamos/admin/content`
 to refresh the VPS cache immediately — changes are visible on
 `www.refugiodelsatiro.es` right away, but don't reach the repo until someone
 runs the local workflow above.

@@ -17,7 +17,7 @@ Today the club has two disconnected web presences:
 `www.refugiodelsatiro.es` (Google Sites, edited by several club
 collaborators) and `refugiosatiro.pythonanywhere.com` (Ariadna's Flask
 app, embedded into Sites on two pages). Our repo `refugio-del-satiro`
-currently ships only the lending app mounted at `/prestecs`. The
+currently ships only the lending app mounted at `/prestamos`. The
 direction of travel is "everything under `www.refugiodelsatiro.es`":
 the club site's content pages *plus* the lending flow, served from
 one origin. The merge raises a content-workflow question that only
@@ -36,7 +36,7 @@ should not be left implicit.
   collaborators to learn a different editor — or stop editing and rely
   on a dev.
 - Google Sites' custom-domain mapping is all-or-nothing at the apex:
-  we can't tell Google to serve `/prestecs` to the VPS and everything
+  we can't tell Google to serve `/prestamos` to the VPS and everything
   else to Sites.
 
 ### Options
@@ -45,7 +45,7 @@ should not be left implicit.
 Editors keep editing Sites. A sync job (manual trigger or nightly cron)
 downloads the rendered HTML + assets, stores them in our repo (or on
 disk), and the VPS serves them as static files. The VPS also serves
-`/prestecs` from the React app. `www.refugiodelsatiro.es` points at the
+`/prestamos` from the React app. `www.refugiodelsatiro.es` points at the
 VPS.
 - Pros: editors unchanged; single origin for everything; simple URL
   routing (all of `/` is just static files from the VPS).
@@ -67,7 +67,7 @@ system, versioning, review/approval workflow. Re-train editors.
 
 **Option 3 — Reverse-proxy Google Sites live.**
 `www.refugiodelsatiro.es` points at the VPS (Caddy). Caddy routes
-`/prestecs/*` to the React app; everything else reverse-proxies to
+`/prestamos/*` to the React app; everything else reverse-proxies to
 `sites.google.com/view/refugiodelsatiro/...`, rewriting absolute URLs
 in the response body. No scraping, edits go out instantly.
 - Pros: editors unchanged; no lag; nothing to re-train.
@@ -110,7 +110,7 @@ Avoid Option 2. The scope is incommensurate with the value.
 
 ---
 
-## Decision 2 — Spanish only for `/prestecs` v1?
+## Decision 2 — Spanish only for `/prestamos` v1?
 
 ### Context
 
@@ -152,14 +152,14 @@ editorial ownership should be explicit:
 
 1. **Sites content** (home, FAQ, events, members info).
 2. **Ludoteca catalog** (BGG-backed).
-3. **Lending flow** (`/prestecs`).
+3. **Lending flow** (`/prestamos`).
 
 ### Options & recommendation
 
 **Assumed model** (confirm in the meeting):
 - Sites content → existing collaborators, via Google Sites, on their
   current cadence.
-- Ludoteca catalog → admins of the `/prestecs` app (and eventually,
+- Ludoteca catalog → admins of the `/prestamos` app (and eventually,
   Nora persona from the TFM). Board games are added to the BGG source
   list; our app syncs.
 - Lending flow & admin UI → admins only.
@@ -422,7 +422,7 @@ actually answer.
 ## Parking lot — already decided (carried forward)
 
 - **Routing**: single canonical table in
-  `plan-replicate-existing-site.md`. `/prestecs` stays for private
+  `plan-replicate-existing-site.md`. `/prestamos` stays for private
   flow; `/ludoteca` is the public read-only view of the same catalog.
 - **v1 scope for lending**: catalog + borrow/return + game detail +
   member validation + admin members restyle. Everything else

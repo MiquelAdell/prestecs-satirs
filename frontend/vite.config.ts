@@ -4,15 +4,15 @@ import react from "@vitejs/plugin-react";
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "/prestecs/",
+  base: "/prestamos/",
   plugins: [react()],
   server: {
     port: 5173,
     proxy: {
-      "/prestecs/api": {
+      "/prestamos/api": {
         target: "http://localhost:8000",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/prestecs/, ""),
+        rewrite: (path) => path.replace(/^\/prestamos/, ""),
       },
     },
   },
