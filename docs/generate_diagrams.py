@@ -296,8 +296,8 @@ def diagram_architecture() -> None:
                      container_id="caddy-https", stroke="#6741d9", frame_id=fid))
 
     els.append(rect("caddy-route1", 150, 360, 380, 50, bg="#fff3bf", stroke="#f08c00", frame_id=fid,
-                     bound=[{"id": "caddy-r1-t", "type": "text"}, {"id": "arr-prestecs", "type": "arrow"}]))
-    els.append(text("caddy-r1-t", 0, 0, "/prestecs/*  ->  App container", size=14,
+                     bound=[{"id": "caddy-r1-t", "type": "text"}, {"id": "arr-prestamos", "type": "arrow"}]))
+    els.append(text("caddy-r1-t", 0, 0, "/prestamos/*  ->  App container", size=14,
                      container_id="caddy-route1", stroke="#f08c00", frame_id=fid))
 
     els.append(rect("caddy-route2", 150, 430, 380, 50, bg="#b2f2bb", stroke="#2f9e44", frame_id=fid,
@@ -313,7 +313,7 @@ def diagram_architecture() -> None:
     # App container
     els.append(rect("app-box", 640, 220, 440, 500, bg="#ffd8a8", stroke="#e8590c",
                      frame_id=fid,
-                     bound=[{"id": "app-title", "type": "text"}, {"id": "arr-prestecs", "type": "arrow"}]))
+                     bound=[{"id": "app-title", "type": "text"}, {"id": "arr-prestamos", "type": "arrow"}]))
     els.append(text("app-title", 0, 0, "App container", size=18,
                      container_id="app-box", stroke="#e8590c", valign="top", frame_id=fid))
 
@@ -348,7 +348,7 @@ def diagram_architecture() -> None:
                      stroke="#868e96", frame_id=fid, align="left"))
 
     # Arrow Caddy -> App
-    els.append(arrow("arr-prestecs", 530, 385, [[0, 0], [110, 0]],
+    els.append(arrow("arr-prestamos", 530, 385, [[0, 0], [110, 0]],
                      start_id="caddy-route1", end_id="app-box", stroke="#e8590c", frame_id=fid))
 
     # Port label
@@ -379,7 +379,7 @@ def diagram_data_flow() -> None:
 
     els.append(arrow("arr-dl", 260, y_step1 + 90, [[0, 0], [160, 0]],
                      start_id="browser1", end_id="server1", stroke="#1971c2", frame_id=fid))
-    els.append(text("arr-dl-t", 290, y_step1 + 60, "GET /prestecs", size=14, stroke="#868e96", frame_id=fid))
+    els.append(text("arr-dl-t", 290, y_step1 + 60, "GET /prestamos", size=14, stroke="#868e96", frame_id=fid))
 
     els.append(rect("server1", 420, y_step1 + 50, 200, 80, bg="#ffd8a8", stroke="#e8590c", frame_id=fid,
                      bound=[{"id": "server1-t", "type": "text"}, {"id": "arr-dl", "type": "arrow"}, {"id": "arr-dl-back", "type": "arrow"}]))
@@ -983,7 +983,7 @@ def diagram_password_setup() -> None:
     els.append(rect("link-example", 60, y + 150, 700, 35, bg="#f3f0ff", stroke="#6741d9", frame_id=fid,
                      bound=[{"id": "link-example-t", "type": "text"}]))
     els.append(text("link-example-t", 0, 0,
-                     "Output:  Maria (maria@example.com): https://refugidelsatiro.cat/prestecs/set-password?token=a3f8c9...",
+                     "Output:  Maria (maria@example.com): https://refugidelsatiro.cat/prestamos/set-password?token=a3f8c9...",
                      size=13, font=3, container_id="link-example", stroke="#6741d9", frame_id=fid))
 
     # --- Phase 2: Admin shares link ---
@@ -1097,7 +1097,7 @@ def diagram_integration() -> None:
     els.append(text("cur-lending-title", 0, 0, "Lending system (separate!)", size=18,
                      container_id="cur-lending", stroke="#e8590c", valign="top", frame_id=fid))
 
-    els.append(text("cur-lending-detail", 70, 440, "Python + React + SQLite\nAt /prestecs/ on a different server",
+    els.append(text("cur-lending-detail", 70, 440, "Python + React + SQLite\nAt /prestamos/ on a different server",
                      size=14, stroke="#868e96", align="left", frame_id=fid))
 
     # Disconnection indicator
@@ -1136,9 +1136,9 @@ def diagram_integration() -> None:
                      bound=[{"id": "fut-lending-t", "type": "text"}]))
     els.append(text("fut-lending-t", 0, 0,
                      "Dynamic section (lending system):\n\n"
-                     "  /prestecs/           Game catalogue\n"
-                     "  /prestecs/games/:id  Game detail + borrow\n"
-                     "  /prestecs/my-loans   My active loans",
+                     "  /prestamos/           Game catalogue\n"
+                     "  /prestamos/games/:id  Game detail + borrow\n"
+                     "  /prestamos/my-loans   My active loans",
                      size=14, font=3, container_id="fut-lending-area", stroke="#e8590c", align="left", frame_id=fid))
 
     # Shared elements callout
@@ -1159,7 +1159,7 @@ def diagram_integration() -> None:
     els.append(text("how-t", 0, 0,
                      "How it connects:\n\n"
                      "Caddy (the reverse proxy) routes traffic based on URL path:\n"
-                     "  /prestecs/*  ->  App container (FastAPI + React)     = dynamic, with database and login\n"
+                     "  /prestamos/*  ->  App container (FastAPI + React)     = dynamic, with database and login\n"
                      "  everything else  ->  Static files                    = static HTML/CSS pages\n\n"
                      "Both live on the same domain, same server. One Caddy config ties them together.",
                      size=14, font=3, container_id="how-box", stroke="#f08c00", align="left", frame_id=fid))

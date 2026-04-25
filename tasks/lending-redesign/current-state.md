@@ -1,8 +1,8 @@
-# Current State Inventory: Lending/Prèstecs UI
+# Current State Inventory: Lending/Préstamos UI
 
 ## 1. Frontend Route Map
 
-All routes mounted at `/prestecs` via React Router basename.
+All routes mounted at `/prestamos` via React Router basename.
 
 | Path | Component | Purpose | Target User |
 |------|-----------|---------|-------------|
@@ -90,7 +90,7 @@ All routes mounted at `/prestecs` via React Router basename.
 
 ## 5. Backend API Endpoints
 
-All prefixed `/api` (full paths: `/prestecs/api/*`).
+All prefixed `/api` (full paths: `/prestamos/api/*`).
 
 | Method | Path | Purpose | Auth | Request | Response |
 |--------|------|---------|------|---------|----------|
@@ -122,10 +122,10 @@ All prefixed `/api` (full paths: `/prestecs/api/*`).
 
 **Current State:** No separation yet. The lending app IS the app.
 
-- **Routing:** Lending app mounted at `/prestecs` (React Router basename)
+- **Routing:** Lending app mounted at `/prestamos` (React Router basename)
 - **Layout:** Shared [NavBar](../../frontend/src/components/NavBar.tsx) with brand "Refugio del Sátiro" (or i18n key `nav.brand`)
 - **Styling:** Same tokens, reset, and CSS modules throughout
-- **Landing Content:** Intended to merge with existing club landing page at `/` (root), but currently `/prestecs/` redirects to CatalogPage
+- **Landing Content:** Intended to merge with existing club landing page at `/` (root), but currently `/prestamos/` redirects to CatalogPage
 
 **Implications:**
 - No distinct landing UI; catalog doubles as landing (must be guest-accessible)
@@ -160,4 +160,4 @@ All prefixed `/api` (full paths: `/prestecs/api/*`).
 
 ## Summary
 
-The lending app (`/prestecs`) is a self-contained React SPA with a Python FastAPI backend, styled via CSS modules with design tokens. It features a game catalog with advanced filtering, loan management, and admin controls, all behind JWT auth. The primary redesign challenges are: **(1) Clarifying the landing/lending boundary** once the club website lands merges; **(2) Consolidating form, button, and layout patterns** into shared components to reduce duplication; **(3) Adding feedback systems** (toasts, loading spinners, error boundaries) for better UX; and **(4) Improving the card/filter UI** for mobile and desktop consistency. The backend API is well-structured; the frontend would most benefit from extracting layout/form abstractions and a consistent state/feedback pattern across pages.
+The lending app (`/prestamos`) is a self-contained React SPA with a Python FastAPI backend, styled via CSS modules with design tokens. It features a game catalog with advanced filtering, loan management, and admin controls, all behind JWT auth. The primary redesign challenges are: **(1) Clarifying the landing/lending boundary** once the club website lands merges; **(2) Consolidating form, button, and layout patterns** into shared components to reduce duplication; **(3) Adding feedback systems** (toasts, loading spinners, error boundaries) for better UX; and **(4) Improving the card/filter UI** for mobile and desktop consistency. The backend API is well-structured; the frontend would most benefit from extracting layout/form abstractions and a consistent state/feedback pattern across pages.

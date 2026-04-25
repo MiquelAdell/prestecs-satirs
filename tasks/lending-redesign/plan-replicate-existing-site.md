@@ -16,7 +16,7 @@ Today the club has two online presences:
      a Google Drive source.
 
 Our repo `refugio-del-satiro` currently only hosts the lending app
-(`/prestecs`). The decision is to **merge everything into this repo** so
+(`/prestamos`). The decision is to **merge everything into this repo** so
 the RackNerd VPS serves the entire club site, and then redirect
 `www.refugiodelsatiro.es` to it.
 
@@ -70,7 +70,7 @@ Two kinds of pages share one layout:
   JSX) files in `frontend/src/content/...`, rendered by a common
   `<ContentPage>` layout. Minimal logic, maximum simplicity.
 - **App pages** — Ludoteca catalog, game detail, member validation,
-  plus everything under `/prestecs` (the lending flow). These already
+  plus everything under `/prestamos` (the lending flow). These already
   consume the FastAPI backend; we extend it.
 
 ### Routing
@@ -86,17 +86,17 @@ Two kinds of pages share one layout:
 | `/eventos` · `/eventos/:slug` | content | Events |
 | `/faq` · `/faq/normas-de-conducta` | content | FAQ + code of conduct |
 | `/socios` · `/socios/entidades-amigas` | content | Members info |
-| `/ludoteca` | app (public) | Catalog (read-only for guests) — **same React page as** `/prestecs/`, served in guest mode when unauthenticated. Replaces `/socios/ludoteca`. |
+| `/ludoteca` | app (public) | Catalog (read-only for guests) — **same React page as** `/prestamos/`, served in guest mode when unauthenticated. Replaces `/socios/ludoteca`. |
 | `/ludoteca/:id` | app (public) | Game detail (read-only for guests) |
 | `/validacion` | app (public) | Member lookup. Replaces `/Validacion-Membresia`. |
-| `/prestecs/...` | app (private) | The full lending flow — borrow, return, my-loans, admin. **Keeps the existing `/prestecs` path** so existing bookmarks, Caddyfile rules, and the current React basename don't change. See `plan-lending-redesign.md`. |
+| `/prestamos/...` | app (private) | The full lending flow — borrow, return, my-loans, admin. **Keeps the existing `/prestamos` path** so existing bookmarks, Caddyfile rules, and the current React basename don't change. See `plan-lending-redesign.md`. |
 | `/login` · `/forgot-password` · `/set-password` | auth | |
 | `/admin/*` | app (admin) | Admin-gated |
 
-Relationship between `/ludoteca` and `/prestecs`: one React catalog
+Relationship between `/ludoteca` and `/prestamos`: one React catalog
 component renders both. When the viewer is unauthenticated, borrow
 buttons are hidden and the page is reachable via `/ludoteca`; when
-authenticated, the same component mounts at `/prestecs/` with borrow
+authenticated, the same component mounts at `/prestamos/` with borrow
 actions enabled. This avoids duplicating code.
 
 Keep 301 redirects for every old Sites slug:
@@ -128,7 +128,7 @@ link + rating. We extend it to:
    "Refresh catalog from BGG"; later: cron.
 
 Data migration: we don't import existing data from PythonAnywhere; we
-re-ingest from BGG. Current `prestecs.db` is the source of truth for
+re-ingest from BGG. Current `prestamos.db` is the source of truth for
 board-game inventory (already has the correct 200-ish games).
 
 ### Member validation reimplementation
@@ -202,7 +202,7 @@ Decision 1 Option 3 (live reverse proxy) or Option 4 (headless CMS).
 - Keep a fallback to the Sites page for a week in case of rollback.
 
 **Phase 5 — lending redesign**
-- Ship the redesigned `/prestecs/*` flow (separate plan:
+- Ship the redesigned `/prestamos/*` flow (separate plan:
   `plan-lending-redesign.md`). Phases A–B (tokens, primitives, catalog
   restyle) can run **in parallel** with Phases 1–2 here — they share
   the same component library. Phases C–F only make sense once the
@@ -241,7 +241,7 @@ DNS cutover:
 - **Email delivery.** The lending app already sends password-reset
   emails. Document SMTP provider, from-address, and failure behaviour
   before new flows (notify-me, request-new-game) go live.
-- **Backups.** Nightly dump of `prestecs.db` to off-box storage.
+- **Backups.** Nightly dump of `prestamos.db` to off-box storage.
   Keep ≥14 days. Test a restore once.
 - **Monitoring.** At minimum: a cron that pings the home + catalog
   + `/api/games` and alerts on failure.
@@ -254,7 +254,7 @@ DNS cutover:
 
 ## Resolved decisions (answered 2026-04-21)
 
-- **Routing**: keep `/prestecs` private, expose `/ludoteca` as public
+- **Routing**: keep `/prestamos` private, expose `/ludoteca` as public
   read-only (same component).
 - **v1 scope**: confirmed (see `plan-lending-redesign.md`).
 - **Languages**: Spanish only for now (main site is ES; drop CA/EN

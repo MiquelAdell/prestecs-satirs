@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: prestecs-satirs
+    name: prestamos-satirs
     runtime: python
     plan: free
     buildCommand: ./build.sh
@@ -13,10 +13,10 @@ services:
       - key: PRESTECS_JWT_SECRET
         generateValue: true
       - key: PRESTECS_BASE_URL
-        value: https://prestecs-satirs.onrender.com
+        value: https://prestamos-satirs.onrender.com
       - key: PRESTECS_DB_PATH
-        value: /opt/render/project/data/prestecs.db
+        value: /opt/render/project/data/prestamos.db
     disk:
-      name: prestecs-data
+      name: prestamos-data
       mountPath: /opt/render/project/data
       sizeGB: 1

@@ -1,6 +1,6 @@
 {$DOMAIN:localhost} {
-	# App (lending flow) — keeps its /prestecs prefix.
-	handle_path /prestecs/* {
+	# App (lending flow) — keeps its /prestamos prefix.
+	handle_path /prestamos/* {
 		reverse_proxy app:8000
 	}
 

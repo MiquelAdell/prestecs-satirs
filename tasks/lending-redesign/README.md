@@ -4,7 +4,7 @@ Research and planning folder for two linked initiatives:
 
 1. Replicating the club's existing website (Google Sites +
    PythonAnywhere) inside this repo.
-2. Redesigning the `/prestecs` lending flow to match the TFM (Master's
+2. Redesigning the `/prestamos` lending flow to match the TFM (Master's
    thesis) design prototype.
 
 All work here is documentation-only. No code changes yet.

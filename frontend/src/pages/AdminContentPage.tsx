@@ -23,7 +23,7 @@ type ScraperEvent = {
 };
 
 const EVENT_STREAM_URL = `${
-  import.meta.env.VITE_API_URL ?? "/prestecs/api"
+  import.meta.env.VITE_API_URL ?? "/prestamos/api"
 }/admin/content/events`;
 
 export function AdminContentPage() {

@@ -1,4 +1,4 @@
-# Plan: lending-flow redesign (`/prestec/*`)
+# Plan: lending-flow redesign (`/prestamos/*`)
 
 Status: **draft, pending user approval / answers to open questions**
 Owner: Miquel (solo) · target: 2026-Q2/Q3
@@ -25,7 +25,7 @@ Owner: Miquel (solo) · target: 2026-Q2/Q3
 
 ## What the redesign is for
 
-The current lending app (`/prestecs`) was built standalone with a
+The current lending app (`/prestamos`) was built standalone with a
 utilitarian look (Tailwind-blue `#2563eb`, system fonts). We're merging
 it into the main club site, and the TFM presents a more polished,
 brand-aligned UX for the same flow. We adopt the TFM look & flow, but
@@ -175,7 +175,7 @@ F1. Audit every new string for CA/ES/(EN?) translations (see Q1 in
 
 ## Resolved decisions (answered 2026-04-21)
 
-- Routing: keep `/prestecs` for private flow, expose same component at
+- Routing: keep `/prestamos` for private flow, expose same component at
   `/ludoteca` for public read-only browsing.
 - v1 scope triage above (catalog + borrow/return + detail + member
   validation + admin members restyle) — confirmed.
@@ -205,8 +205,8 @@ F1. Audit every new string for CA/ES/(EN?) translations (see Q1 in
   flow.
 - **L7. Accessibility target.** WCAG AA? AAA? Baseline needed so we
   don't have to re-do it.
-- ~~**L8. Keeping the existing `/prestecs` path.**~~ Resolved in
-  `plan-replicate-existing-site.md`: keep `/prestecs/...` for the
+- ~~**L8. Keeping the existing `/prestamos` path.**~~ Resolved in
+  `plan-replicate-existing-site.md`: keep `/prestamos/...` for the
   private lending flow (members/admin), expose `/ludoteca` as a
   public, read-only view of the same catalog component.
 - **L9. Figma access.** If you share a viewable link to the Figma
