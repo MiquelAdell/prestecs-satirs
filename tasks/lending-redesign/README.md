@@ -18,7 +18,9 @@ All work here is documentation-only. No code changes yet.
   from the two TFM PDFs. Colours, typography, spacing, components,
   screens inventory, user flows, a11y. Hex codes and fonts reconciled
   against the live production site (Oswald headings, Open Sans body,
-  `#BE0000` brand red).
+  `#BE0000` brand red). **For UI-generation prompts, start at
+  [§11 Agent prompt guide](style-guide.md#11-agent-prompt-guide)** —
+  it's a Claude-facing Bias / Reject summary of the whole document.
 - [plan-replicate-existing-site.md](plan-replicate-existing-site.md) —
   routing table, phases, operations section (deploy, CI, SEO, GDPR,
   backups, email, monitoring), and resolved vs open questions.
