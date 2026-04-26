@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { apiFetch } from "../api/client";
 import type { LoanHistoryEntry } from "../types/loan";
 import type { GameWithStatus } from "../types/game";
@@ -8,6 +8,7 @@ interface UseGameHistoryResult {
   readonly history: readonly LoanHistoryEntry[];
   readonly loading: boolean;
   readonly error: string | null;
+  readonly refetch: () => void;
 }
 
 export function useGameHistory(gameId: string | undefined): UseGameHistoryResult {
@@ -16,30 +17,31 @@ export function useGameHistory(gameId: string | undefined): UseGameHistoryResult
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const fetchAll = useCallback(() => {
     if (!gameId) {
       setLoading(false);
-      setError("ID de joc no vàlid");
+      setError("ID de juego no válido");
       return;
     }
 
     setLoading(true);
     setError(null);
 
-    const fetchAll = async () => {
-      const [games, entries] = await Promise.all([
-        apiFetch<readonly GameWithStatus[]>("/games"),
-        apiFetch<readonly LoanHistoryEntry[]>(`/games/${gameId}/history`),
-      ]);
-      const found = games.find((g) => g.id === Number(gameId)) ?? null;
-      setGame(found);
-      setHistory(entries);
-    };
-
-    fetchAll()
+    Promise.all([
+      apiFetch<readonly GameWithStatus[]>("/games"),
+      apiFetch<readonly LoanHistoryEntry[]>(`/games/${gameId}/history`),
+    ])
+      .then(([games, entries]) => {
+        setGame(games.find((g) => g.id === Number(gameId)) ?? null);
+        setHistory(entries);
+      })
       .catch((err: Error) => setError(err.message))
       .finally(() => setLoading(false));
   }, [gameId]);
 
-  return { game, history, loading, error };
+  useEffect(() => {
+    fetchAll();
+  }, [fetchAll]);
+
+  return { game, history, loading, error, refetch: fetchAll };
 }

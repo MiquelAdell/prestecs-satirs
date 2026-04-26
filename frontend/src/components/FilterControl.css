@@ -7,12 +7,17 @@
 
 .filter-control button {
   flex: 1;
-  padding: var(--space-xs) var(--space-md);
+  min-width: 0;
+  padding: var(--space-xs) var(--space-sm);
   border: none;
   background-color: var(--color-bg-card);
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
   transition: background-color 0.15s, color 0.15s;
 }
 
