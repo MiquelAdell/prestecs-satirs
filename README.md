@@ -39,14 +39,40 @@ that exercises the feature you care about.
 
 ### Lending app only (fastest iteration, HMR)
 
-Backend + Vite dev server. Best for day-to-day work on `/prestamos`.
+Backend + Vite dev server. Best for day-to-day work on `/prestamos`. Runs
+natively — no Docker needed.
+
+```bash
+# Clone the repo (use development branch for ongoing work)
+git clone https://github.com/MiquelAdell/refugio-del-satiro
+cd refugio-del-satiro
+git checkout development
+
+# Install backend (exposes the `refugio` CLI) and frontend dependencies
+pip install -e ".[dev]"
+cd frontend && npm install && cd ..
+```
+
+To import members, export `members.csv` from the members Google Sheet and place
+it at the repo root. If you don't have it, skip the `import-members` line below
+and add a single test member instead:
+
+```bash
+refugio import-members --email you@example.com --name "Test User" --admin
+```
+
+The `--base-url` in the import command is just baked into the generated
+password-setup links — it does **not** need to be reachable when you run the
+command.
 
 ```bash
 # One-time: migrate and seed the DB
 refugio migrate
 refugio import-games data/bgg_collection.json
 refugio import-members members.csv --base-url http://localhost:5173/prestamos
+```
 
+```bash
 # Two terminals:
 uvicorn backend.api.app:create_app --factory --reload --port 8000   # backend
 cd frontend && npm run dev                                          # frontend
