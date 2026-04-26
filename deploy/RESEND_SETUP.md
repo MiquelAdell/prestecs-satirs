@@ -38,7 +38,7 @@ SMTP_HOST=smtp.resend.com
 SMTP_PORT=587
 SMTP_USER=resend
 SMTP_PASSWORD=re_YOUR_API_KEY_HERE
-SMTP_FROM=prestecs@refugiodelsatiro.es
+SMTP_FROM=prestamos@refugiodelsatiro.es
 ```
 
 Then restart:
