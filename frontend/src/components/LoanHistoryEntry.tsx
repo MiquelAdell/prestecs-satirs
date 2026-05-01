@@ -16,7 +16,7 @@ function formatDate(iso: string): string {
 export function LoanHistoryEntry({ entry }: LoanHistoryEntryProps) {
   return (
     <div className="loan-history-entry">
-      <span className="loan-history-member">{entry.member_display_name}</span>
+      <span className="loan-history-member">{entry.member_display_name ?? "Socio"}</span>
       <span className="loan-history-dates">
         {formatDate(entry.borrowed_at)}
         {" — "}

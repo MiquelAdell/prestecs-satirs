@@ -56,7 +56,7 @@ function matchesTimePreset(playingTime: number, preset: TimePreset): boolean {
 const DESKTOP_MQ = "(min-width: 641px)";
 
 export function CatalogPage() {
-  const { games, loading, error, refetch } = useGames();
+  const { games, loading, error } = useGames();
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<FilterValue>("all");
   const [location, setLocation] = useState<LocationValue>("all");
@@ -378,7 +378,7 @@ export function CatalogPage() {
       ) : (
         <div className="catalog-grid">
           {filteredGames.map((game) => (
-            <GameCard key={game.id} game={game} onAction={refetch} />
+            <GameCard key={game.id} game={game} />
           ))}
         </div>
       )}

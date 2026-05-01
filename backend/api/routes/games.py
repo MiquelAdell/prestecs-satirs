@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 
 from backend.api.dependencies import (
+    OptionalMember,
     get_game_history_use_case,
     get_game_use_case,
     get_list_games_use_case,
@@ -39,12 +40,12 @@ class GameResponse(BaseModel):
 
 
 class LoanHistoryEntryResponse(BaseModel):
-    member_display_name: str
+    member_display_name: str | None
     borrowed_at: datetime
     returned_at: datetime | None
 
 
-def _to_response(g: GameWithStatus) -> GameResponse:
+def _to_response(g: GameWithStatus, *, is_authenticated: bool) -> GameResponse:
     return GameResponse(
         id=g.id,
         bgg_id=g.bgg_id,
@@ -61,22 +62,27 @@ def _to_response(g: GameWithStatus) -> GameResponse:
         created_at=g.created_at,
         updated_at=g.updated_at,
         status=g.status,
-        borrower_display_name=g.borrower_display_name,
-        loan_id=g.loan_id,
+        borrower_display_name=g.borrower_display_name if is_authenticated else None,
+        loan_id=g.loan_id if is_authenticated else None,
     )
 
 
 @router.get("", response_model=list[GameResponse])
 def list_games(
     use_case: Annotated[ListGamesUseCase, Depends(get_list_games_use_case)],
+    member: OptionalMember,
 ) -> list[GameResponse]:
-    return [_to_response(g) for g in use_case.execute()]
+    is_authenticated = member is not None
+    return [
+        _to_response(g, is_authenticated=is_authenticated) for g in use_case.execute()
+    ]
 
 
 @router.get("/{slug}", response_model=GameResponse)
 def get_game(
     slug: str,
     use_case: Annotated[GetGameUseCase, Depends(get_game_use_case)],
+    member: OptionalMember,
 ) -> GameResponse:
     game = use_case.execute(slug)
     if game is None:
@@ -84,20 +90,24 @@ def get_game(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Juego no encontrado.",
         )
-    return _to_response(game)
+    return _to_response(game, is_authenticated=member is not None)
 
 
 @router.get("/{slug}/history", response_model=list[LoanHistoryEntryResponse])
 def get_game_history(
     slug: str,
     use_case: Annotated[GetGameHistoryUseCase, Depends(get_game_history_use_case)],
+    member: OptionalMember,
 ) -> list[LoanHistoryEntryResponse]:
     entries = use_case.execute(slug)
     if entries is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Juego no encontrado.")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Juego no encontrado."
+        )
+    is_authenticated = member is not None
     return [
         LoanHistoryEntryResponse(
-            member_display_name=e.member_display_name,
+            member_display_name=e.member_display_name if is_authenticated else None,
             borrowed_at=e.borrowed_at,
             returned_at=e.returned_at,
         )
