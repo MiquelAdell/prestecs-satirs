@@ -27,11 +27,10 @@ export function useGameHistory(slug: string | undefined): UseGameHistoryResult {
     setError(null);
 
     const fetchAll = async () => {
-      const [games, entries] = await Promise.all([
-        apiFetch<readonly GameWithStatus[]>("/juegos"),
+      const [found, entries] = await Promise.all([
+        apiFetch<GameWithStatus>(`/juegos/${slug}`),
         apiFetch<readonly LoanHistoryEntry[]>(`/juegos/${slug}/history`),
       ]);
-      const found = games.find((g) => g.slug === slug) ?? null;
       setGame(found);
       setHistory(entries);
     };

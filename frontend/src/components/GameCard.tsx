@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 import { apiFetch } from "../api/client";
 import { ConfirmDialog } from "./ConfirmDialog";
+import { Button } from "../ui/Button";
 import type { GameWithStatus } from "../types/game";
 import "./GameCard.css";
 
@@ -14,7 +14,6 @@ interface GameCardProps {
 
 export function GameCard({ game, onAction }: GameCardProps) {
   const { member } = useAuth();
-  const { t } = useTranslation();
   const [confirmAction, setConfirmAction] = useState<"borrow" | "return" | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -74,7 +73,7 @@ export function GameCard({ game, onAction }: GameCardProps) {
           )}
           {game.bgg_rating > 0 && (
             <span className="game-card-rating">
-              {t("game.rating", { rating: game.bgg_rating.toFixed(1) })}
+              {`${game.bgg_rating.toFixed(1)} ★`}
             </span>
           )}
         </div>
@@ -86,59 +85,59 @@ export function GameCard({ game, onAction }: GameCardProps) {
           <div className="game-card-meta">
             {game.min_players > 0 && game.max_players > 0 && (
               <span className="game-card-players">
-                {t("game.players", { min: game.min_players, max: game.max_players })}
+                {`${game.min_players}-${game.max_players} jugadores`}
               </span>
             )}
             {game.playing_time > 0 && (
               <span className="game-card-time">
-                {t("game.playingTime", { time: game.playing_time })}
+                {`${game.playing_time} min`}
               </span>
             )}
           </div>
           <span className={`game-card-status ${game.status}`}>
             {game.status === "available"
-              ? t("game.available")
-              : t("game.lentTo", { name: game.borrower_display_name })}
+              ? "Disponible"
+              : `Prestado a ${game.borrower_display_name}`}
           </span>
         </div>
       </Link>
 
       <div className="game-card-actions">
         {canBorrow && (
-          <button
-            className="btn btn-primary"
+          <Button
+            variant="primary"
             onClick={() => setConfirmAction("borrow")}
             disabled={loading}
           >
-            {t("game.borrow")}
-          </button>
+            Tomar prestado
+          </Button>
         )}
         {canReturn && (
-          <button
-            className="btn btn-secondary"
+          <Button
+            variant="secondary"
             onClick={() => setConfirmAction("return")}
             disabled={loading}
           >
-            {t("game.return")}
-          </button>
+            Devolver
+          </Button>
         )}
       </div>
 
       {confirmAction === "borrow" && (
         <ConfirmDialog
-          message={t("game.confirmBorrow", { name: game.name })}
+          message={`¿Quieres tomar prestado "${game.name}"?`}
           onConfirm={() => void handleBorrow()}
           onCancel={() => setConfirmAction(null)}
-          confirmLabel={t("game.borrow")}
+          confirmLabel="Tomar prestado"
         />
       )}
 
       {confirmAction === "return" && (
         <ConfirmDialog
-          message={t("game.confirmReturn", { name: game.name })}
+          message={`¿Quieres devolver "${game.name}"?`}
           onConfirm={() => void handleReturn()}
           onCancel={() => setConfirmAction(null)}
-          confirmLabel={t("game.return")}
+          confirmLabel="Devolver"
         />
       )}
     </div>

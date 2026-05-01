@@ -11,6 +11,7 @@ class Game:
     name: str
     slug: str
     thumbnail_url: str
+    image_url: str
     year_published: int
     min_players: int
     max_players: int

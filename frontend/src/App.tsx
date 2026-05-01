@@ -1,18 +1,18 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { NavBar } from "./components/NavBar";
-import { LanguageSelector } from "./components/LanguageSelector";
 import { CatalogPage } from "./pages/CatalogPage";
 import { GameDetailPage } from "./pages/GameDetailPage";
 import { MyLoansPage } from "./pages/MyLoansPage";
 import { LoginPage } from "./pages/LoginPage";
+import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
 import { SetPasswordPage } from "./pages/SetPasswordPage";
 import { AdminMembersPage } from "./pages/AdminMembersPage";
-import "./i18n";
+import { AdminContentPage } from "./pages/AdminContentPage";
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/prestamos">
       <AuthProvider>
         <NavBar />
         <main>
@@ -21,11 +21,12 @@ export default function App() {
             <Route path="/juegos/:slug" element={<GameDetailPage />} />
             <Route path="/my-loans" element={<MyLoansPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/set-password" element={<SetPasswordPage />} />
             <Route path="/admin/members" element={<AdminMembersPage />} />
+            <Route path="/admin/content" element={<AdminContentPage />} />
           </Routes>
         </main>
-        <LanguageSelector />
       </AuthProvider>
     </BrowserRouter>
   );

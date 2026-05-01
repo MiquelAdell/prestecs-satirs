@@ -34,6 +34,7 @@ class ImportGamesUseCase:
                 bgg_id=bgg_game.bgg_id,
                 name=bgg_game.name,
                 thumbnail_url=bgg_game.thumbnail_url,
+                image_url="",
                 year_published=bgg_game.year_published,
             )
             if existing is None:

@@ -4,6 +4,7 @@ export interface Game {
   readonly name: string;
   readonly slug: string;
   readonly thumbnail_url: string;
+  readonly image_url: string;
   readonly year_published: number;
   readonly min_players: number;
   readonly max_players: number;

@@ -12,10 +12,12 @@ from backend.api.dependencies import (
     _settings,
     get_authenticate_use_case,
     get_current_member,
+    get_request_password_reset_use_case,
     get_set_password_use_case,
 )
 from backend.domain.entities.member import Member
 from backend.domain.use_cases.authenticate import AuthenticateUseCase
+from backend.domain.use_cases.request_password_reset import RequestPasswordResetUseCase
 from backend.domain.use_cases.set_password import SetPasswordError, SetPasswordUseCase
 
 router = APIRouter(prefix="/api", tags=["auth"])
@@ -24,6 +26,10 @@ router = APIRouter(prefix="/api", tags=["auth"])
 class LoginRequest(BaseModel):
     email: str
     password: str
+
+
+class ForgotPasswordRequest(BaseModel):
+    email: str
 
 
 class SetPasswordRequest(BaseModel):
@@ -77,6 +83,15 @@ def logout(response: Response) -> OkResponse:
 @router.get("/me", response_model=MemberResponse)
 def get_me(member: CurrentMember) -> MemberResponse:
     return _member_to_response(member)
+
+
+@router.post("/forgot-password", response_model=OkResponse)
+def forgot_password(
+    body: ForgotPasswordRequest,
+    use_case: Annotated[RequestPasswordResetUseCase, Depends(get_request_password_reset_use_case)],
+) -> OkResponse:
+    use_case.execute(body.email)
+    return OkResponse()
 
 
 @router.post("/set-password", response_model=OkResponse)

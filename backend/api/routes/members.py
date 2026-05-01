@@ -16,6 +16,7 @@ class ActiveLoanResponse(BaseModel):
     game_id: int
     game_name: str
     game_thumbnail_url: str
+    game_image_url: str
     borrowed_at: str
 
 
@@ -33,6 +34,7 @@ def get_my_loans(
             game_id=loan.game_id,
             game_name=loan.game_name,
             game_thumbnail_url=loan.game_thumbnail_url,
+            game_image_url=loan.game_image_url,
             borrowed_at=loan.borrowed_at,
         )
         for loan in loans

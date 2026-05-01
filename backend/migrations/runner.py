@@ -13,7 +13,7 @@ MIGRATIONS_DIR = Path(__file__).parent
 def _backfill_game_slugs(conn: sqlite3.Connection) -> None:
     """Generate slugs for games that don't yet have one.
 
-    Run after ``004_add_game_slug.sql`` adds the column with an empty default.
+    Run after ``005_add_game_slug.sql`` adds the column with an empty default.
     """
     rows = conn.execute(
         "SELECT id, name FROM games WHERE slug = '' OR slug IS NULL"
@@ -34,7 +34,7 @@ def _backfill_game_slugs(conn: sqlite3.Connection) -> None:
 
 
 POST_MIGRATION_HOOKS: dict[str, Callable[[sqlite3.Connection], None]] = {
-    "004_add_game_slug": _backfill_game_slugs,
+    "005_add_game_slug": _backfill_game_slugs,
 }
 
 
