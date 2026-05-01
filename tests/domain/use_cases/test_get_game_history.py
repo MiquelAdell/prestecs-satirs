@@ -38,6 +38,7 @@ def _make_game(id: int, slug: str = "catan") -> Game:
         name=slug.replace("-", " ").title(),
         slug=slug,
         thumbnail_url="https://example.com/x.jpg",
+        image_url="https://example.com/x_full.jpg",
         year_published=2020,
         min_players=2,
         max_players=4,

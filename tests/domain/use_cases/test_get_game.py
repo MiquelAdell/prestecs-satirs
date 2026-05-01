@@ -19,7 +19,7 @@ class TestGetGameUseCase:
             member_repo=FakeMemberRepository(),
         )
 
-        assert use_case.execute(999) is None
+        assert use_case.execute("no-existe") is None
 
     def test_returns_available_game(self) -> None:
         game = _make_game(1, "Catan")
@@ -29,7 +29,7 @@ class TestGetGameUseCase:
             member_repo=FakeMemberRepository(),
         )
 
-        result = use_case.execute(1)
+        result = use_case.execute("catan")
 
         assert result is not None
         assert result.id == 1
@@ -49,7 +49,7 @@ class TestGetGameUseCase:
             member_repo=FakeMemberRepository([member]),
         )
 
-        result = use_case.execute(1)
+        result = use_case.execute("catan")
 
         assert result is not None
         assert result.status == "lent"
