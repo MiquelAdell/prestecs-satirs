@@ -10,16 +10,16 @@ interface UseGameHistoryResult {
   readonly error: string | null;
 }
 
-export function useGameHistory(gameId: string | undefined): UseGameHistoryResult {
+export function useGameHistory(slug: string | undefined): UseGameHistoryResult {
   const [game, setGame] = useState<GameWithStatus | null>(null);
   const [history, setHistory] = useState<readonly LoanHistoryEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!gameId) {
+    if (!slug) {
       setLoading(false);
-      setError("ID de joc no vàlid");
+      setError("Identificador de juego no válido");
       return;
     }
 
@@ -27,11 +27,10 @@ export function useGameHistory(gameId: string | undefined): UseGameHistoryResult
     setError(null);
 
     const fetchAll = async () => {
-      const [games, entries] = await Promise.all([
-        apiFetch<readonly GameWithStatus[]>("/games"),
-        apiFetch<readonly LoanHistoryEntry[]>(`/games/${gameId}/history`),
+      const [found, entries] = await Promise.all([
+        apiFetch<GameWithStatus>(`/juegos/${slug}`),
+        apiFetch<readonly LoanHistoryEntry[]>(`/juegos/${slug}/history`),
       ]);
-      const found = games.find((g) => g.id === Number(gameId)) ?? null;
       setGame(found);
       setHistory(entries);
     };
@@ -39,7 +38,7 @@ export function useGameHistory(gameId: string | undefined): UseGameHistoryResult
     fetchAll()
       .catch((err: Error) => setError(err.message))
       .finally(() => setLoading(false));
-  }, [gameId]);
+  }, [slug]);
 
   return { game, history, loading, error };
 }

@@ -37,7 +37,7 @@ class TestListGames:
     def test_empty_catalog(self) -> None:
         client, conn = _setup_client()
 
-        response = client.get("/api/games")
+        response = client.get("/api/juegos")
 
         assert response.status_code == 200
         assert response.json() == []
@@ -70,7 +70,7 @@ class TestListGames:
 
         loan_repo.create(game_id=game2.id, member_id=member.id)
 
-        response = client.get("/api/games")
+        response = client.get("/api/juegos")
 
         assert response.status_code == 200
         data = response.json()
@@ -78,10 +78,12 @@ class TestListGames:
 
         by_name = {g["name"]: g for g in data}
 
+        assert by_name["Catan"]["slug"] == "catan"
         assert by_name["Catan"]["status"] == "available"
         assert by_name["Catan"]["borrower_display_name"] is None
         assert by_name["Catan"]["loan_id"] is None
 
+        assert by_name["Pandemic"]["slug"] == "pandemic"
         assert by_name["Pandemic"]["status"] == "lent"
         assert by_name["Pandemic"]["borrower_display_name"] == "Alice Smith"
         assert by_name["Pandemic"]["loan_id"] is not None
@@ -89,11 +91,85 @@ class TestListGames:
         conn.close()
 
 
-class TestGetGameHistory:
-    def test_empty_history(self) -> None:
+class TestGetGame:
+    def test_not_found(self) -> None:
         client, conn = _setup_client()
 
-        response = client.get("/api/games/999/history")
+        response = client.get("/api/juegos/no-existe")
+
+        assert response.status_code == 404
+        assert response.json() == {"detail": "Juego no encontrado."}
+        conn.close()
+
+    def test_available_game(self) -> None:
+        client, conn = _setup_client()
+        game_repo = SqliteGameRepository(conn)
+
+        game = game_repo.upsert_by_bgg_id(
+            bgg_id=100, name="Catan", thumbnail_url="https://example.com/catan.jpg", year_published=1995
+        )
+
+        response = client.get(f"/api/juegos/{game.slug}")
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["id"] == game.id
+        assert data["slug"] == "catan"
+        assert data["name"] == "Catan"
+        assert data["status"] == "available"
+        assert data["borrower_display_name"] is None
+        assert data["loan_id"] is None
+        conn.close()
+
+    def test_lent_game(self) -> None:
+        client, conn = _setup_client()
+        game_repo = SqliteGameRepository(conn)
+        member_repo = SqliteMemberRepository(conn)
+        loan_repo = SqliteLoanRepository(conn)
+
+        game = game_repo.upsert_by_bgg_id(
+            bgg_id=100, name="Catan", thumbnail_url="https://example.com/catan.jpg", year_published=1995
+        )
+        member = member_repo.upsert_by_email(
+            member_number=1,
+            first_name="Alice",
+            last_name="Smith",
+            nickname=None,
+            phone=None,
+            email="alice@example.com",
+            display_name="Alice Smith",
+            is_admin=False,
+        )
+        loan = loan_repo.create(game_id=game.id, member_id=member.id)
+
+        response = client.get(f"/api/juegos/{game.slug}")
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["status"] == "lent"
+        assert data["borrower_display_name"] == "Alice Smith"
+        assert data["loan_id"] == loan.id
+        conn.close()
+
+
+class TestGetGameHistory:
+    def test_unknown_slug_returns_404(self) -> None:
+        client, conn = _setup_client()
+
+        response = client.get("/api/juegos/no-existe/history")
+
+        assert response.status_code == 404
+        conn.close()
+
+    def test_known_game_with_no_history_returns_empty_list(self) -> None:
+        client, conn = _setup_client()
+
+        game_repo = SqliteGameRepository(conn)
+        game_repo.upsert_by_bgg_id(
+            bgg_id=100, name="Catan", thumbnail_url="https://example.com/catan.jpg", year_published=1995
+        )
+
+        response = client.get("/api/juegos/catan/history")
 
         assert response.status_code == 200
         assert response.json() == []
@@ -139,7 +215,7 @@ class TestGetGameHistory:
         # Bob currently has it
         loan_repo.create(game_id=game.id, member_id=bob.id)
 
-        response = client.get(f"/api/games/{game.id}/history")
+        response = client.get(f"/api/juegos/{game.slug}/history")
 
         assert response.status_code == 200
         data = response.json()

@@ -57,7 +57,7 @@ export function GameCard({ game, onAction }: GameCardProps) {
 
   return (
     <div className="game-card">
-      <Link to={`/games/${game.id}`} className="game-card-link">
+      <Link to={`/juegos/${game.slug}`} className="game-card-link">
         <div className="game-card-thumbnail-wrapper">
           {game.thumbnail_url ? (
             <img
