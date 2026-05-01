@@ -27,11 +27,10 @@ export function useGameHistory(gameId: string | undefined): UseGameHistoryResult
     setError(null);
 
     const fetchAll = async () => {
-      const [games, entries] = await Promise.all([
-        apiFetch<readonly GameWithStatus[]>("/games"),
+      const [found, entries] = await Promise.all([
+        apiFetch<GameWithStatus>(`/games/${gameId}`),
         apiFetch<readonly LoanHistoryEntry[]>(`/games/${gameId}/history`),
       ]);
-      const found = games.find((g) => g.id === Number(gameId)) ?? null;
       setGame(found);
       setHistory(entries);
     };

@@ -78,6 +78,13 @@ uvicorn backend.api.app:create_app --factory --reload --port 8000   # backend
 cd frontend && npm run dev                                          # frontend
 ```
 
+Or you can instead run the command:
+
+```bash
+./dev.sh
+```
+From the repo root. It starts uvicorn on :8000 and Vite on :5173, traps Ctrl+C to kill both.
+
 Open http://localhost:5173/prestamos. Vite proxies `/prestamos/api` to the
 backend on `:8000`. The scraped site is **not** served in this mode — links
 to `/`, `/inicio`, etc. will 404.

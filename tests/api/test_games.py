@@ -89,6 +89,66 @@ class TestListGames:
         conn.close()
 
 
+class TestGetGame:
+    def test_not_found(self) -> None:
+        client, conn = _setup_client()
+
+        response = client.get("/api/games/999")
+
+        assert response.status_code == 404
+        assert response.json() == {"detail": "Juego no encontrado."}
+        conn.close()
+
+    def test_available_game(self) -> None:
+        client, conn = _setup_client()
+        game_repo = SqliteGameRepository(conn)
+
+        game = game_repo.upsert_by_bgg_id(
+            bgg_id=100, name="Catan", thumbnail_url="https://example.com/catan.jpg", year_published=1995
+        )
+
+        response = client.get(f"/api/games/{game.id}")
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["id"] == game.id
+        assert data["name"] == "Catan"
+        assert data["status"] == "available"
+        assert data["borrower_display_name"] is None
+        assert data["loan_id"] is None
+        conn.close()
+
+    def test_lent_game(self) -> None:
+        client, conn = _setup_client()
+        game_repo = SqliteGameRepository(conn)
+        member_repo = SqliteMemberRepository(conn)
+        loan_repo = SqliteLoanRepository(conn)
+
+        game = game_repo.upsert_by_bgg_id(
+            bgg_id=100, name="Catan", thumbnail_url="https://example.com/catan.jpg", year_published=1995
+        )
+        member = member_repo.upsert_by_email(
+            member_number=1,
+            first_name="Alice",
+            last_name="Smith",
+            nickname=None,
+            phone=None,
+            email="alice@example.com",
+            display_name="Alice Smith",
+            is_admin=False,
+        )
+        loan = loan_repo.create(game_id=game.id, member_id=member.id)
+
+        response = client.get(f"/api/games/{game.id}")
+
+        assert response.status_code == 200
+        data = response.json()
+        assert data["status"] == "lent"
+        assert data["borrower_display_name"] == "Alice Smith"
+        assert data["loan_id"] == loan.id
+        conn.close()
+
+
 class TestGetGameHistory:
     def test_empty_history(self) -> None:
         client, conn = _setup_client()

@@ -15,6 +15,7 @@ from backend.data.repositories.sqlite_member_repository import SqliteMemberRepos
 from backend.data.repositories.sqlite_password_token_repository import SqlitePasswordTokenRepository
 from backend.domain.entities.member import Member
 from backend.domain.use_cases.authenticate import AuthenticateUseCase
+from backend.domain.use_cases.get_game import GetGameUseCase
 from backend.domain.use_cases.get_game_history import GetGameHistoryUseCase
 from backend.domain.use_cases.list_games import ListGamesUseCase
 from backend.domain.use_cases.request_password_reset import RequestPasswordResetUseCase
@@ -68,6 +69,14 @@ def get_list_games_use_case(
     member_repo: MemberRepo,
 ) -> ListGamesUseCase:
     return ListGamesUseCase(game_repo, loan_repo, member_repo)
+
+
+def get_game_use_case(
+    game_repo: GameRepo,
+    loan_repo: LoanRepo,
+    member_repo: MemberRepo,
+) -> GetGameUseCase:
+    return GetGameUseCase(game_repo, loan_repo, member_repo)
 
 
 def get_game_history_use_case(
