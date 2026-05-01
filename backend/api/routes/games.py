@@ -3,20 +3,21 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 
 from backend.api.dependencies import get_game_history_use_case, get_list_games_use_case
 from backend.domain.use_cases.get_game_history import GetGameHistoryUseCase
 from backend.domain.use_cases.list_games import ListGamesUseCase
 
-router = APIRouter(prefix="/api/games", tags=["games"])
+router = APIRouter(prefix="/api/juegos", tags=["games"])
 
 
 class GameResponse(BaseModel):
     id: int
     bgg_id: int
     name: str
+    slug: str
     thumbnail_url: str
     year_published: int
     min_players: int
@@ -47,6 +48,7 @@ def list_games(
             id=g.id,
             bgg_id=g.bgg_id,
             name=g.name,
+            slug=g.slug,
             thumbnail_url=g.thumbnail_url,
             year_published=g.year_published,
             min_players=g.min_players,
@@ -64,12 +66,14 @@ def list_games(
     ]
 
 
-@router.get("/{game_id}/history", response_model=list[LoanHistoryEntryResponse])
+@router.get("/{slug}/history", response_model=list[LoanHistoryEntryResponse])
 def get_game_history(
-    game_id: int,
+    slug: str,
     use_case: Annotated[GetGameHistoryUseCase, Depends(get_game_history_use_case)],
 ) -> list[LoanHistoryEntryResponse]:
-    entries = use_case.execute(game_id)
+    entries = use_case.execute(slug)
+    if entries is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Juego no encontrado.")
     return [
         LoanHistoryEntryResponse(
             member_display_name=e.member_display_name,

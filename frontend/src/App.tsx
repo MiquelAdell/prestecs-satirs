@@ -18,7 +18,7 @@ export default function App() {
         <main>
           <Routes>
             <Route path="/" element={<CatalogPage />} />
-            <Route path="/games/:id" element={<GameDetailPage />} />
+            <Route path="/juegos/:slug" element={<GameDetailPage />} />
             <Route path="/my-loans" element={<MyLoansPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/set-password" element={<SetPasswordPage />} />

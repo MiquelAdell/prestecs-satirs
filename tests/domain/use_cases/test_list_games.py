@@ -89,6 +89,7 @@ def _make_game(id: int, name: str = "Test Game") -> Game:
         id=id,
         bgg_id=id * 100,
         name=name,
+        slug=f"test-game-{id}",
         thumbnail_url=f"https://example.com/{id}.jpg",
         year_published=2020,
         min_players=2,

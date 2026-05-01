@@ -5,8 +5,8 @@ import { LoanHistoryEntry } from "../components/LoanHistoryEntry";
 import "./GameDetailPage.css";
 
 export function GameDetailPage() {
-  const { id } = useParams<{ id: string }>();
-  const { game, history, loading, error } = useGameHistory(id);
+  const { slug } = useParams<{ slug: string }>();
+  const { game, history, loading, error } = useGameHistory(slug);
   const { t } = useTranslation();
 
   if (loading) {

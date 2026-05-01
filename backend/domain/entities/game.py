@@ -9,6 +9,7 @@ class Game:
     id: int
     bgg_id: int
     name: str
+    slug: str
     thumbnail_url: str
     year_published: int
     min_players: int

@@ -70,10 +70,11 @@ def get_list_games_use_case(
 
 
 def get_game_history_use_case(
+    game_repo: GameRepo,
     loan_repo: LoanRepo,
     member_repo: MemberRepo,
 ) -> GetGameHistoryUseCase:
-    return GetGameHistoryUseCase(loan_repo, member_repo)
+    return GetGameHistoryUseCase(game_repo, loan_repo, member_repo)
 
 
 def get_authenticate_use_case(member_repo: MemberRepo) -> AuthenticateUseCase:
