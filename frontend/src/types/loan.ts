@@ -8,7 +8,7 @@ export interface ActiveLoan {
 }
 
 export interface LoanHistoryEntry {
-  readonly member_display_name: string;
+  readonly member_display_name: string | null;
   readonly borrowed_at: string;
   readonly returned_at: string | null;
 }
