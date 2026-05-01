@@ -218,18 +218,29 @@ server treats Maria as anonymous again.
 
 ---
 
-## 4. How members get their first password
+## 4. How members get their password
 
 Members don't "register" themselves. An admin imports them from a CSV file
-(the member list the association already has). At import time, the system
-generates a unique, random, one-time link for each member:
+(the member list the association already has). Once a member exists in the
+database with their real email on file, there are **two ways** they can end
+up with a working password — both produce the same kind of one-time link:
 
 ```
 https://refugidelsatiro.cat/prestamos/set-password?token=a3f8c9d1e7...
 ```
 
-The admin shares this link with each member (by message, email, etc.). When
-the member clicks it:
+**Option A — Admin onboards the member.** At import time the system generates
+a unique, random, one-time link for each new member, and the admin shares it
+manually (WhatsApp, email, Signal, in person, etc.). This is how members get
+in on day one, before they have any credentials.
+
+**Option B — Member self-serves a reset.** Once the member has been imported
+(so the system knows their email), they can hit the "I forgot my password"
+form themselves and enter their email. The server creates a fresh token and
+emails the link to the registered address. This covers forgotten passwords
+and any later resets, without admin involvement.
+
+Either way, when the member clicks the link:
 
 1. The browser shows a "Set your password" form.
 2. The member types their desired password.
@@ -237,7 +248,9 @@ the member clicks it:
 4. The server hashes the password and stores it in the `members` table.
 5. The token is marked as "used" so it can't be reused.
 
-This avoids the need for email verification — the link *is* the verification.
+This avoids the need for separate email verification — the link *is* the
+verification, and only the holder of the registered address can receive it
+in Option B.
 
 ---
 

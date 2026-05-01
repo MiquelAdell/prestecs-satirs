@@ -945,11 +945,12 @@ def diagram_agentic() -> None:
 def diagram_password_setup() -> None:
     els: list[dict] = []
     fid = "frame-pwd"
-    els.append(frame(fid, 0, 0, 1200, 800, "8. How Members Get Their Password"))
+    els.append(frame(fid, 0, 0, 1200, 900, "8. How Members Get Their Password"))
 
     # Intro text
     els.append(text("intro", 40, 40,
-                     "Members don't register themselves. An admin imports them and shares a one-time link.",
+                     "Members don't register themselves. An admin imports them; from then on the member"
+                     " can either be onboarded by the admin or use \"I forgot my password\" themselves.",
                      size=16, align="left", stroke="#868e96", frame_id=fid))
 
     # --- Phase 1: Import ---
@@ -994,33 +995,63 @@ def diagram_password_setup() -> None:
                      "Output:  Maria (maria@example.com): https://refugidelsatiro.cat/prestamos/set-password?token=a3f8c9...",
                      size=13, font=3, container_id="link-example", stroke="#6741d9", frame_id=fid))
 
-    # --- Phase 2: Admin shares link ---
+    # --- Phase 2: How the link reaches the member (two options) ---
     y2 = 330
-    els.append(rect("phase2-bg", 40, y2, 1120, 100, bg="#f8f9fa", stroke="#dee2e6", stroke_w=1, frame_id=fid))
-    els.append(text("phase2-label", 60, y2 + 10, "Phase 2: Admin shares the link", size=18,
+    els.append(rect("phase2-bg", 40, y2, 1120, 230, bg="#f8f9fa", stroke="#dee2e6", stroke_w=1, frame_id=fid))
+    els.append(text("phase2-label", 60, y2 + 10, "Phase 2: How the link reaches the member", size=18,
                      align="left", bold=True, frame_id=fid))
 
-    els.append(rect("admin-share", 60, y2 + 45, 160, 40, bg="#ffd8a8", stroke="#e8590c", frame_id=fid,
+    # Option A — Admin onboards the member
+    els.append(text("opt-a-label", 60, y2 + 45,
+                     "Option A — Admin onboards the member (first-time setup)",
+                     size=14, align="left", stroke="#868e96", frame_id=fid))
+
+    els.append(rect("admin-share", 60, y2 + 70, 160, 40, bg="#ffd8a8", stroke="#e8590c", frame_id=fid,
                      bound=[{"id": "admin-share-t", "type": "text"}, {"id": "arr-share", "type": "arrow"}]))
     els.append(text("admin-share-t", 0, 0, "Admin", size=14, container_id="admin-share", stroke="#e8590c", frame_id=fid))
 
-    els.append(arrow("arr-share", 220, y2 + 65, [[0, 0], [140, 0]],
+    els.append(arrow("arr-share", 220, y2 + 90, [[0, 0], [140, 0]],
                      start_id="admin-share", end_id="share-method", stroke="#e8590c", frame_id=fid))
 
-    els.append(rect("share-method", 360, y2 + 40, 300, 50, bg="#b2f2bb", stroke="#2f9e44", frame_id=fid,
+    els.append(rect("share-method", 360, y2 + 65, 300, 50, bg="#b2f2bb", stroke="#2f9e44", frame_id=fid,
                      bound=[{"id": "share-method-t", "type": "text"}, {"id": "arr-share", "type": "arrow"}, {"id": "arr-to-member", "type": "arrow"}]))
     els.append(text("share-method-t", 0, 0, "Sends link via WhatsApp,\nemail, Signal, etc.", size=14,
                      container_id="share-method", stroke="#2f9e44", frame_id=fid))
 
-    els.append(arrow("arr-to-member", 660, y2 + 65, [[0, 0], [100, 0]],
+    els.append(arrow("arr-to-member", 660, y2 + 90, [[0, 0], [100, 0]],
                      start_id="share-method", end_id="member-receives", stroke="#2f9e44", frame_id=fid))
 
-    els.append(rect("member-receives", 760, y2 + 45, 160, 40, bg="#a5d8ff", stroke="#1971c2", frame_id=fid,
+    els.append(rect("member-receives", 760, y2 + 70, 160, 40, bg="#a5d8ff", stroke="#1971c2", frame_id=fid,
                      bound=[{"id": "member-receives-t", "type": "text"}, {"id": "arr-to-member", "type": "arrow"}]))
     els.append(text("member-receives-t", 0, 0, "Member", size=14, container_id="member-receives", stroke="#1971c2", frame_id=fid))
 
+    # Option B — Member self-serves via "I forgot my password"
+    els.append(text("opt-b-label", 60, y2 + 130,
+                     "Option B — Member self-serves (forgot password, password expired, etc.)",
+                     size=14, align="left", stroke="#868e96", frame_id=fid))
+
+    els.append(rect("self-member", 60, y2 + 155, 160, 40, bg="#a5d8ff", stroke="#1971c2", frame_id=fid,
+                     bound=[{"id": "self-member-t", "type": "text"}, {"id": "arr-self-1", "type": "arrow"}]))
+    els.append(text("self-member-t", 0, 0, "Member", size=14, container_id="self-member", stroke="#1971c2", frame_id=fid))
+
+    els.append(arrow("arr-self-1", 220, y2 + 175, [[0, 0], [140, 0]],
+                     start_id="self-member", end_id="self-form", stroke="#1971c2", frame_id=fid))
+
+    els.append(rect("self-form", 360, y2 + 150, 300, 50, bg="#d0bfff", stroke="#6741d9", frame_id=fid,
+                     bound=[{"id": "self-form-t", "type": "text"}, {"id": "arr-self-1", "type": "arrow"}, {"id": "arr-self-2", "type": "arrow"}]))
+    els.append(text("self-form-t", 0, 0, "Visits \"I forgot my password\"\nand enters their email", size=14,
+                     container_id="self-form", stroke="#6741d9", frame_id=fid))
+
+    els.append(arrow("arr-self-2", 660, y2 + 175, [[0, 0], [100, 0]],
+                     start_id="self-form", end_id="self-server", stroke="#6741d9", frame_id=fid))
+
+    els.append(rect("self-server", 760, y2 + 150, 200, 50, bg="#ffd8a8", stroke="#e8590c", frame_id=fid,
+                     bound=[{"id": "self-server-t", "type": "text"}, {"id": "arr-self-2", "type": "arrow"}]))
+    els.append(text("self-server-t", 0, 0, "Server emails the link\nto the registered address", size=14,
+                     container_id="self-server", stroke="#e8590c", frame_id=fid))
+
     # --- Phase 3: Member sets password ---
-    y3 = 460
+    y3 = 590
     els.append(rect("phase3-bg", 40, y3, 1120, 300, bg="#f8f9fa", stroke="#dee2e6", stroke_w=1, frame_id=fid))
     els.append(text("phase3-label", 60, y3 + 10, "Phase 3: Member clicks link and sets password", size=18,
                      align="left", bold=True, frame_id=fid))
