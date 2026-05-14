@@ -22,6 +22,7 @@ from scraper.linker import (
     rewrite_href,
 )
 from scraper.manifest import Manifest, PageRecord
+from scraper.nav_extractor import extract_nav
 from scraper.stripper import ContentExtractionError, strip
 from scraper.writer import (
     DeletionGuardError,
@@ -30,6 +31,7 @@ from scraper.writer import (
     purge_stale_files,
     read_previous_manifest,
     write_manifest,
+    write_nav,
     write_page,
 )
 
@@ -149,9 +151,7 @@ async def _rehost_and_rewrite(
         if not isinstance(link, Tag):
             continue
         rels = link.get("rel")
-        rel_value = (
-            " ".join(rels) if isinstance(rels, list) else str(rels)
-        ).lower()
+        rel_value = (" ".join(rels) if isinstance(rels, list) else str(rels)).lower()
         if "icon" not in rel_value:
             continue
         href = link.get("href")
@@ -334,6 +334,24 @@ async def run(
             output_file = path_to_output(canonical, config.assets_subdir)
             sha = content_sha(document_html)
             previous = previous_by_path.get(canonical)
+
+            nav_sha: str | None = None
+            if canonical == "/" and not dry_run:
+                nav_items = extract_nav(stripped.document)
+                nav_sha = write_nav(nav_items, output_dir)
+                if nav_sha is None:
+                    await _emit(
+                        sink,
+                        ScraperEvent(
+                            kind="warning",
+                            message=(
+                                "nav extraction yielded no items;"
+                                " _nav.json not written"
+                            ),
+                            data={"path": canonical},
+                        ),
+                    )
+
             record = PageRecord(
                 url=url,
                 path=canonical,
@@ -342,6 +360,7 @@ async def run(
                 content_sha256=sha,
                 asset_filenames=asset_filenames,
                 scraped_at=datetime.now(UTC).isoformat(timespec="seconds"),
+                nav_sha256=nav_sha,
             )
             new_pages.append(record)
 

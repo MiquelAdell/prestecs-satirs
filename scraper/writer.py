@@ -3,10 +3,17 @@
 from __future__ import annotations
 
 import hashlib
+import json
+import logging
+import os
+from datetime import UTC, datetime
 from pathlib import Path
 
 from scraper.config import ScraperConfig
 from scraper.manifest import Manifest, PageRecord, dump, load
+from scraper.nav_extractor import NavItem
+
+_log = logging.getLogger(__name__)
 
 
 class DeletionGuardError(RuntimeError):
@@ -15,6 +22,38 @@ class DeletionGuardError(RuntimeError):
 
 def content_sha(content_html: str) -> str:
     return hashlib.sha256(content_html.encode("utf-8")).hexdigest()
+
+
+_NAV_FILENAME = "_nav.json"
+
+
+def write_nav(items: tuple[NavItem, ...], target_dir: Path) -> str | None:
+    """Serialise *items* to ``_nav.json`` inside *target_dir* atomically.
+
+    Returns the SHA-256 hex digest of the written JSON bytes so the caller can
+    store it in the manifest. If *items* is empty, does not write and returns
+    ``None``.
+    """
+    if not items:
+        _log.warning("nav extraction returned no items — skipping _nav.json write")
+        return None
+
+    payload = {
+        "generated_at": datetime.now(UTC).isoformat(timespec="seconds"),
+        "items": [{"href": item.href, "label": item.label} for item in items],
+        "version": 1,
+    }
+    json_bytes = (
+        json.dumps(payload, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
+        + "\n"
+    ).encode("utf-8")
+    sha = hashlib.sha256(json_bytes).hexdigest()
+
+    dest = target_dir / _NAV_FILENAME
+    tmp = target_dir / f"{_NAV_FILENAME}.tmp"
+    tmp.write_bytes(json_bytes)
+    os.replace(tmp, dest)
+    return sha
 
 
 def write_page(

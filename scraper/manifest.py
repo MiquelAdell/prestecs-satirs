@@ -16,6 +16,7 @@ class PageRecord:
     content_sha256: str
     asset_filenames: tuple[str, ...]
     scraped_at: str  # ISO-8601 UTC
+    nav_sha256: str | None = None  # SHA-256 of _nav.json bytes; root page only
 
 
 @dataclass(frozen=True)
@@ -40,6 +41,7 @@ def load(path: Path) -> Manifest | None:
             content_sha256=item["content_sha256"],
             asset_filenames=tuple(item["asset_filenames"]),
             scraped_at=item["scraped_at"],
+            nav_sha256=item.get("nav_sha256"),
         )
         for item in raw.get("pages", [])
     )
