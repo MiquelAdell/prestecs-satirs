@@ -14,6 +14,10 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/prestamos/, ""),
       },
+      "/_nav.json": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
     },
   },
   test: {

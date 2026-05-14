@@ -86,6 +86,16 @@
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
   --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.1);
 
+  /* ─── Header tokens ────────────────────────────────────────────── */
+  /* Sampled from frontend/public/content-mirror/index.html inline styles */
+  --color-header-bg: rgb(0, 0, 0);           /* nav#yuynLe inline style: background-color:rgb(0,0,0) */
+  --color-header-fg: rgba(255, 255, 255, 1); /* .fOU46b .YSH9J / .Mz8gvb: color rgba(255,255,255,1) */
+  --color-header-fg-hover: rgba(255, 255, 255, 0.8); /* hover approx — no explicit hover rule in scraped CSS */
+  --color-header-fg-active: rgba(190, 0, 0, 1);  /* .fOU46b .aCIEDd .YSH9J: color rgba(190,0,0,1) — brand red on active */
+  --color-header-divider: rgba(255, 255, 255, 0.12); /* .fOU46b .iWs3gf.chg4Jd:focus bg rgba(255,255,255,0.12) */
+  --header-height: 64px;                     /* approximate — scraped header is ~64 px tall at desktop */
+  --header-z: 100;                           /* above page content, below modals */
+
   /* ─── Breakpoints (mobile-first) ────────────────────────────────── */
   --bp-sm: 480px;
   --bp-md: 768px;
