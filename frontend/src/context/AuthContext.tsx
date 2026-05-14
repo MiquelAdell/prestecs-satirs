@@ -2,6 +2,8 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import { apiFetch } from "../api/client";
 import type { CurrentMember } from "../types/member";
 
+const SESSION_KEY = "prestamos_session";
+
 interface AuthState {
   readonly member: CurrentMember | null;
   readonly loading: boolean;
@@ -16,9 +18,16 @@ export function AuthProvider({ children }: { readonly children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!localStorage.getItem(SESSION_KEY)) {
+      setLoading(false);
+      return;
+    }
     apiFetch<CurrentMember>("/me")
       .then(setMember)
-      .catch(() => setMember(null))
+      .catch(() => {
+        localStorage.removeItem(SESSION_KEY);
+        setMember(null);
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -27,12 +36,14 @@ export function AuthProvider({ children }: { readonly children: ReactNode }) {
       method: "POST",
       body: JSON.stringify({ email, password }),
     });
+    localStorage.setItem(SESSION_KEY, "1");
     const me = await apiFetch<CurrentMember>("/me");
     setMember(me);
   };
 
   const logout = async () => {
     await apiFetch<{ ok: boolean }>("/logout", { method: "POST" });
+    localStorage.removeItem(SESSION_KEY);
     setMember(null);
   };
 
