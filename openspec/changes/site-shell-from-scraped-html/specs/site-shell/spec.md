@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Defines the single page shell — header, top navigation with the Préstamos submenu, footer, and the layout that composes them — used by every page rendered by the React app. The shell visually mirrors the scraped club site (`frontend/public/content-mirror/`) and routes both static-content destinations (`/calendario`, `/eventos`, ...) and lending-app destinations (`/prestamos/...`) from a single nav. The static content pages themselves are still served by Caddy from the content mirror; this capability owns only the React side of the shell.
+Defines the single page shell — header, top navigation with the Préstamos submenu, footer, and the layout that composes them — used by every page rendered by the React app. The shell visually mirrors the scraped club site (`frontend/public/content-mirror/`) and routes both static-content destinations and lending-app destinations from a single nav. The static content pages themselves are still served by Caddy from the content mirror; this capability owns only the React side of the shell. The top-level nav items for static pages are **data-driven**: the scraper writes `_nav.json` and the React shell fetches it at boot, so editorial changes on the source site flow through automatically on the next scrape.
 
 ## ADDED Requirements
 
@@ -19,27 +19,74 @@ The system SHALL provide a `<PageLayout>` component at `frontend/src/components/
 - **WHEN** the catalog (`/`), my-loans (`/my-loans`), game-detail (`/games/:id`), admin members (`/admin/members`), or admin content (`/admin/content`) routes render
 - **THEN** their top-level JSX SHALL be `<PageLayout>...</PageLayout>`
 
+### Requirement: Scraper writes _nav.json
+
+The scraper SHALL extract the top-level navigation from the scraped root page's `<header>` (after internal-href rewriting) and write `frontend/public/content-mirror/_nav.json` with the shape `{ "version": 1, "generated_at": ISO8601, "items": [{ "label": string, "href": string }] }`. Items whose `href` equals `/prestamos` or starts with `/prestamos/` SHALL be excluded. Fragment-only hrefs (`#…`) and absolute external URLs SHALL be excluded. The file SHALL be written atomically (write to a temp file, then `os.replace`). The write SHALL run only when the scraper processes the canonical root page; other pages do not trigger it.
+
+#### Scenario: Happy-path extraction
+- **WHEN** the scraper processes the canonical root page and the header contains top-level items pointing at `/`, `/calendario`, `/eventos`, and `/prestamos`
+- **THEN** `_nav.json` SHALL contain `items` with three entries (root, calendario, eventos) in source order
+- **AND** the `/prestamos` entry SHALL be excluded
+
+#### Scenario: Préstamos boundary
+- **WHEN** a scraped item has `href = "/prestamos-info"`
+- **THEN** the item SHALL be kept (the exclusion rule matches only `/prestamos` exactly or `/prestamos/…` prefixed paths)
+
+#### Scenario: Extraction failure leaves previous file untouched
+- **WHEN** the scraper fails to locate the nav container, or extraction returns an empty list
+- **THEN** `_nav.json` SHALL NOT be overwritten
+- **AND** a warning SHALL be emitted
+
+#### Scenario: Atomic write
+- **WHEN** the scraper writes `_nav.json`
+- **THEN** the write SHALL go to a temporary file and be promoted via atomic rename
+- **AND** a partial / truncated `_nav.json` SHALL never be observable on disk
+
+### Requirement: SiteHeader fetches nav data once at boot
+
+The React shell SHALL provide a `useNavItems()` hook (and a sibling `<SiteNavProvider>`) that fetches `/_nav.json` exactly once at App boot, validates the response shape, and exposes `{ items, status }` (status: `loading | ready | error`). `<SiteHeader>` SHALL consume this hook. On HTTP failure, JSON parse failure, schema mismatch, or empty items, the hook SHALL return `status: "error"` with `items: []`; the header SHALL still render with only the Préstamos parent. The fetch SHALL use `cache: "no-store"` so a freshly-rescraped nav is picked up on next page load. Re-mounting `<SiteHeader>` SHALL NOT re-fetch — the request is owned by the App-level provider.
+
+#### Scenario: Happy-path render
+- **WHEN** `/_nav.json` returns valid items `[{label: "Inicio", href: "/"}, {label: "Calendario", href: "/calendario"}]`
+- **THEN** `<SiteHeader>` SHALL render Inicio and Calendario as `<a>` elements in order
+- **AND** the Préstamos parent SHALL appear after them
+
+#### Scenario: Missing nav file
+- **WHEN** `/_nav.json` returns 404
+- **THEN** `<SiteHeader>` SHALL render only the Préstamos parent (no static items)
+- **AND** no error SHALL be visible to the user
+
+#### Scenario: Schema mismatch
+- **WHEN** `/_nav.json` returns a body that does not validate against the expected shape
+- **THEN** the hook SHALL return `status: "error"`, `items: []`
+- **AND** the header SHALL behave as in the missing-nav-file scenario
+
+#### Scenario: Single fetch at App boot
+- **WHEN** the App mounts and any number of `<SiteHeader>` instances render
+- **THEN** exactly one network request SHALL be made for `/_nav.json` per App lifetime
+
 ### Requirement: SiteHeader top-level navigation
 
-The `<SiteHeader>` component SHALL render the club logo plus a horizontal top-level navigation containing these items in order: `Inicio` (`/`), `Calendario` (`/calendario`), `Eventos` (`/eventos`), `Juegos de Mesa` (`/juegos-de-mesa`), `Juegos de Rol` (`/juegos-de-rol`), `Socios` (`/socios`), `FAQ` (`/faq`), and `Préstamos` (parent — submenu defined below).
+`<SiteHeader>` SHALL render the club logo plus a horizontal top-level navigation. The static-page items SHALL be exactly those returned by `useNavItems()`, in the order returned. After those items, a Préstamos parent SHALL be appended.
 
 #### Scenario: Top-level items rendered
-- **WHEN** `<SiteHeader>` renders on a viewport ≥ 768 px
-- **THEN** it SHALL render exactly these top-level nav items in order: Inicio, Calendario, Eventos, Juegos de Mesa, Juegos de Rol, Socios, FAQ, Préstamos
+- **WHEN** `<SiteHeader>` renders on a viewport ≥ 768 px with `useNavItems` returning items `A, B, C` and status `ready`
+- **THEN** it SHALL render those items in order
+- **AND** Préstamos SHALL appear as the last top-level item
 
 #### Scenario: Static-page items are plain anchor tags
-- **WHEN** any nav item except Préstamos and its submenu items renders
+- **WHEN** any fetched nav item renders
 - **THEN** it SHALL be an `<a href="...">` element (not a React Router `<Link>`)
 - **AND** clicking it SHALL cause a full-page navigation
 
 #### Scenario: Préstamos and its submenu items are React Router links
-- **WHEN** the Préstamos parent or any of its submenu items renders
+- **WHEN** the Préstamos parent or any of its submenu items renders (excluding action items like Cerrar sesión)
 - **THEN** it SHALL be a React Router `<Link to="...">` element
 - **AND** clicking it SHALL be handled client-side without a full-page navigation
 
 ### Requirement: Préstamos submenu
 
-The `Préstamos` parent nav item SHALL link to `/prestamos/` and SHALL reveal a submenu containing `Catálogo` (`/prestamos/`), `Mis préstamos` (`/prestamos/my-loans`), and `Administración` (`/prestamos/admin/members`) when the parent is hovered, focused, or (on mobile) tapped.
+The `Préstamos` parent SHALL link to `/prestamos/` and reveal a submenu when hovered (desktop), focused (keyboard), or tapped (mobile). The submenu contents are auth-gated as defined below.
 
 #### Scenario: Submenu opens on hover (desktop)
 - **WHEN** a user with viewport ≥ 768 px hovers the Préstamos parent
@@ -54,31 +101,34 @@ The `Préstamos` parent nav item SHALL link to `/prestamos/` and SHALL reveal a 
 - **THEN** the submenu SHALL expand inline below the parent
 - **AND** tapping the parent again SHALL collapse the submenu
 
-#### Scenario: Submenu items in order
-- **WHEN** the Préstamos submenu is open
-- **THEN** it SHALL render `Catálogo`, `Mis préstamos`, and `Administración` in that order (subject to role-gating below)
-
-### Requirement: Administración is admin-only
-
-The `Administración` submenu item SHALL render only when the authenticated member has `is_admin === true`. For non-admin members the item SHALL NOT appear in the DOM. For unauthenticated visitors the item SHALL NOT appear, and `Mis préstamos` SHALL also NOT appear.
-
-#### Scenario: Admin sees all three submenu items
-- **WHEN** an authenticated member with `is_admin === true` opens the Préstamos submenu
-- **THEN** the submenu SHALL render `Catálogo`, `Mis préstamos`, and `Administración`
-
-#### Scenario: Non-admin member sees two submenu items
-- **WHEN** an authenticated member with `is_admin === false` opens the Préstamos submenu
-- **THEN** the submenu SHALL render `Catálogo` and `Mis préstamos`
-- **AND** `Administración` SHALL NOT appear in the DOM
-
-#### Scenario: Guest sees only Catálogo
+#### Scenario: Guest sees Catálogo + Iniciar sesión
 - **WHEN** an unauthenticated visitor opens the Préstamos submenu
-- **THEN** the submenu SHALL render only `Catálogo`
-- **AND** `Mis préstamos` and `Administración` SHALL NOT appear in the DOM
+- **THEN** the submenu SHALL contain exactly `Catálogo` (`/prestamos/`) and `Iniciar sesión` (`/prestamos/login`)
+- **AND** `Mis préstamos`, `Cerrar sesión`, and `Administración` SHALL NOT appear in the DOM
+
+#### Scenario: Non-admin member sees Catálogo + Mis préstamos + Cerrar sesión
+- **WHEN** an authenticated member with `is_admin === false` opens the Préstamos submenu
+- **THEN** the submenu SHALL contain exactly `Catálogo`, `Mis préstamos`, and `Cerrar sesión`, in that order
+- **AND** `Iniciar sesión` and `Administración` SHALL NOT appear in the DOM
+
+#### Scenario: Admin sees all items including nested Administración
+- **WHEN** an authenticated member with `is_admin === true` opens the Préstamos submenu
+- **THEN** the submenu SHALL contain `Catálogo`, `Mis préstamos`, `Administración` (nested parent), and `Cerrar sesión`
+- **AND** the `Administración` item SHALL itself reveal a nested submenu with `Miembros` (`/prestamos/admin/members`) and `Contenido` (`/prestamos/admin/content`)
+
+#### Scenario: Nested Administración submenu open/close
+- **WHEN** an admin hovers/focuses `Administración` on desktop, or taps it on mobile
+- **THEN** the nested submenu with `Miembros` and `Contenido` SHALL appear
+- **AND** on mobile, tapping `Administración` again SHALL collapse the nested submenu
+
+#### Scenario: Cerrar sesión invokes logout
+- **WHEN** an authenticated user activates the `Cerrar sesión` submenu item
+- **THEN** the auth context's `logout()` action SHALL be invoked
+- **AND** the user SHALL be navigated to a guest-appropriate page
 
 ### Requirement: Active-route highlighting
 
-The `<SiteHeader>` SHALL apply an `active` styling class to the nav item whose route matches the current location: the `Préstamos` parent when the path starts with `/prestamos/`, exact-path matching for submenu items, and exact-path matching for static-page items.
+`<SiteHeader>` SHALL apply an `active` styling class to the nav item whose route matches the current location: the `Préstamos` parent when the path starts with `/prestamos/`, exact-path matching for Préstamos submenu items, and exact-path matching (against `window.location.pathname`) for fetched static-page items.
 
 #### Scenario: Préstamos parent active under any /prestamos/ path
 - **WHEN** the current path is `/prestamos/`, `/prestamos/my-loans`, `/prestamos/admin/members`, `/prestamos/games/42`, or any path starting with `/prestamos/`
@@ -86,17 +136,17 @@ The `<SiteHeader>` SHALL apply an `active` styling class to the nav item whose r
 
 #### Scenario: Submenu item active on exact match
 - **WHEN** the current path is `/prestamos/my-loans`
-- **THEN** the Mis préstamos submenu item SHALL have the `active` class
-- **AND** Catálogo and Administración SHALL NOT have the `active` class
+- **THEN** the `Mis préstamos` submenu item SHALL have the `active` class
+- **AND** `Catálogo` and the nested `Administración` parent SHALL NOT have the `active` class
 
-#### Scenario: Static-page item active on exact match
-- **WHEN** the current path is `/calendario`
-- **THEN** the Calendario top-level item SHALL have the `active` class
+#### Scenario: Fetched item active on exact match
+- **WHEN** the fetched items include an entry with `href = "/calendario"` and the current path is `/calendario`
+- **THEN** that nav item SHALL have the `active` class
 - **AND** no other top-level item SHALL have the `active` class
 
 ### Requirement: Mobile burger drawer below 768 px
 
-The `<SiteHeader>` SHALL collapse the top-level navigation into a hamburger control on viewports < 768 px. Tapping the control SHALL open a drawer containing the same nav items, with `Préstamos` rendered as an expandable parent whose submenu nests inline.
+`<SiteHeader>` SHALL collapse the top-level navigation into a hamburger control on viewports < 768 px. Tapping the control SHALL open a drawer containing the same nav items (fetched items + Préstamos parent), with `Préstamos` rendered as an expandable parent whose submenu nests inline. The drawer SHALL be dismissible via the Escape key, body scroll SHALL be locked while it is open, and the hamburger button SHALL expose `aria-expanded` and `aria-controls`.
 
 #### Scenario: Burger control visible below breakpoint
 - **WHEN** the viewport width is < 768 px
@@ -112,6 +162,10 @@ The `<SiteHeader>` SHALL collapse the top-level navigation into a hamburger cont
 - **WHEN** the drawer is open and the user taps `Préstamos`
 - **THEN** the submenu SHALL expand inline beneath the parent
 - **AND** tapping `Préstamos` again SHALL collapse the submenu
+
+#### Scenario: Escape closes the drawer
+- **WHEN** the drawer is open and the user presses Escape
+- **THEN** the drawer SHALL close and focus SHALL return to the hamburger button
 
 ### Requirement: SiteFooter mirrors scraped footer minus language selector
 

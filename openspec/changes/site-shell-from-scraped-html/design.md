@@ -34,7 +34,19 @@ This change covers only the **lending React app's wrap**. Porting the static con
 
 **Why over literal embedding:** the scraped pages contain Google Sites' obfuscated class names (`yDmH0d`, `BuY5Fd`, ...) and a `jsaction`/`jscontroller` attribute soup that runs Sites' own JS. None of that is meaningful to us, and it actively prevents us from inserting the new Préstamos submenu cleanly. A clean rebuild lets us own the markup and evolve the nav structure.
 
-**How we keep visual fidelity:** the scraped CSS (`frontend/public/content-mirror/_assets/content.css`) and the rendered pages serve as the *visual reference*. Phase A's tokens already line up with the club's brand colors and typography, so the new components compose tokens to match. A side-by-side review against `frontend/public/content-mirror/index.html` is part of the migration plan.
+**How we keep visual fidelity:** the rendered scraped page (`frontend/public/content-mirror/index.html`) is the *visual reference*. There is **no** `content.css` file — Sites injects all styles inline in `<style>` blocks in the page, so visual values are sampled via DevTools rather than read from a stylesheet. The sampled values feed the new header tokens (`--color-header-bg`, `--color-header-fg`, `--color-header-fg-hover`, `--color-header-fg-active`, `--color-header-divider`, `--header-height`, `--header-z`) added to `tokens.css`. Fonts (Oswald, Open Sans) are already self-hosted in `tokens.css` — do not add the Google Fonts `<link>`. Logo asset: `frontend/public/content-mirror/_assets/200953ee27cc922e.png`, ~40 px header height, left-aligned.
+
+### S1b. Top-level nav items are data-driven from `_nav.json`
+
+**Decision:** The static-page nav items (`Inicio`, `Calendario`, `Eventos`, `Juegos de Mesa`, …) are not hardcoded in `<SiteHeader>`. The scraper extracts the top-level `<header>` nav from the canonical root page on each run and writes `frontend/public/content-mirror/_nav.json` with `{version, generated_at, items: [{label, href}]}`. The React shell fetches that file once at App boot via `useNavItems()` (provider-cached) and renders the items in order, then appends the Préstamos parent.
+
+**Why over hardcoding:** the source Google Sites nav changes occasionally (Sites editors add or rename items). A hardcoded list silently drifts; a fetched list stays in sync after every scrape. The cost is one extra HTTP request per session and a small atomic-write helper in the scraper.
+
+**Failure mode:** if `_nav.json` is missing, returns an unexpected shape, or fails to parse, the hook returns `status: "error"` with `items: []` and `<SiteHeader>` renders with only the Préstamos parent. The user sees a degraded but functional header, never a broken page. The scraper's atomic-write helper guarantees that a partial `_nav.json` never reaches disk: a previous valid file remains in place across failed re-scrapes.
+
+**Boundary rule:** items whose `href` is exactly `/prestamos` or starts with `/prestamos/` are excluded by the extractor — the React shell owns that branch via the Préstamos parent. `/prestamos-info` (hypothetical sibling) is kept because the exclusion is anchored to the exact-or-trailing-slash prefix.
+
+**Dev parity:** in production Caddy serves `_nav.json` from `frontend/public/content-mirror/_nav.json` at `/_nav.json`. In dev under Vite, we proxy `/_nav.json` to Caddy (`http://localhost:8080`) via `vite.config.ts`, so the fetch path is identical in both environments.
 
 ### S2. Keep the static content pages on Caddy; cross-link via plain `<a>`
 
@@ -52,11 +64,23 @@ On mobile (< 768 px), the burger drawer renders the parent as an expandable item
 
 **Why over a headless menu library (Radix Menu):** the surface here is small — one parent, three children, no keyboard arrow navigation across siblings, no checkable items. CSS + a single `useState` is enough. Adding `@radix-ui/react-navigation-menu` would be ~15 KB of behavior we don't need. If the nav grows another submenu, we can revisit.
 
-### S4. Administración submenu item is role-gated
+### S4. Préstamos submenu shape is auth-gated and nested
 
-**Decision:** The `Administración` submenu link renders only when the authenticated member has `is_admin === true` (consume `useAuth()` from `AuthContext`). For non-admins, the submenu shows only `Catálogo` and `Mis préstamos`. For unauthenticated visitors, the submenu shows only `Catálogo`.
+**Decision:** The Préstamos submenu is computed declaratively from `useAuth()`:
 
-**Why:** consistent with the existing `NavBar`'s role-gating; we are porting that behavior, not changing it.
+- Guest: `Catálogo`, `Iniciar sesión` (`/prestamos/login`).
+- Member (`is_admin === false`): `Catálogo`, `Mis préstamos`, `Cerrar sesión` (action → `logout()`).
+- Admin (`is_admin === true`): `Catálogo`, `Mis préstamos`, `Administración` (nested parent), `Cerrar sesión`. The nested `Administración` reveals a second-level submenu with `Miembros` (`/prestamos/admin/members`) and `Contenido` (`/prestamos/admin/content`).
+
+`Iniciar sesión` replaces the bespoke `NavBar`'s standalone login button. `Cerrar sesión` lives inside the submenu (default) for symmetry with `Iniciar sesión`; an alternative — a separate `<Button>` outside the submenu — is documented but not chosen.
+
+**Why:** consolidates auth actions in one entry point, makes the visible-item set predictable per role, and the single auth-gated entry plus the nested admin branch keeps `<SiteHeader>` declarative — the rendered list is a pure `filter` over a static config keyed by role.
+
+### S4b. Nested Administración submenu
+
+**Decision:** The nested Administración submenu reuses the same opening pattern as its parent — CSS-only `:hover` / `:focus-within` on desktop, `useState`-driven expand on mobile. No third level beyond `Administración → {Miembros, Contenido}`.
+
+**Why over a flat admin section:** keeps admin-only routes hidden one level deeper, matching the existing privilege boundary in the lending app and reducing visual clutter for non-admin users who never see this branch anyway.
 
 ### S5. Login / forgot / set-password pages use a minimal shell
 
