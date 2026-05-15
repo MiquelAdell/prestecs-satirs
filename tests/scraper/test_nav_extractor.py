@@ -24,13 +24,32 @@ _HEADER_TEMPLATE = """\
 </body></html>
 """
 
-_ITEM = "<li><div><a href='{href}'>{label}</a></div></li>"
+_ANCHOR = "<a href='{href}'>{label}</a>"
+
+
+def _li(label: str, href: str, *children: tuple[str, str]) -> str:
+    """Build a top-level `<li>` with an optional list of child anchors.
+
+    Mirrors the Google Sites markup: the parent anchor lives in a `<div>`,
+    and L2 children sit as later `<a>` descendants inside the same `<li>`.
+    """
+    head = _ANCHOR.format(href=href, label=label)
+    rest = "".join(_ANCHOR.format(href=c_href, label=c_label) for c_label, c_href in children)
+    return f"<li><div>{head}</div>{rest}</li>"
 
 
 def _html(*items: tuple[str, str]) -> str:
     """Build a minimal header HTML with the given (label, href) pairs."""
+    rendered = "\n      ".join(_li(label, href) for label, href in items)
+    return _HEADER_TEMPLATE.format(items=rendered)
+
+
+def _html_with_children(
+    *items: tuple[str, str, tuple[tuple[str, str], ...]],
+) -> str:
+    """Build a minimal header HTML where each top-level item can have children."""
     rendered = "\n      ".join(
-        _ITEM.format(href=href, label=label) for label, href in items
+        _li(label, href, *children) for label, href, children in items
     )
     return _HEADER_TEMPLATE.format(items=rendered)
 
@@ -176,15 +195,114 @@ _REAL_MIRROR = Path(__file__).resolve().parents[2] / "frontend" / "public" / "co
 
 
 class TestRealMirror:
-    def test_extracts_expected_top_level_from_real_index_html(self) -> None:
+    def test_extracts_expected_top_level_and_children_from_real_index_html(
+        self,
+    ) -> None:
         """Guards the chosen DOM traversal against the actual scraped HTML."""
         doc = BeautifulSoup(_REAL_MIRROR.read_text(encoding="utf-8"), "lxml")
         assert extract_nav(doc) == (
             NavItem(label="Inicio", href="/inicio"),
             NavItem(label="Calendario", href="/calendario"),
-            NavItem(label="Juegos de Rol", href="/juegos-de-rol"),
-            NavItem(label="Juegos de Mesa", href="/juegos-de-mesa"),
-            NavItem(label="Eventos", href="/eventos"),
-            NavItem(label="FAQ", href="/faq"),
-            NavItem(label="Socios", href="/socios"),
+            NavItem(
+                label="Juegos de Rol",
+                href="/juegos-de-rol",
+                children=(
+                    NavItem(label="Campañas", href="/juegos-de-rol/campanas"),
+                    NavItem(label="Oneshots", href="/juegos-de-rol/oneshots"),
+                ),
+            ),
+            NavItem(
+                label="Juegos de Mesa",
+                href="/juegos-de-mesa",
+                children=(
+                    NavItem(
+                        label="Días de Juegos",
+                        href="/juegos-de-mesa/dias-de-juegos",
+                    ),
+                ),
+            ),
+            NavItem(
+                label="Eventos",
+                href="/eventos",
+                children=(
+                    NavItem(label="Diürnes del Sàtir", href="/eventos/diurnes-satir"),
+                    NavItem(label="Festa Major de Sabadell", href="/eventos/festa-major"),
+                    NavItem(label="24h Juegos de Mesa", href="/eventos/24h-mesa"),
+                ),
+            ),
+            NavItem(
+                label="FAQ",
+                href="/faq",
+                children=(
+                    NavItem(label="Normas de conducta", href="/faq/normas-de-conducta"),
+                ),
+            ),
+            NavItem(
+                label="Socios",
+                href="/socios",
+                children=(
+                    NavItem(label="Entidades Amigas", href="/socios/entidades-amigas"),
+                    NavItem(label="Ludoteca", href="/socios/ludoteca"),
+                ),
+            ),
+        )
+
+    def test_child_skip_rules_apply_independently(self) -> None:
+        """Children inherit the same skip rules as parents (fragments, /prestamos, abs)."""
+        html = _html_with_children(
+            (
+                "Eventos",
+                "/eventos",
+                (
+                    ("Diürnes", "/eventos/diurnes-satir"),
+                    ("Jump", "#section-1"),
+                    ("External", "https://example.com/x"),
+                    ("Prestamos sub", "/prestamos/foo"),
+                    ("Boundary", "/prestamos-info"),
+                ),
+            ),
+        )
+        doc = _parse(html)
+        result = extract_nav(doc)
+        assert result == (
+            NavItem(
+                label="Eventos",
+                href="/eventos",
+                children=(
+                    NavItem(label="Diürnes", href="/eventos/diurnes-satir"),
+                    NavItem(label="Boundary", href="/prestamos-info"),
+                ),
+            ),
+        )
+
+    def test_top_level_without_children_has_empty_children_tuple(self) -> None:
+        doc = _parse(_html(("Inicio", "/"), ("Calendario", "/calendario")))
+        assert extract_nav(doc) == (
+            NavItem(label="Inicio", href="/", children=()),
+            NavItem(label="Calendario", href="/calendario", children=()),
+        )
+
+    def test_duplicate_children_deduplicated_first_wins(self) -> None:
+        html = _html_with_children(
+            (
+                "Eventos",
+                "/eventos",
+                (
+                    ("Diürnes", "/eventos/diurnes-satir"),
+                    ("Diürnes", "/eventos/diurnes-satir"),
+                    ("Festa Major", "/eventos/festa-major"),
+                ),
+            ),
+        )
+        doc = _parse(html)
+        result = extract_nav(doc)
+        assert result == (
+            NavItem(
+                label="Eventos",
+                href="/eventos",
+                children=(
+                    NavItem(label="Diürnes", href="/eventos/diurnes-satir"),
+                    NavItem(label="Festa Major", href="/eventos/festa-major"),
+                ),
+            ),
         )

@@ -5,16 +5,16 @@ Branch from `development` as `feature/import-menu`. Sequenced after `lending-des
 ## 1. Scraper nav extraction
 
 - [ ] 1.1 [BE] Inspect `frontend/public/content-mirror/index.html` to identify the real DOM selector for the top-level nav inside `id="atIdViewHeader"`. Pick a selector and document a one-line rationale in `scraper/nav_extractor.py`.
-- [ ] 1.2 [BE] Create `scraper/nav_extractor.py` exposing a pure transform `extract_nav(doc: BeautifulSoup) -> tuple[NavItem, ...]` where `NavItem = @dataclass(frozen=True)` with `label: str, href: str`. The function performs no I/O.
-- [ ] 1.3 [BE] Implement skip rules: exclude items whose `href == "/prestamos"` or `href.startswith("/prestamos/")`; exclude fragment-only hrefs (`#…`); exclude absolute external URLs. Deduplicate by `(label, href)` preserving first-seen order. The extractor assumes its input has already been internal-href-rewritten by the orchestrator.
+- [ ] 1.2 [BE] Create `scraper/nav_extractor.py` exposing a pure transform `extract_nav(doc: BeautifulSoup) -> tuple[NavItem, ...]` where `NavItem = @dataclass(frozen=True)` with `label: str, href: str, children: tuple[NavItem, ...]` (default empty). The first `<a>` descendant of each top-level `<li>` is the parent; any later `<a>` descendants in the same `<li>` are serialised as `children`. The function performs no I/O.
+- [ ] 1.3 [BE] Implement skip rules (applied identically to parents and children): exclude items whose `href == "/prestamos"` or `href.startswith("/prestamos/")`; exclude fragment-only hrefs (`#…`); exclude absolute external URLs. Deduplicate top-level items by `(label, href)` preserving first-seen order; deduplicate each item's children by `(label, href)` likewise. The extractor assumes its input has already been internal-href-rewritten by the orchestrator.
 - [ ] 1.4 [BE] Add `nav_sha256: str | None` to the manifest dataclass in `scraper/manifest.py` so an unchanged nav is detectable across runs.
-- [ ] 1.5 [BE] Add `write_nav(items: tuple[NavItem, ...], target_dir: Path) -> None` to `scraper/writer.py`. Serialise `{"version": 1, "generated_at": <ISO8601 UTC>, "items": [...]}` to `_nav.json`. Write to `_nav.json.tmp` first, then `os.replace`. If items is empty, do not write — emit a warning instead.
+- [ ] 1.5 [BE] Add `write_nav(items: tuple[NavItem, ...], target_dir: Path) -> None` to `scraper/writer.py`. Serialise `{"version": 1, "generated_at": <ISO8601 UTC>, "items": [...]}` to `_nav.json`. Each item serialises as `{"href", "label"}` plus a `"children"` array when non-empty (omitted otherwise). Write to `_nav.json.tmp` first, then `os.replace`. If items is empty, do not write — emit a warning instead.
 - [ ] 1.6 [BE] In `scraper/orchestrator.py`, after the canonical root page (`canonical == "/"`) is stripped and href-rewritten, call `extract_nav` and `write_nav`. Run only on the root page — the header is identical across pages.
 - [ ] 1.7 [BE] In `Caddyfile`, add a path matcher for `/_nav.json` with `Cache-Control "public, max-age=300"` (mirrors `.html` cache headers).
 - [ ] 1.8 [BE] Create `tests/scraper/__init__.py` (the directory does not exist yet).
-- [ ] 1.9 [BE] `tests/scraper/test_nav_extractor.py` — fixtures cover: happy path with known nav (assert full expected tuple via `==`), empty header (empty tuple, no exception), missing header (empty tuple, no exception), fragment hrefs excluded, `/prestamos` exact match excluded, `/prestamos-info` boundary kept, absolute external URLs excluded, duplicate items deduplicated. All assertions are concrete equality against the full expected tuple/dict.
+- [ ] 1.9 [BE] `tests/scraper/test_nav_extractor.py` — fixtures cover: happy path with known nav (assert full expected tuple via `==`), empty header (empty tuple, no exception), missing header (empty tuple, no exception), fragment hrefs excluded, `/prestamos` exact match excluded, `/prestamos-info` boundary kept, absolute external URLs excluded, duplicate items deduplicated, top-level items without children carry `children=()`, child skip rules apply independently, child deduplication preserves first-seen order, and the real-mirror smoke test asserts each top-level item with its expected child tuple. All assertions are concrete equality against the full expected tuple/dict.
 - [ ] 1.10 [BE] `tests/scraper/test_orchestrator.py` (extend existing or create) — full scrape against a fixture writes `_nav.json` with the expected schema; on extraction failure, `_nav.json` is left untouched (or absent if it never existed).
-- [ ] 1.11 [BE] `tests/scraper/test_writer.py` — atomic-write behaviour: write succeeds and produces valid JSON; empty items does not write the file; a simulated mid-write crash leaves no partial `_nav.json` visible.
+- [ ] 1.11 [BE] `tests/scraper/test_writer.py` — atomic-write behaviour: write succeeds and produces valid JSON; empty items does not write the file; a simulated mid-write crash leaves no partial `_nav.json` visible; items with `children` serialise the `children` array; items without children omit the `children` key.
 
 ## 2. Visual reference inspection
 
@@ -26,7 +26,7 @@ Branch from `development` as `feature/import-menu`. Sequenced after `lending-des
 ## 3. Frontend nav-data plumbing
 
 - [ ] 3.1 [FE] Add a Vite proxy in `frontend/vite.config.ts`: `server.proxy["/_nav.json"] = { target: "http://localhost:8080" }`. This makes the dev server reach Caddy for the nav file so the fetch path is identical in dev and prod.
-- [ ] 3.2 [FE] Create `frontend/src/hooks/useNavItems.ts`. Fetches `/_nav.json` with `cache: "no-store"`, validates the response shape (typed schema check), returns `{ items: readonly NavItem[]; status: "loading" | "ready" | "error" }`. On HTTP error, JSON parse error, or schema mismatch returns `status: "error"` with `items: []`.
+- [ ] 3.2 [FE] Create `frontend/src/hooks/useNavItems.ts`. Fetches `/_nav.json` with `cache: "no-store"`, validates the response shape (typed schema check, including optional `children: readonly NavItem[]` recursively), returns `{ items: readonly NavItem[]; status: "loading" | "ready" | "error" }`. On HTTP error, JSON parse error, or schema mismatch returns `status: "error"` with `items: []`.
 - [ ] 3.3 [FE] Create `frontend/src/context/SiteNavProvider.tsx`. Wraps the app, performs the fetch exactly once, exposes the same `{ items, status }` via context. Re-mounts of `<SiteHeader>` consume the cached value and do not re-fetch.
 - [ ] 3.4 [FE] Tests: `useNavItems.test.ts` — mock `fetch`; assert happy path returns concrete typed items, 404 returns `error` status with empty items, malformed JSON returns `error`, schema mismatch returns `error`. Assertions are concrete equality.
 
@@ -40,8 +40,8 @@ Branch from `development` as `feature/import-menu`. Sequenced after `lending-des
 - [ ] 5.1 [FE] Create `frontend/src/components/SiteHeader/{SiteHeader.tsx, SiteHeader.module.css, SiteHeader.test.tsx, index.ts}`.
 - [ ] 5.2 [FE] Add tokens to `frontend/src/tokens.css`: `--color-header-bg`, `--color-header-fg`, `--color-header-fg-hover`, `--color-header-fg-active`, `--color-header-divider`, `--header-height`, `--header-z`. Values sampled from the live scraped header.
 - [ ] 5.3 [FE] Render the club logo (negative variant for the dark bar) on the left.
-- [ ] 5.4 [FE] Render the top-level nav by mapping over `useNavItems().items`: each item is an `<a href="...">` with the fetched `label`. If `status === "error"` or items is empty, render no static items (Préstamos still appears). All rendering uses functional `map`, not imperative loops.
-- [ ] 5.5 [FE] Test: with mock-injected items, rendered `<a>` elements appear in order with the correct hrefs; with an empty/`error` provider, only the Préstamos parent renders. Assertions are concrete equality against the full expected list.
+- [ ] 5.4 [FE] Render the top-level nav by mapping over `useNavItems().items`: each item is an `<a href="...">` with the fetched `label`. Items whose `children` array is non-empty render with a chevron and a hover/focus-revealed `<ul role="menu">` containing each child as an `<a href>` (`role="menuitem"`). If `status === "error"` or items is empty, render no static items (Préstamos still appears). All rendering uses functional `map`, not imperative loops.
+- [ ] 5.5 [FE] Test: with mock-injected items, rendered `<a>` elements appear in order with the correct hrefs; items with `children` expose `aria-haspopup="menu"` and render their child `<a>` elements; with an empty/`error` provider, only the Préstamos parent renders. Assertions are concrete equality against the full expected list.
 
 ## 6. Préstamos submenu (desktop) with auth gating
 
@@ -65,8 +65,8 @@ Branch from `development` as `feature/import-menu`. Sequenced after `lending-des
 
 - [ ] 8.1 [FE] Add a hamburger `<button>` to `SiteHeader` that is `display: none` on viewports ≥ 768 px and visible below. Wire `aria-label`, `aria-expanded`, `aria-controls`.
 - [ ] 8.2 [FE] Add `useState` for the drawer-open boolean. Tapping the hamburger toggles it. Escape closes it and returns focus to the hamburger button. Lock body scroll while open.
-- [ ] 8.3 [FE] Drawer renders the same nav items in the same order (fetched + Préstamos parent), vertically stacked. Préstamos becomes a tappable expandable parent with its own `useState`-driven open flag. The nested Administración submenu uses the same expandable pattern.
-- [ ] 8.4 [FE] Tapping Préstamos in the drawer expands the submenu inline beneath it. Tapping again collapses. Same for Administración inside it.
+- [ ] 8.3 [FE] Drawer renders the same nav items in the same order (fetched + Préstamos parent), vertically stacked. Fetched items with `children` become tappable expandable parents whose child links render inline when open. Préstamos becomes a tappable expandable parent with its own `useState`-driven open flag. The nested Administración submenu uses the same expandable pattern.
+- [ ] 8.4 [FE] Tapping a fetched parent with children in the drawer expands its child list inline beneath it; tapping again collapses. Tapping Préstamos in the drawer expands the Préstamos submenu inline beneath it. Tapping again collapses. Same for Administración inside it.
 - [ ] 8.5 [FE] Tests: < 768 px viewport (use `vitest`'s `matchMedia` mock or jsdom's window resize), burger control is visible; tapping it opens the drawer; tapping Préstamos expands the submenu; pressing Escape closes the drawer.
 
 ## 9. PageLayout

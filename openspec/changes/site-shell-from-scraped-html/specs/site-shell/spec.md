@@ -21,12 +21,21 @@ The system SHALL provide a `<PageLayout>` component at `frontend/src/components/
 
 ### Requirement: Scraper writes _nav.json
 
-The scraper SHALL extract the top-level navigation from the scraped root page's `<header>` (after internal-href rewriting) and write `frontend/public/content-mirror/_nav.json` with the shape `{ "version": 1, "generated_at": ISO8601, "items": [{ "label": string, "href": string }] }`. Items whose `href` equals `/prestamos` or starts with `/prestamos/` SHALL be excluded. Fragment-only hrefs (`#…`) and absolute external URLs SHALL be excluded. The file SHALL be written atomically (write to a temp file, then `os.replace`). The write SHALL run only when the scraper processes the canonical root page; other pages do not trigger it.
+The scraper SHALL extract the top-level navigation from the scraped root page's `<header>` (after internal-href rewriting) and write `frontend/public/content-mirror/_nav.json` with the shape `{ "version": 1, "generated_at": ISO8601, "items": [{ "label": string, "href": string, "children"?: [{ "label": string, "href": string }, ...] }] }`. For each top-level `<li>`, the first descendant `<a>` is the parent and any later `<a>` descendants in the same `<li>` are serialised as `children`. The `"children"` key SHALL be omitted when the list is empty. Items whose `href` equals `/prestamos` or starts with `/prestamos/` SHALL be excluded; the same rule SHALL apply to children. Fragment-only hrefs (`#…`) and absolute external URLs SHALL be excluded (at both levels). Top-level items and children SHALL each be deduplicated by `(label, href)` preserving source order. The file SHALL be written atomically (write to a temp file, then `os.replace`). The write SHALL run only when the scraper processes the canonical root page; other pages do not trigger it.
 
 #### Scenario: Happy-path extraction
 - **WHEN** the scraper processes the canonical root page and the header contains top-level items pointing at `/`, `/calendario`, `/eventos`, and `/prestamos`
 - **THEN** `_nav.json` SHALL contain `items` with three entries (root, calendario, eventos) in source order
 - **AND** the `/prestamos` entry SHALL be excluded
+
+#### Scenario: L2 submenu children preserved
+- **WHEN** a top-level `<li>` contains additional `<a>` descendants after its parent anchor (e.g. an `Eventos` parent with `Diürnes del Sàtir`, `Festa Major`, `24h Juegos de Mesa` children)
+- **THEN** the serialised item for `Eventos` SHALL include a `"children"` array carrying those entries in source order
+- **AND** each child SHALL be a `{ "label", "href" }` object with the same skip rules applied
+
+#### Scenario: children key omitted when empty
+- **WHEN** a top-level item has no L2 anchors
+- **THEN** its serialised JSON SHALL NOT include a `"children"` key
 
 #### Scenario: Préstamos boundary
 - **WHEN** a scraped item has `href = "/prestamos-info"`
@@ -78,6 +87,17 @@ The React shell SHALL provide a `useNavItems()` hook (and a sibling `<SiteNavPro
 - **WHEN** any fetched nav item renders
 - **THEN** it SHALL be an `<a href="...">` element (not a React Router `<Link>`)
 - **AND** clicking it SHALL cause a full-page navigation
+
+#### Scenario: Fetched item with children renders as a dropdown
+- **WHEN** a fetched nav item has a non-empty `children` array
+- **THEN** the top-level anchor SHALL render with a chevron indicator and `aria-haspopup="menu"`
+- **AND** a `<ul role="menu">` SHALL contain each child as an `<a href="...">` wrapped in a `role="menuitem"` element
+- **AND** hovering or focusing the parent (desktop ≥ 768 px) SHALL reveal the dropdown
+- **AND** tapping the parent inside the burger drawer (< 768 px) SHALL expand the children inline
+
+#### Scenario: Fetched item without children renders without a dropdown
+- **WHEN** a fetched nav item has no `children` (or an empty `children` array)
+- **THEN** no chevron, no `aria-haspopup`, and no submenu `<ul>` SHALL render for that item
 
 #### Scenario: Préstamos and its submenu items are React Router links
 - **WHEN** the Préstamos parent or any of its submenu items renders (excluding action items like Cerrar sesión)
@@ -162,6 +182,11 @@ The `Préstamos` parent SHALL link to `/prestamos/` and reveal a submenu when ho
 - **WHEN** the drawer is open and the user taps `Préstamos`
 - **THEN** the submenu SHALL expand inline beneath the parent
 - **AND** tapping `Préstamos` again SHALL collapse the submenu
+
+#### Scenario: Fetched item with children nested in drawer
+- **WHEN** the drawer is open and the user taps a fetched item whose `children` array is non-empty
+- **THEN** that item's children SHALL expand inline beneath it as a list of `<a href="...">` links
+- **AND** tapping the parent again SHALL collapse the children
 
 #### Scenario: Escape closes the drawer
 - **WHEN** the drawer is open and the user presses Escape

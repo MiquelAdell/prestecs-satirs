@@ -39,6 +39,38 @@ class TestWriteNav:
         assert sha is not None
         assert len(sha) == 64  # SHA-256 hex
 
+    def test_serialises_children_when_present(self, tmp_path: Path) -> None:
+        items = (
+            NavItem(
+                label="Eventos",
+                href="/eventos",
+                children=(
+                    NavItem(label="Festa Major", href="/eventos/festa-major"),
+                    NavItem(label="24h", href="/eventos/24h-mesa"),
+                ),
+            ),
+            NavItem(label="Inicio", href="/"),
+        )
+        write_nav(items, tmp_path)
+        payload = json.loads((tmp_path / _NAV_JSON).read_bytes())
+        assert payload["items"] == [
+            {
+                "href": "/eventos",
+                "label": "Eventos",
+                "children": [
+                    {"href": "/eventos/festa-major", "label": "Festa Major"},
+                    {"href": "/eventos/24h-mesa", "label": "24h"},
+                ],
+            },
+            {"href": "/", "label": "Inicio"},
+        ]
+
+    def test_omits_children_key_when_empty(self, tmp_path: Path) -> None:
+        write_nav((NavItem(label="Inicio", href="/"),), tmp_path)
+        payload = json.loads((tmp_path / _NAV_JSON).read_bytes())
+        assert payload["items"] == [{"href": "/", "label": "Inicio"}]
+        assert "children" not in payload["items"][0]
+
     def test_returns_sha256_matching_file_bytes(self, tmp_path: Path) -> None:
         import hashlib
 
