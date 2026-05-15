@@ -10,17 +10,21 @@ pip install -e . --quiet
 python -m uvicorn backend.api.app:create_app --factory --host 0.0.0.0 --port 8000 &
 BACKEND_PID=$!
 
+python -m http.server 8080 --directory frontend/public/content-mirror &
+MIRROR_PID=$!
+
 cd frontend
 npm install --silent
 npm run dev &
 FRONTEND_PID=$!
 
-trap "kill $BACKEND_PID $FRONTEND_PID 2>/dev/null" EXIT INT TERM
+trap "kill $BACKEND_PID $MIRROR_PID $FRONTEND_PID 2>/dev/null" EXIT INT TERM
 
 echo ""
-echo "Backend:  http://localhost:8000"
-echo "Frontend: http://localhost:5173"
-echo "Press Ctrl+C to stop both."
+echo "Backend:        http://localhost:8000"
+echo "Frontend:       http://localhost:5173"
+echo "Content mirror: http://localhost:8080"
+echo "Press Ctrl+C to stop all three."
 echo ""
 
 wait
