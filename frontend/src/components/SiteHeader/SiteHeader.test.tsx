@@ -138,7 +138,7 @@ describe("SiteHeader", () => {
         return link?.textContent ?? "";
       });
       // With empty items, only Préstamos should be in the top-level nav
-      expect(topLevelItems.map((t) => t.replace("▾", "").trim())).toEqual(["Préstamos"]);
+      expect(topLevelItems.map((t) => t.trim())).toEqual(["Préstamos"]);
     });
   });
 

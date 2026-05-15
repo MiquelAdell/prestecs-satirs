@@ -4,6 +4,25 @@ import { useAuth } from "../../context/AuthContext";
 import { useNavItemsContext } from "../../hooks/useNavItemsContext";
 import styles from "./SiteHeader.module.css";
 
+function ChevronDown() {
+  return (
+    <svg
+      className={styles.chevron}
+      focusable="false"
+      aria-hidden="true"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <g transform="translate(9.7,12) rotate(45)">
+        <path d="M-4.2 0 L4.2 0" strokeWidth="2" />
+      </g>
+      <g transform="translate(14.3,12) rotate(-45)">
+        <path d="M-4.2 0 L4.2 0" strokeWidth="2" />
+      </g>
+    </svg>
+  );
+}
+
 // ─── Submenu item config ──────────────────────────────────────────────────────
 
 type SubmenuRole = "guest" | "member" | "admin";
@@ -73,7 +92,7 @@ function AdminNestedSubmenu({
         onClick={onToggleMobile}
       >
         {item.label}
-        <span className={styles.chevron} aria-hidden="true">▾</span>
+        <ChevronDown />
       </button>
       <ul
         className={`${styles.nestedList} ${mobileExpanded ? styles.nestedListOpen : ""}`}
@@ -254,7 +273,7 @@ export function SiteHeader() {
                 aria-expanded={false}
               >
                 Préstamos
-                <span className={styles.chevron} aria-hidden="true">▾</span>
+                <ChevronDown />
               </Link>
               <PrestamosSubmenu
                 role={role}
@@ -309,7 +328,7 @@ export function SiteHeader() {
                 onClick={() => setPrestamosExpanded((prev) => !prev)}
               >
                 Préstamos
-                <span className={styles.chevron} aria-hidden="true">▾</span>
+                <ChevronDown />
               </button>
               {prestamosExpanded && (
                 <PrestamosSubmenu

@@ -93,7 +93,7 @@
   --color-header-fg-hover: rgba(255, 255, 255, 0.8); /* hover approx — no explicit hover rule in scraped CSS */
   --color-header-fg-active: rgba(190, 0, 0, 1);  /* .fOU46b .aCIEDd .YSH9J: color rgba(190,0,0,1) — brand red on active */
   --color-header-divider: rgba(255, 255, 255, 0.12); /* .fOU46b .iWs3gf.chg4Jd:focus bg rgba(255,255,255,0.12) */
-  --header-height: 64px;                     /* approximate — scraped header is ~64 px tall at desktop */
+  --header-height: 56px;                     /* measured from scraped source header at 1440×900 */
   --header-z: 100;                           /* above page content, below modals */
 
   /* ─── Breakpoints (mobile-first) ────────────────────────────────── */
