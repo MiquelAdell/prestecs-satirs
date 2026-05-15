@@ -30,19 +30,21 @@ interface NestedSubmenuItem {
 
 type SubmenuItem = LinkSubmenuItem | ActionSubmenuItem | NestedSubmenuItem;
 
+// `to` values are router-relative (inside `<BrowserRouter basename="/prestamos">`),
+// so they omit the `/prestamos` prefix — the router prepends it.
 const PRESTAMOS_SUBMENU: readonly SubmenuItem[] = [
-  { type: "link", label: "Catálogo", to: "/prestamos/", roles: ["guest", "member", "admin"] },
-  { type: "link", label: "Mis préstamos", to: "/prestamos/my-loans", roles: ["member", "admin"] },
+  { type: "link", label: "Catálogo", to: "/", roles: ["guest", "member", "admin"] },
+  { type: "link", label: "Mis préstamos", to: "/my-loans", roles: ["member", "admin"] },
   {
     type: "nested",
     label: "Administración",
     roles: ["admin"],
     children: [
-      { type: "link", label: "Miembros", to: "/prestamos/admin/members", roles: ["admin"] },
-      { type: "link", label: "Contenido", to: "/prestamos/admin/content", roles: ["admin"] },
+      { type: "link", label: "Miembros", to: "/admin/members", roles: ["admin"] },
+      { type: "link", label: "Contenido", to: "/admin/content", roles: ["admin"] },
     ],
   },
-  { type: "link", label: "Iniciar sesión", to: "/prestamos/login", roles: ["guest"] },
+  { type: "link", label: "Iniciar sesión", to: "/login", roles: ["guest"] },
   { type: "action", label: "Cerrar sesión", roles: ["member", "admin"] },
 ];
 
@@ -162,7 +164,15 @@ export function SiteHeader() {
   const [adminExpanded, setAdminExpanded] = useState(false);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
 
-  const isPrestamosActive = useMatch("/prestamos/*") !== null;
+  // In production the router runs under basename "/prestamos", so
+  // `useMatch("/prestamos/*")` never matches against the basename-stripped
+  // location. In tests we mount under a plain MemoryRouter where the path
+  // does start with "/prestamos". Cover both by also checking the raw
+  // browser pathname when it's available.
+  const isPrestamosActive =
+    useMatch("/prestamos/*") !== null ||
+    (typeof window !== "undefined" &&
+      window.location.pathname.startsWith("/prestamos"));
 
   const role: SubmenuRole =
     member?.is_admin === true
@@ -239,7 +249,7 @@ export function SiteHeader() {
               }`}
             >
               <Link
-                to="/prestamos/"
+                to="/"
                 aria-haspopup="menu"
                 aria-expanded={false}
               >

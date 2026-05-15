@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from bs4 import BeautifulSoup
 
 from scraper.nav_extractor import NavItem, extract_nav
@@ -22,7 +24,7 @@ _HEADER_TEMPLATE = """\
 </body></html>
 """
 
-_ITEM = "<li><a href='{href}'>{label}</a></li>"
+_ITEM = "<li><div><a href='{href}'>{label}</a></div></li>"
 
 
 def _html(*items: tuple[str, str]) -> str:
@@ -164,3 +166,25 @@ class TestNavExtractor:
         item_b = NavItem(label="Inicio", href="/")
         doc = _parse(_html(("Home", "/"), ("Inicio", "/")))
         assert extract_nav(doc) == (item_a, item_b)
+
+
+# ---------------------------------------------------------------------------
+# Real-DOM smoke: extract against the live scraped index.html
+# ---------------------------------------------------------------------------
+
+_REAL_MIRROR = Path(__file__).resolve().parents[2] / "frontend" / "public" / "content-mirror" / "index.html"
+
+
+class TestRealMirror:
+    def test_extracts_expected_top_level_from_real_index_html(self) -> None:
+        """Guards the chosen DOM traversal against the actual scraped HTML."""
+        doc = BeautifulSoup(_REAL_MIRROR.read_text(encoding="utf-8"), "lxml")
+        assert extract_nav(doc) == (
+            NavItem(label="Inicio", href="/inicio"),
+            NavItem(label="Calendario", href="/calendario"),
+            NavItem(label="Juegos de Rol", href="/juegos-de-rol"),
+            NavItem(label="Juegos de Mesa", href="/juegos-de-mesa"),
+            NavItem(label="Eventos", href="/eventos"),
+            NavItem(label="FAQ", href="/faq"),
+            NavItem(label="Socios", href="/socios"),
+        )
