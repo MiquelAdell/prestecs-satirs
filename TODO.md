@@ -7,6 +7,12 @@
 - [ ] review filters in the cataglog page
 - [ ] check if there is any service, other than resend and racknerd, with miquel's personal account
 - [ ] create a github account for refugio
+- [ ] Move login anchor in the menu out of catalogo/prestamos
+- [ ] fix the confusion between catalogo/prestamos
+- [ ] Improve the presentation of the login page (maybe integrate with the header and footer?)
+- [ ] /prestamos still has some "préstecs" in the header
+- [ ] fix the chevron
+- [ ] fix campañas
 
 ## Post-deploy hardening
 - [ ] Set up a simple backup strategy for the SQLite database (cron + copy to local)

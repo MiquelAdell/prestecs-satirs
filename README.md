@@ -83,11 +83,14 @@ Or you can instead run the command:
 ```bash
 ./dev.sh
 ```
-From the repo root. It starts uvicorn on :8000 and Vite on :5173, traps Ctrl+C to kill both.
+From the repo root. It starts uvicorn on :8000, Vite on :5173, and a
+`python -m http.server` content-mirror on :8080. Ctrl+C kills all three.
 
 Open http://localhost:5173/prestamos. Vite proxies `/prestamos/api` to the
-backend on `:8000`. The scraped site is **not** served in this mode — links
-to `/`, `/inicio`, etc. will 404.
+backend on `:8000` and the top-level scraped paths (`/inicio`, `/calendario`,
+`/juegos-de-rol`, `/juegos-de-mesa`, `/eventos`, `/faq`, `/socios`) plus
+`/_nav.json` and `/_assets` to the content mirror on `:8080`, so cross-app
+nav links resolve the same way Caddy resolves them in production.
 
 ### Scraped site only
 
