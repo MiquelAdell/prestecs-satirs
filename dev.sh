@@ -10,7 +10,7 @@ pip install -e . --quiet
 python -m uvicorn backend.api.app:create_app --factory --host 0.0.0.0 --port 8000 &
 BACKEND_PID=$!
 
-python -m http.server 8080 --directory frontend/public/content-mirror &
+python scripts/dev_mirror.py &
 MIRROR_PID=$!
 
 cd frontend
