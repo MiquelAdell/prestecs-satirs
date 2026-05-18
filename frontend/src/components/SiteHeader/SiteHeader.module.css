@@ -233,6 +233,71 @@
 .chevron {
   width: 1em;
   height: 1em;
+  transition: transform 0.15s ease;
+}
+
+/* Desktop: rotate when the submenu is revealed by hover/focus-within. */
+.hasSubmenu:hover > a > .chevron,
+.hasSubmenu:focus-within > a > .chevron,
+.hasNested:hover > .nestedTrigger > .chevron,
+.hasNested:focus-within > .nestedTrigger > .chevron {
+  transform: rotate(180deg);
+}
+
+/* Mobile drawer + nested admin: rotate based on real aria-expanded state. */
+.drawerParent[aria-expanded="true"] > .chevron,
+.nestedTrigger[aria-expanded="true"] > .chevron {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron {
+    transition: none;
+  }
+}
+
+/* ─── Header actions (right-aligned slot for login / utility links) ──── */
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-left: var(--space-md);
+}
+
+@media (max-width: 767px) {
+  .headerActions {
+    display: none;
+  }
+}
+
+.loginAction {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-xs) var(--space-md);
+  color: var(--color-header-fg);
+  text-decoration: none;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  border: 1px solid var(--color-header-fg);
+  border-radius: var(--radius-sm, 4px);
+  white-space: nowrap;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.loginAction:hover,
+.loginAction:focus-visible {
+  background-color: var(--color-header-fg);
+  color: var(--color-header-bg);
+}
+
+.drawerLoginAction {
+  display: block;
+  padding: var(--space-sm) var(--space-md);
+  color: var(--color-header-fg-active);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
 }
 
 /* ─── Hamburger ──────────────────────────────────────────────────────── */

@@ -143,15 +143,16 @@ describe("SiteHeader", () => {
   });
 
   describe("Préstamos submenu — guest", () => {
-    it("renders exactly Catálogo and Iniciar sesión for guest", () => {
+    it("renders Préstamos as a plain link with no submenu and no chevron", () => {
       setGuest();
       renderHeader();
 
-      const submenuItems = screen
-        .getAllByRole("menuitem")
-        .map((el) => el.textContent?.trim());
-
-      expect(submenuItems).toEqual(["Catálogo", "Iniciar sesión"]);
+      // No menuitem roles at all — Préstamos is a plain link, no submenu rendered
+      expect(screen.queryAllByRole("menuitem")).toEqual([]);
+      // No aria-haspopup anywhere
+      expect(
+        document.querySelectorAll("[aria-haspopup='menu']").length
+      ).toEqual(0);
     });
 
     it("does not show Mis préstamos, Cerrar sesión, or Administración for guest", () => {
@@ -162,10 +163,57 @@ describe("SiteHeader", () => {
       expect(screen.queryByText("Cerrar sesión")).toBeNull();
       expect(screen.queryByText("Administración")).toBeNull();
     });
+
+    it("renders the Iniciar sesión action link in the header for guest", () => {
+      setGuest();
+      const { container } = renderHeader();
+
+      const loginLinks = Array.from(container.querySelectorAll("a")).filter(
+        (el) => el.textContent?.trim() === "Iniciar sesión"
+      );
+      // One in the desktop header actions slot, one in the drawer = 2
+      expect(loginLinks.length).toEqual(2);
+      loginLinks.forEach((link) => {
+        expect(link.getAttribute("href")).toEqual("/login");
+      });
+    });
+
+    it("does not show Iniciar sesión inside the Préstamos submenu", () => {
+      setGuest();
+      renderHeader();
+
+      // Iniciar sesión exists in header/drawer (covered above) but never as a menuitem
+      const menuitems = screen
+        .queryAllByRole("menuitem")
+        .map((el) => el.textContent?.trim());
+      expect(menuitems).toEqual([]);
+    });
+  });
+
+  describe("Iniciar sesión action — authenticated users", () => {
+    it("is not rendered for member", () => {
+      setMember();
+      const { container } = renderHeader();
+
+      const loginLinks = Array.from(container.querySelectorAll("a")).filter(
+        (el) => el.textContent?.trim() === "Iniciar sesión"
+      );
+      expect(loginLinks).toEqual([]);
+    });
+
+    it("is not rendered for admin", () => {
+      setAdmin();
+      const { container } = renderHeader();
+
+      const loginLinks = Array.from(container.querySelectorAll("a")).filter(
+        (el) => el.textContent?.trim() === "Iniciar sesión"
+      );
+      expect(loginLinks).toEqual([]);
+    });
   });
 
   describe("Préstamos submenu — member", () => {
-    it("renders exactly Catálogo, Mis préstamos, Cerrar sesión for member", () => {
+    it("renders exactly Mis préstamos, Cerrar sesión for member", () => {
       setMember();
       renderHeader();
 
@@ -173,7 +221,7 @@ describe("SiteHeader", () => {
         .getAllByRole("menuitem")
         .map((el) => el.textContent?.trim());
 
-      expect(submenuItems).toEqual(["Catálogo", "Mis préstamos", "Cerrar sesión"]);
+      expect(submenuItems).toEqual(["Mis préstamos", "Cerrar sesión"]);
     });
 
     it("does not show Iniciar sesión or Administración for member", () => {
@@ -186,7 +234,7 @@ describe("SiteHeader", () => {
   });
 
   describe("Préstamos submenu — admin", () => {
-    it("renders Catálogo, Mis préstamos, Administración, Cerrar sesión for admin", () => {
+    it("renders Mis préstamos, Administración, Cerrar sesión for admin", () => {
       setAdmin();
       renderHeader();
 
@@ -194,8 +242,7 @@ describe("SiteHeader", () => {
         .getAllByRole("menuitem")
         .map((el) => el.textContent?.trim());
 
-      // Admin sees all items including the nested Administración parent button
-      expect(submenuItems).toContain("Catálogo");
+      // Admin sees all items; Administración is a nested parent (not a menuitem) covered by a separate test
       expect(submenuItems).toContain("Mis préstamos");
       expect(submenuItems).toContain("Cerrar sesión");
     });
@@ -316,6 +363,7 @@ describe("SiteHeader", () => {
     });
 
     it("tapping Préstamos in drawer toggles prestamos submenu", () => {
+      setMember();
       renderHeader();
 
       // Open drawer first

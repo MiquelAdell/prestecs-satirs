@@ -52,7 +52,6 @@ type SubmenuItem = LinkSubmenuItem | ActionSubmenuItem | NestedSubmenuItem;
 // `to` values are router-relative (inside `<BrowserRouter basename="/prestamos">`),
 // so they omit the `/prestamos` prefix — the router prepends it.
 const PRESTAMOS_SUBMENU: readonly SubmenuItem[] = [
-  { type: "link", label: "Catálogo", to: "/", roles: ["guest", "member", "admin"] },
   { type: "link", label: "Mis préstamos", to: "/my-loans", roles: ["member", "admin"] },
   {
     type: "nested",
@@ -63,7 +62,6 @@ const PRESTAMOS_SUBMENU: readonly SubmenuItem[] = [
       { type: "link", label: "Contenido", to: "/admin/content", roles: ["admin"] },
     ],
   },
-  { type: "link", label: "Iniciar sesión", to: "/login", roles: ["guest"] },
   { type: "action", label: "Cerrar sesión", roles: ["member", "admin"] },
 ];
 
@@ -200,6 +198,10 @@ export function SiteHeader() {
         ? "member"
         : "guest";
 
+  const hasPrestamosSubmenu = PRESTAMOS_SUBMENU.some((item) =>
+    item.roles.includes(role)
+  );
+
   // Close drawer and return focus on Escape
   useEffect(() => {
     if (!drawerOpen) return;
@@ -263,27 +265,38 @@ export function SiteHeader() {
 
             {/* Préstamos parent */}
             <li
-              className={`${styles.navItem} ${styles.hasSubmenu} ${
+              className={`${styles.navItem} ${hasPrestamosSubmenu ? styles.hasSubmenu : ""} ${
                 isPrestamosActive ? styles.active : ""
               }`}
             >
-              <Link
-                to="/"
-                aria-haspopup="menu"
-                aria-expanded={false}
-              >
-                Préstamos
-                <ChevronDown />
-              </Link>
-              <PrestamosSubmenu
-                role={role}
-                onLogout={handleLogout}
-                adminExpanded={false}
-                onToggleAdmin={() => undefined}
-              />
+              {hasPrestamosSubmenu ? (
+                <>
+                  <Link to="/" aria-haspopup="menu" aria-expanded={false}>
+                    Préstamos
+                    <ChevronDown />
+                  </Link>
+                  <PrestamosSubmenu
+                    role={role}
+                    onLogout={handleLogout}
+                    adminExpanded={false}
+                    onToggleAdmin={() => undefined}
+                  />
+                </>
+              ) : (
+                <Link to="/">Préstamos</Link>
+              )}
             </li>
           </ul>
         </nav>
+
+        {/* Right-side actions */}
+        {role === "guest" && (
+          <div className={styles.headerActions}>
+            <Link to="/login" className={styles.loginAction}>
+              Iniciar sesión
+            </Link>
+          </div>
+        )}
 
         {/* Hamburger */}
         <button
@@ -309,6 +322,18 @@ export function SiteHeader() {
       >
         <nav aria-label="Principal">
           <ul className={styles.drawerList}>
+            {role === "guest" && (
+              <li className={styles.drawerItem}>
+                <Link
+                  to="/login"
+                  className={styles.drawerLoginAction}
+                  onClick={closeDrawer}
+                >
+                  Iniciar sesión
+                </Link>
+              </li>
+            )}
+
             {status !== "error" &&
               items.map((item) => (
                 <li key={item.href} className={styles.drawerItem}>
@@ -320,24 +345,32 @@ export function SiteHeader() {
 
             {/* Préstamos in drawer */}
             <li className={styles.drawerItem}>
-              <button
-                type="button"
-                className={styles.drawerParent}
-                aria-haspopup="menu"
-                aria-expanded={prestamosExpanded}
-                onClick={() => setPrestamosExpanded((prev) => !prev)}
-              >
-                Préstamos
-                <ChevronDown />
-              </button>
-              {prestamosExpanded && (
-                <PrestamosSubmenu
-                  role={role}
-                  onLogout={handleLogout}
-                  adminExpanded={adminExpanded}
-                  onToggleAdmin={() => setAdminExpanded((prev) => !prev)}
-                  onItemClick={closeDrawer}
-                />
+              {hasPrestamosSubmenu ? (
+                <>
+                  <button
+                    type="button"
+                    className={styles.drawerParent}
+                    aria-haspopup="menu"
+                    aria-expanded={prestamosExpanded}
+                    onClick={() => setPrestamosExpanded((prev) => !prev)}
+                  >
+                    Préstamos
+                    <ChevronDown />
+                  </button>
+                  {prestamosExpanded && (
+                    <PrestamosSubmenu
+                      role={role}
+                      onLogout={handleLogout}
+                      adminExpanded={adminExpanded}
+                      onToggleAdmin={() => setAdminExpanded((prev) => !prev)}
+                      onItemClick={closeDrawer}
+                    />
+                  )}
+                </>
+              ) : (
+                <Link to="/" onClick={closeDrawer}>
+                  Préstamos
+                </Link>
               )}
             </li>
           </ul>
