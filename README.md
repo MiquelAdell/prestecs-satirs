@@ -285,8 +285,8 @@ A [`render.yaml`](render.yaml) blueprint is also included for deployment to [Ren
 ## Planned work
 
 - **Lending redesign (v1)** — visual + interaction rebuild of `/prestamos` to align with the club site (`refugiodelsatiro.es`) typography and color, based on the UOC TFM by Ariadna Ortega Rams. Roadmap and specs in [`openspec/changes/archive/2026-04-25-plan-lending-redesign/`](openspec/changes/archive/2026-04-25-plan-lending-redesign/). Implementation phases:
-  - Phase A: design tokens + primitives + drop i18n — **in progress** ([`openspec/changes/lending-design-tokens-and-primitives/`](openspec/changes/lending-design-tokens-and-primitives/)).
-  - Site shell with new "Préstamos" submenu — pending ([`openspec/changes/site-shell-from-scraped-html/`](openspec/changes/site-shell-from-scraped-html/)).
+  - Phase A: design tokens + primitives + drop i18n — **complete**.
+  - Site shell with data-driven nav and new "Préstamos" submenu — **in progress** ([`openspec/changes/site-shell-from-scraped-html/`](openspec/changes/site-shell-from-scraped-html/), PR #46). Submenu children from `_nav.json` deferred to a follow-up issue.
   - Phase B (catalog rebuild), Phase B4+C1 (borrow with return date), Phase D (admin members restyle) — to be opened later.
 
 ## License

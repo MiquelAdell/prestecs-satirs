@@ -1,15 +1,23 @@
 # TODO
 
-## From internal meeting 26/04/2026 
-- [ ] Move login anchor in the menu out of catalogo/prestamos
-- [ ] fix the confusion between catalogo/prestamos
-- [ ] Improve the presentation of the login page (maybe integrate with the header and footer?)
-- [ ] /prestamos still has some "préstecs" in the header
-- [ ] fix the chevron
-- [ ] fix campañas
-- [ ] The original request — /prestamos → /prestamos/ redirect — was not implemented. My first attempt broke Vite's internal request routing, and I reverted everything. A whitelist-only middleware approach (only matching exact paths /prestamos, /inicio, etc.) is the right direction; just needs to be retried once the blank-page issue above is understood. Worth adding to TODO if you want it tracked.
-- [ ] Validate openspec/changes/site-shell-from-scraped-html/tasks.md against actual commits — that was the next step flagged in memory before merge.
-- [ ] review filters in the cataglog page
+## From internal meeting 26/04/2026
+
+Tracked as GitHub issues under parent #45 (site-wide shell).
+
+In PR #46 (`feature/import-menu`):
+- [ ] #47 — replace Catalan "Préstecs" remnants with "Préstamos"
+- [ ] #48 — rotate chevron when Préstamos / drawer parent is open
+- [ ] #49 — remove duplicate Catálogo entry under Préstamos
+- [ ] #50 — move "Iniciar sesión" out of Préstamos submenu into header action
+- [ ] #51 — redirect accented URLs (campañas → campanas) in dev mirror + Caddy
+- [ ] #52 — validate site-shell-from-scraped-html tasks.md against commits
+
+Follow-up (after PR #46 merges):
+- [ ] #53 — integrate login page with site header / footer shell
+- [ ] #54 — /prestamos → /prestamos/ redirect via Caddy exact-path whitelist
+
+Not yet scoped:
+- [ ] review filters in the catalog page
 
 
 ## Post-deploy hardening
