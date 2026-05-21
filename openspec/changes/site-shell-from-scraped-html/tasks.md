@@ -47,7 +47,7 @@ Branch from `development` as `feature/import-menu`. Sequenced after `lending-des
 
 - [x] 6.1 [FE] Add the Préstamos parent as the last top-level item, rendered with React Router `<Link to="/prestamos/">`.
 - [x] 6.2 [FE] Render the submenu via a single declarative item list derived from auth state (`useAuth()` from `frontend/src/context/AuthContext.tsx`). No imperative branching; the list is computed with `filter`/`map` from a base array of typed entries.
-  - Guest items: `Catálogo` (`/prestamos/`), `Iniciar sesión` (`/prestamos/login`).
+  - Guest items: `Préstamos` as a plain `<Link>` (no submenu); `Iniciar sesión` moved to a top-level header `<Button>` action (commit 54af6ab).
   - Member items: `Catálogo`, `Mis préstamos` (`/prestamos/my-loans`), `Cerrar sesión` (action → `logout()`).
   - Admin items: `Catálogo`, `Mis préstamos`, `Administración` (nested parent), `Cerrar sesión`.
 - [x] 6.3 [FE] Nested `Administración` submenu — items: `Miembros` (`/prestamos/admin/members`), `Contenido` (`/prestamos/admin/content`).
@@ -104,7 +104,7 @@ Branch from `development` as `feature/import-menu`. Sequenced after `lending-des
 - [x] 14.4 [FE] `cd frontend && npm run build` produces a clean build.
 - [x] 14.5 [BE] `pytest tests/scraper/` passes.
 - [~] 14.6 [FE] `cd e2e && npx playwright test` passes.  *(descoped)*
-- [ ] 14.7 [FE] Manual smoke via Chrome DevTools MCP: trigger a scrape (admin "Contenido" → re-sync), verify `_nav.json` exists with expected schema and `/prestamos` excluded; navigate to `/prestamos/` and confirm fetched items + Préstamos render; cross-navigate to a fetched item; test guest / member / admin submenu shapes; mobile-emulate 375 px and exercise the drawer + nested expand + Escape; console clean. Assert visual parity for the header at 1280 / 768 / 375.
+- [x] 14.7 [FE] Manual smoke via Chrome DevTools MCP: trigger a scrape (admin "Contenido" → re-sync), verify `_nav.json` exists with expected schema and `/prestamos` excluded; navigate to `/prestamos/` and confirm fetched items + Préstamos render; cross-navigate to a fetched item; test guest / member / admin submenu shapes; mobile-emulate 375 px and exercise the drawer + nested expand + Escape; console clean. Assert visual parity for the header at 1280 / 768 / 375.
 
 ## 15. Documentation
 
@@ -114,3 +114,7 @@ Branch from `development` as `feature/import-menu`. Sequenced after `lending-des
 
 - [x] 16.1 [CR] Open PR titled `feat(shell): site-wide PageLayout with data-driven nav, drop bespoke NavBar` against `development`. Body links to this change directory and the archived `plan-lending-redesign`, and references the related GitHub issue per `.claude/CLAUDE.md`.
 - [ ] 16.2 [CR] Confirm CI passes.
+
+---
+
+> **Note:** Follow-up commits 9d3ed2b, 54af6ab, 8c687cf (GitHub issues #47–#51: Catalan→Spanish, chevron/drawer fixes, dev URL redirects) were merged after the 46-task audit and are tracked via GitHub, not as task items.
