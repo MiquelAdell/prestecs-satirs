@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:e2e": "NODE_PATH=./node_modules playwright test --config ../e2e/playwright.config.ts",
+    "test:e2e": "yarn build && NODE_PATH=./node_modules playwright test --config ../e2e/playwright.config.ts",
     "typecheck": "tsc -b --noEmit"
   },
   "dependencies": {

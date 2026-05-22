@@ -125,6 +125,14 @@ Each row: checklist item → test ID → type → location. Test IDs use the for
 | Percent-encoded variant redirects | `url-2` | pyunit | `tests/scripts/test_dev_mirror.py` |
 | Caddyfile rules cover same paths | `url-3` | pyunit (parsed) | `tests/scripts/test_dev_mirror.py` |
 | Trailing-slash canonicalisation | `url-4` | smoke | `site-shell.spec.ts` |
+| Encoded accented URL with trailing slash → ASCII canonical | `int-1` | smoke | `e2e/tests/url-redirects.spec.ts` |
+| Encoded accented URL without trailing slash → ASCII canonical (lands on trailing-slash form via Caddy canonicaliser) | `int-2` | smoke | `e2e/tests/url-redirects.spec.ts` |
+| `/inicio` and `/inicio/` redirect to `/` (both variants under one ID) | `red-inicio` | smoke | `e2e/tests/url-redirects.spec.ts` |
+| `/socios/ludoteca` redirects to `/ludoteca/` | `red-ludoteca` | smoke | `e2e/tests/url-redirects.spec.ts` |
+| `/Validacion-Membresia` redirects to `/validacion/` | `red-validacion` | smoke | `e2e/tests/url-redirects.spec.ts` |
+| `/calendario` canonicalises to `/calendario/` | `red-trailing-slash` | smoke | `e2e/tests/url-redirects.spec.ts` |
+| `/prestamos/games/1` is not redirected (SPA exclusion) | `red-spa-no-trailing` | smoke | `e2e/tests/url-redirects.spec.ts` |
+| Unknown path returns 404 | `url-1` (e2e) | smoke | `e2e/tests/url-redirects.spec.ts` |
 
 ### 8. Visual & styling
 
@@ -169,8 +177,8 @@ quick visual diffing.
 
 | Item | Test ID | Type |
 |------|---------|------|
-| `/prestamos/*` pages render with shell | `int-1` | smoke |
-| Cross-page navigation preserves auth | `int-2` | smoke |
+| Encoded accented URL with trailing slash → ASCII canonical | `int-1` | smoke | `e2e/tests/url-redirects.spec.ts` |
+| Encoded accented URL without trailing slash → ASCII canonical | `int-2` | smoke | `e2e/tests/url-redirects.spec.ts` |
 | Hardcoded ↔ scraped route transitions | `int-3` | smoke |
 
 ## CI gate

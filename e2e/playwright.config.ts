@@ -9,7 +9,7 @@ export default defineConfig({
   reporter: "html",
   globalSetup: "./scripts/seed-auth-states.ts",
   use: {
-    baseURL: process.env.BASE_URL || "http://localhost:5173",
+    baseURL: process.env.BASE_URL || "http://localhost:8090",
     trace: "on-first-retry",
   },
 
@@ -39,16 +39,16 @@ export default defineConfig({
 
   webServer: [
     {
-      command: "uvicorn backend.api.app:create_app --factory --port 8000",
+      command: "python -m uvicorn backend.api.app:create_app --factory --port 8000",
       cwd: "..",
-      port: 8000,
-      reuseExistingServer: !process.env.CI,
+      url: "http://localhost:8000/api/health",
+      reuseExistingServer: true,
     },
     {
-      command: "yarn dev --port 5173",
-      cwd: "../frontend",
-      port: 5173,
-      reuseExistingServer: !process.env.CI,
+      command: "caddy run --config Caddyfile.e2e --adapter caddyfile",
+      cwd: "..",
+      url: "http://localhost:8090/",
+      reuseExistingServer: true,
     },
   ],
 });

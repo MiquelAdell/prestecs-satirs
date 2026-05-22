@@ -25,7 +25,7 @@ import { request, type APIRequestContext } from "@playwright/test";
 const FIXTURES_DIR = resolve(__dirname, "..", "fixtures");
 
 const API_BASE = process.env.E2E_API_BASE ?? "http://localhost:8000";
-const APP_BASE = process.env.E2E_APP_BASE ?? "http://localhost:5173";
+const APP_BASE = process.env.E2E_APP_BASE ?? "http://localhost:8090";
 const SESSION_STORAGE_KEY = "prestamos_session";
 const SESSION_STORAGE_VALUE = "1";
 

@@ -17,6 +17,8 @@ Append a brief entry per agent run. Newest at top.
 
 <!-- Format: YYYY-MM-DD HH:MM — <section> — <agent> — <summary> -->
 
+2026-05-22 — W3 (Caddy-fronted e2e stack) landed: `Caddyfile.e2e` mirrors prod routing; Playwright `baseURL` now `http://localhost:8090`; `int-1` / `int-2` un-skipped and passing; new `red-*` smoke tests for legacy redirects and trailing-slash canonicaliser added in `e2e/tests/url-redirects.spec.ts`. See `e2e/README.md` for the stack overview.
+
 2026-05-22 — Workstreams A-D landed: SiteHeader 36/36, pytest 23/23, Catálogo drift cleared.
 
 2026-05-21 19:30 — Section 12 — frontend-developer — All 12 items ⏭. No page-level Vitest specs exist for CatalogPage / MyLoansPage / AdminMembersPage / AdminContentPage (only GameDetailPage.test.tsx, unrelated). `e2e/tests/` empty — no Playwright specs. Every Section 12 item in TESTING_PARAMETERS is typed `smoke` (int-1, int-2, int-3). Section blocked pending Playwright infra; same blocker as sections 8 (visual) and 11 (perf).
@@ -49,12 +51,12 @@ Append a brief entry per agent run. Newest at top.
 ### 4. Mobile Drawer (375px viewport) — 🟢 15✅ 5⏭
 ### 5. Authentication & State Management — 🟢 14✅ 4⏭ (useAuth lives in `context/AuthContext.tsx`, not `hooks/`; semantics confirmed: guest=member null, member=is_admin false, admin=is_admin true. Drawer logout now drawer-scoped via `within()`; login redirect is router-level smoke.)
 ### 6. Data-Driven Navigation (_nav.json) — 10✅ 2⏭
-### 7. URL Handling & Redirects — 🟢 9✅ 4⏭ (raw-ñ harness cases dropped in Workstream C; percent-encoded covers behaviour; 23/23 pytest pass)
+### 7. URL Handling & Redirects — 🟢 9✅ 4⏭ + e2e ✅ (raw-ñ harness cases dropped in Workstream C; percent-encoded covers behaviour; 23/23 pytest pass; W3 added Caddy-backed smoke for `int-1`, `int-2`, `red-inicio`, `red-ludoteca`, `red-validacion`, `red-trailing-slash`, `red-spa-no-trailing`, `url-1` — all green via `e2e/tests/url-redirects.spec.ts`)
 ### 8. Visual & Styling — 🟢 4✅ 16⏭ (CSS confirms mobile breakpoint, dark theme, hover transitions, drawer structure; all viewport/contrast/screenshot items require real browser + eyes)
 ### 9. Accessibility — 🟢 8✅ 8⏭ (semantic + ARIA covered by existing unit assertions; tab order / keyboard activation / screen-reader behaviour are smoke+manual)
 ### 10. Error States & Edge Cases — 🟡 2✅ 1🔨 9⏭ (`_nav.json` fallback + auth-null→guest covered; rapid-toggle test missing; remainder smoke/router/manual)
 ### 11. Performance — ⏭ 11⏭ (all items require Playwright smoke + Lighthouse + multi-browser cloud matrix; e2e/tests/ is empty, no perf infra in place)
-### 12. Integration Tests — ⏭ 12⏭ (no page-level Vitest specs for the four lending pages; `e2e/tests/` empty; all items typed `smoke` per TESTING_PARAMETERS — blocked on Playwright infra)
+### 12. Integration Tests — 🟢 2✅ 10⏭ (W3: `int-1` and `int-2` now ✅ via `e2e/tests/url-redirects.spec.ts` running against the Caddy-fronted stack on `:8090`; remaining lending-page integration items still pending Playwright page specs)
 
 ---
 
@@ -68,12 +70,12 @@ Append a brief entry per agent run. Newest at top.
 | 4. Mobile Drawer | 🟢 15✅ 5⏭ |
 | 5. Authentication & State | 🟢 14✅ 4⏭ |
 | 6. Data-Driven Navigation | 🟢 10✅ 2⏭ |
-| 7. URL Handling & Redirects | 🟢 9✅ 4⏭ |
+| 7. URL Handling & Redirects | 🟢 9✅ 4⏭ + e2e ✅ (red-inicio, red-ludoteca, red-validacion, red-trailing-slash, red-spa-no-trailing, url-1) |
 | 8. Visual & Styling | 🟢 4✅ 1🔨 16⏭ |
 | 9. Accessibility | 🟢 8✅ 1🔨 8⏭ |
 | 10. Error States & Edge Cases | 🟡 2✅ 1🔨 9⏭ |
 | 11. Performance | ⏭ 11⏭ |
-| 12. Integration Tests | ⏭ 12⏭ |
+| 12. Integration Tests | 🟢 2✅ 10⏭ (int-1, int-2 un-skipped via W3) |
 
 ### Next steps
 
@@ -264,6 +266,16 @@ verified.
 - ⏭ Route changes update document URL (smoke-only — React Router behaviour)
 - ⏭ Back/forward browser buttons work (smoke-only — browser history API)
 
+#### Caddy-backed redirect smoke (W3, `e2e/tests/url-redirects.spec.ts`)
+- ✅ `int-1` — `/juegos-de-rol/campa%C3%B1as/` → `/juegos-de-rol/campanas/` (Caddy `redir` rule + percent-encoded match)
+- ✅ `int-2` — `/juegos-de-rol/campa%C3%B1as` → `/juegos-de-rol/campanas/` (no-slash variant lands on trailing-slash form via Caddy canonicaliser)
+- ✅ `red-inicio` — both `/inicio` and `/inicio/` → `/` (two test cases under one ID)
+- ✅ `red-ludoteca` — `/socios/ludoteca` → `/ludoteca/`
+- ✅ `red-validacion` — `/Validacion-Membresia` → `/validacion/`
+- ✅ `red-trailing-slash` — `/calendario` → `/calendario/`
+- ✅ `red-spa-no-trailing` — `/prestamos/games/1` unchanged (SPA exclusion in Caddyfile.e2e)
+- ✅ `url-1` (e2e) — unknown path returns 404
+
 ### 8. Visual & Styling
 
 #### Desktop Layout (1280px)
@@ -363,18 +375,22 @@ verified.
 
 ### 12. Integration Tests
 
+#### Accented-URL redirects (W3)
+- ✅ `int-1` — `/juegos-de-rol/campa%C3%B1as/` → `/juegos-de-rol/campanas/` (Caddy-fronted, `e2e/tests/url-redirects.spec.ts`)
+- ✅ `int-2` — `/juegos-de-rol/campa%C3%B1as` → `/juegos-de-rol/campanas/` (lands on trailing-slash form via Caddy canonicaliser)
+
 #### Lending App Pages
-- ⏭ `/prestamos/` catalog displays (int-1 smoke; no Vitest page test for `CatalogPage.tsx`; `e2e/tests/` empty)
-- ⏭ `/prestamos/my-loans` member page (int-1 smoke; no Vitest test for `MyLoansPage.tsx`)
-- ⏭ `/prestamos/admin/members` admin page (int-1 smoke; no Vitest test for `AdminMembersPage.tsx`)
-- ⏭ `/prestamos/admin/content` admin page (int-1 smoke; no Vitest test for `AdminContentPage.tsx`)
-- ⏭ Navigation doesn't interfere with page content (int-1 smoke — requires real DOM + viewport)
+- ⏭ `/prestamos/` catalog displays (no Vitest page test for `CatalogPage.tsx`)
+- ⏭ `/prestamos/my-loans` member page (no Vitest test for `MyLoansPage.tsx`)
+- ⏭ `/prestamos/admin/members` admin page (no Vitest test for `AdminMembersPage.tsx`)
+- ⏭ `/prestamos/admin/content` admin page (no Vitest test for `AdminContentPage.tsx`)
+- ⏭ Navigation doesn't interfere with page content (smoke — requires real DOM + viewport)
 
 #### Cross-page Navigation
-- ⏭ Can navigate between all nav items (int-2 smoke — router-level, needs Playwright)
-- ⏭ State persists across pages (int-2 smoke — AuthContext + localStorage rehydrate; needs running app)
-- ⏭ Logout clears auth state across all pages (int-2 smoke — multi-page traversal)
-- ⏭ Login/logout triggers nav update (int-2 smoke — overlaps Section 5 login-redirect)
+- ⏭ Can navigate between all nav items (smoke — router-level, needs Playwright page specs)
+- ⏭ State persists across pages (smoke — AuthContext + localStorage rehydrate; needs running app)
+- ⏭ Logout clears auth state across all pages (smoke — multi-page traversal)
+- ⏭ Login/logout triggers nav update (smoke — overlaps Section 5 login-redirect)
 
 #### Mixed Routes
 - ⏭ Hardcoded Préstamos routes work (int-3 smoke — covered structurally by Section 2 unit tests but full nav requires browser)
