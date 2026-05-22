@@ -42,14 +42,14 @@
 
 ### Member Auth State Submenu
 - [ ] Préstamos has dropdown chevron
-- [ ] Submenu items: Catálogo, Mis préstamos, Cerrar sesión
+- [ ] Submenu items: Mis préstamos, Cerrar sesión
 - [ ] Mis préstamos links to `/prestamos/my-loans`
 - [ ] Cerrar sesión button calls logout action
 - [ ] Submenu expands/collapses on click
 
 ### Admin Auth State Submenu
 - [ ] Préstamos has dropdown chevron
-- [ ] Submenu items: Catálogo, Mis préstamos, Administración, Cerrar sesión
+- [ ] Submenu items: Mis préstamos, Administración, Cerrar sesión
 - [ ] Administración is a nested parent (has chevron)
 - [ ] Nested children: Miembros, Contenido
 - [ ] Miembros links to `/prestamos/admin/members`
@@ -115,7 +115,7 @@
 
 ### Member State (logged-in non-admin)
 - [ ] useAuth() returns member state
-- [ ] Préstamos submenu shows: Catálogo, Mis préstamos, Cerrar sesión
+- [ ] Préstamos submenu shows: Mis préstamos, Cerrar sesión
 - [ ] No Administración option
 - [ ] Cerrar sesión functional
 
@@ -293,8 +293,8 @@
 ## Notes
 
 - **Guest nav item count**: 8 items (Inicio through Socios) + Préstamos (link, no submenu) + Iniciar sesión (header button)
-- **Member submenu**: Catálogo, Mis préstamos, Cerrar sesión (3 items)
-- **Admin submenu**: Catálogo, Mis préstamos, Administración (with Miembros, Contenido nested), Cerrar sesión (4 items + 2 nested)
+- **Member submenu**: Mis préstamos, Cerrar sesión (2 items)
+- **Admin submenu**: Mis préstamos, Administración (with Miembros, Contenido nested), Cerrar sesión (3 items + 2 nested)
 - **Focus viewports**: 375px (mobile), 768px (tablet), 1280px (desktop)
 - **Key commits**:
   - `54af6ab`: chevron rotation, drawer, login button repositioning
