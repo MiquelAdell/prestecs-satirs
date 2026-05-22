@@ -3,6 +3,15 @@ import { describe, it, expect } from "vitest";
 import { SiteFooter } from "./SiteFooter";
 
 describe("SiteFooter", () => {
+  // foot-1: footer renders as semantic <footer> element
+  describe("semantic element (foot-1)", () => {
+    it("renders a <footer> element", () => {
+      const { container } = render(<SiteFooter />);
+      const footer = container.querySelector("footer");
+      expect(footer).not.toBeNull();
+    });
+  });
+
   describe("social links", () => {
     it("renders the WhatsApp social link", () => {
       render(<SiteFooter />);
