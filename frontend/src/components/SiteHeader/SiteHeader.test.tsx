@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { SiteHeader } from "./SiteHeader";
@@ -174,7 +174,7 @@ describe("SiteHeader", () => {
       // One in the desktop header actions slot, one in the drawer = 2
       expect(loginLinks.length).toEqual(2);
       loginLinks.forEach((link) => {
-        expect(link.getAttribute("href")).toEqual("/login");
+        expect(link).toHaveAttribute("href", "/login");
       });
     });
 
@@ -222,6 +222,14 @@ describe("SiteHeader", () => {
         .map((el) => el.textContent?.trim());
 
       expect(submenuItems).toEqual(["Mis préstamos", "Cerrar sesión"]);
+
+      const misPrestamosLinks = screen
+        .getAllByRole("menuitem")
+        .filter((el) => el.textContent?.trim() === "Mis préstamos")
+        .map((el) => el.querySelector("a"));
+      misPrestamosLinks.forEach((link) => {
+        expect(link).toHaveAttribute("href", "/my-loans");
+      });
     });
 
     it("does not show Iniciar sesión or Administración for member", () => {
@@ -383,6 +391,242 @@ describe("SiteHeader", () => {
       expect(drawerPrestamos!.getAttribute("aria-expanded")).toEqual("false");
       fireEvent.click(drawerPrestamos!);
       expect(drawerPrestamos!.getAttribute("aria-expanded")).toEqual("true");
+    });
+
+    // draw-6: nested Administración expands inside drawer
+    it("nested Administración submenu items become visible after opening in drawer (draw-6)", () => {
+      setAdmin();
+      const { container } = renderHeader();
+
+      // Open drawer
+      const hamburger = screen.getByRole("button", { name: "Abrir menú" });
+      fireEvent.click(hamburger);
+
+      const drawer = container.querySelector("#mobile-drawer") as HTMLElement;
+      expect(drawer).not.toBeNull();
+
+      // Open Préstamos in drawer
+      const drawerPrestamos = within(drawer)
+        .getAllByRole("button")
+        .find(
+          (el) =>
+            el.textContent?.includes("Préstamos") &&
+            el.getAttribute("aria-haspopup") === "menu"
+        );
+      expect(drawerPrestamos).toBeDefined();
+      fireEvent.click(drawerPrestamos!);
+
+      // Click the Administración nested trigger
+      const adminTrigger = within(drawer)
+        .getAllByRole("button")
+        .find((el) => el.textContent?.includes("Administración"));
+      expect(adminTrigger).toBeDefined();
+      fireEvent.click(adminTrigger!);
+
+      // Miembros and Contenido links are now visible inside the drawer
+      expect(within(drawer).getByText("Miembros")).toBeDefined();
+      expect(within(drawer).getByText("Contenido")).toBeDefined();
+
+      const miembrosLinks = within(drawer)
+        .getAllByRole("menuitem")
+        .filter((el) => el.textContent?.trim() === "Miembros");
+      const contenidoLinks = within(drawer)
+        .getAllByRole("menuitem")
+        .filter((el) => el.textContent?.trim() === "Contenido");
+
+      expect(miembrosLinks.length).toBeGreaterThan(0);
+      expect(contenidoLinks.length).toBeGreaterThan(0);
+    });
+
+    // auth-5: Cerrar sesión in drawer closes the drawer
+    it("clicking Cerrar sesión in drawer calls logout and closes the drawer (auth-5)", () => {
+      setMember();
+      mockLogout.mockResolvedValue(undefined);
+      const { container } = renderHeader();
+
+      // Open drawer
+      const hamburger = screen.getByRole("button", { name: "Abrir menú" });
+      fireEvent.click(hamburger);
+      expect(hamburger.getAttribute("aria-expanded")).toEqual("true");
+
+      const drawer = container.querySelector("#mobile-drawer") as HTMLElement;
+      expect(drawer).not.toBeNull();
+
+      // Open Préstamos submenu in drawer
+      const drawerPrestamos = within(drawer)
+        .getAllByRole("button")
+        .find(
+          (el) =>
+            el.textContent?.includes("Préstamos") &&
+            el.getAttribute("aria-haspopup") === "menu"
+        );
+      expect(drawerPrestamos).toBeDefined();
+      fireEvent.click(drawerPrestamos!);
+
+      // Click Cerrar sesión inside the drawer
+      const cerrarBtn = within(drawer).getByText("Cerrar sesión");
+      fireEvent.click(cerrarBtn);
+
+      expect(mockLogout).toHaveBeenCalledTimes(1);
+      // Drawer closes after logout
+      expect(hamburger.getAttribute("aria-expanded")).toEqual("false");
+    });
+  });
+
+  // nav-logo-1: logo anchor links to /inicio
+  describe("logo", () => {
+    it("logo link points to /inicio (nav-logo-1)", () => {
+      const { container } = renderHeader();
+
+      const logoLink = container.querySelector("a[aria-label='Refugio del Sátiro – Inicio']");
+      expect(logoLink).not.toBeNull();
+      expect(logoLink!.getAttribute("href")).toEqual("/inicio");
+    });
+
+    // nav-logo-2: logo img has correct alt text
+    it("logo img has alt text 'El Refugio del Sátiro' (nav-logo-2)", () => {
+      renderHeader();
+
+      const logoImg = screen.getByAltText("El Refugio del Sátiro");
+      expect(logoImg.tagName).toEqual("IMG");
+    });
+  });
+
+  // submenu-admin-2: Miembros and Contenido href values
+  describe("admin nested link hrefs (submenu-admin-2)", () => {
+    it("Miembros link has href /admin/members", () => {
+      setAdmin();
+      const { container } = renderHeader();
+
+      const allLinks = Array.from(container.querySelectorAll("a"));
+      const miembrosLink = allLinks.find((el) => el.textContent?.trim() === "Miembros");
+      expect(miembrosLink).not.toBeUndefined();
+      // Plain MemoryRouter with no basename: Link to="/admin/members" renders /admin/members
+      expect(miembrosLink!.getAttribute("href")).toEqual("/admin/members");
+    });
+
+    it("Contenido link has href /admin/content", () => {
+      setAdmin();
+      const { container } = renderHeader();
+
+      const allLinks = Array.from(container.querySelectorAll("a"));
+      const contenidoLink = allLinks.find((el) => el.textContent?.trim() === "Contenido");
+      expect(contenidoLink).not.toBeUndefined();
+      expect(contenidoLink!.getAttribute("href")).toEqual("/admin/content");
+    });
+  });
+
+  // submenu-admin-3: Administración trigger in drawer toggles aria-expanded
+  describe("Administración trigger aria-expanded in drawer (submenu-admin-3)", () => {
+    it("Administración button aria-expanded flips true on first click, false on second", () => {
+      setAdmin();
+      const { container } = renderHeader();
+
+      // Open drawer
+      const hamburger = screen.getByRole("button", { name: "Abrir menú" });
+      fireEvent.click(hamburger);
+
+      const drawer = container.querySelector("#mobile-drawer") as HTMLElement;
+      expect(drawer).not.toBeNull();
+
+      // Open Préstamos in drawer
+      const drawerPrestamos = within(drawer)
+        .getAllByRole("button")
+        .find(
+          (el) =>
+            el.textContent?.includes("Préstamos") &&
+            el.getAttribute("aria-haspopup") === "menu"
+        );
+      expect(drawerPrestamos).toBeDefined();
+      fireEvent.click(drawerPrestamos!);
+
+      // Find Administración nested trigger inside drawer
+      const adminTrigger = within(drawer)
+        .getAllByRole("button")
+        .find((el) => el.textContent?.includes("Administración"));
+      expect(adminTrigger).toBeDefined();
+
+      expect(adminTrigger!.getAttribute("aria-expanded")).toEqual("false");
+      fireEvent.click(adminTrigger!);
+      expect(adminTrigger!.getAttribute("aria-expanded")).toEqual("true");
+      fireEvent.click(adminTrigger!);
+      expect(adminTrigger!.getAttribute("aria-expanded")).toEqual("false");
+    });
+  });
+
+  // chev-1: chevron SVG presence by auth state
+  describe("chevron SVG presence (chev-1)", () => {
+    it("Préstamos parent in desktop nav contains a chevron SVG for member", () => {
+      setMember();
+      const { container } = renderHeader();
+
+      const desktopNav = container.querySelector("nav[aria-label='Principal']");
+      expect(desktopNav).not.toBeNull();
+
+      // The Préstamos link element contains the ChevronDown SVG
+      const prestamosLi = Array.from(desktopNav!.querySelectorAll("li")).find(
+        (li) => li.textContent?.includes("Préstamos")
+      );
+      expect(prestamosLi).toBeDefined();
+      const chevrons = prestamosLi!.querySelectorAll("svg");
+      expect(chevrons.length).toBeGreaterThan(0);
+    });
+
+    it("Préstamos parent in desktop nav contains a chevron SVG for admin", () => {
+      setAdmin();
+      const { container } = renderHeader();
+
+      const desktopNav = container.querySelector("nav[aria-label='Principal']");
+      expect(desktopNav).not.toBeNull();
+
+      const prestamosLi = Array.from(desktopNav!.querySelectorAll("li")).find(
+        (li) => li.textContent?.includes("Préstamos")
+      );
+      expect(prestamosLi).toBeDefined();
+      const chevrons = prestamosLi!.querySelectorAll("svg");
+      expect(chevrons.length).toBeGreaterThan(0);
+    });
+
+    it("Préstamos item in desktop nav has no chevron SVG for guest", () => {
+      setGuest();
+      const { container } = renderHeader();
+
+      const desktopNav = container.querySelector("nav[aria-label='Principal']");
+      expect(desktopNav).not.toBeNull();
+
+      const prestamosLi = Array.from(desktopNav!.querySelectorAll("li")).find(
+        (li) => li.textContent?.trim() === "Préstamos"
+      );
+      expect(prestamosLi).toBeDefined();
+      const chevrons = prestamosLi!.querySelectorAll("svg");
+      expect(chevrons.length).toEqual(0);
+    });
+  });
+
+  // err-2: rapid double-click on drawer Préstamos trigger leaves aria-expanded deterministic
+  describe("rapid toggle is deterministic (err-2)", () => {
+    it("double-click on drawer Préstamos trigger results in closed state", () => {
+      setMember();
+      renderHeader();
+
+      // Open drawer
+      const hamburger = screen.getByRole("button", { name: "Abrir menú" });
+      fireEvent.click(hamburger);
+
+      const drawerPrestamos = screen
+        .getAllByRole("button")
+        .find(
+          (el) =>
+            el.textContent?.includes("Préstamos") &&
+            el.getAttribute("aria-haspopup") === "menu"
+        );
+      expect(drawerPrestamos).toBeDefined();
+
+      // Rapid double-click: open then immediately close
+      fireEvent.click(drawerPrestamos!);
+      fireEvent.click(drawerPrestamos!);
+
+      expect(drawerPrestamos!.getAttribute("aria-expanded")).toEqual("false");
     });
   });
 });
