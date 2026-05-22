@@ -14,6 +14,17 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/prestamos/, ""),
       },
+      "/_nav.json": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
+      // Static assets served by Caddy from the content-mirror in production.
+      // Dev needs to reach them too so the SiteHeader logo and any other
+      // mirror-resident images load on /prestamos/* pages.
+      "/_assets": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
     },
   },
   test: {

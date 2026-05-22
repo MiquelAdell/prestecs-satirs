@@ -42,6 +42,12 @@ htmlcov/
 # Playwright MCP (browser logs, screenshots, downloads)
 .playwright-mcp/
 
+# Playwright test output (per-run, regenerated)
+playwright-report/
+test-results/
+e2e/fixtures/*.json
+!e2e/fixtures/.gitkeep
+
 # Sensitive data
 members.csv
 

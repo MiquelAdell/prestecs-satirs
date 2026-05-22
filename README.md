@@ -21,6 +21,7 @@ small scraper (see `scraper/`) and served as static files by Caddy.
 - Python 3.12+
 - Node.js 18+
 - pip
+- [Caddy](https://caddyserver.com/docs/install) (`brew install caddy` on macOS)
 
 ## Installation
 
@@ -83,11 +84,21 @@ Or you can instead run the command:
 ```bash
 ./dev.sh
 ```
-From the repo root. It starts uvicorn on :8000 and Vite on :5173, traps Ctrl+C to kill both.
 
-Open http://localhost:5173/prestamos. Vite proxies `/prestamos/api` to the
-backend on `:8000`. The scraped site is **not** served in this mode — links
-to `/`, `/inicio`, etc. will 404.
+From the repo root. It starts all four processes and kills them together on
+Ctrl+C:
+
+| Process | Port | Role |
+|---------|------|------|
+| uvicorn | :8000 | FastAPI backend |
+| dev_mirror.py | :8080 | Static content mirror |
+| Vite | :5173 | React dev server (HMR) |
+| Caddy | :2015 | Single entry point |
+
+Open **http://localhost:2015**. Caddy routes `/prestamos/*` to the Vite dev
+server and everything else to the content mirror, so you can navigate between
+`/prestamos/` and `/calendario/` (or any other static page) without switching
+ports — the same routing split as production. HMR works as usual.
 
 ### Scraped site only
 
@@ -282,8 +293,8 @@ A [`render.yaml`](render.yaml) blueprint is also included for deployment to [Ren
 ## Planned work
 
 - **Lending redesign (v1)** — visual + interaction rebuild of `/prestamos` to align with the club site (`refugiodelsatiro.es`) typography and color, based on the UOC TFM by Ariadna Ortega Rams. Roadmap and specs in [`openspec/changes/archive/2026-04-25-plan-lending-redesign/`](openspec/changes/archive/2026-04-25-plan-lending-redesign/). Implementation phases:
-  - Phase A: design tokens + primitives + drop i18n — **in progress** ([`openspec/changes/lending-design-tokens-and-primitives/`](openspec/changes/lending-design-tokens-and-primitives/)).
-  - Site shell with new "Préstamos" submenu — pending ([`openspec/changes/site-shell-from-scraped-html/`](openspec/changes/site-shell-from-scraped-html/)).
+  - Phase A: design tokens + primitives + drop i18n — **complete**.
+  - Site shell with data-driven nav and new "Préstamos" submenu — **in progress** ([`openspec/changes/site-shell-from-scraped-html/`](openspec/changes/site-shell-from-scraped-html/), PR #46). Submenu children from `_nav.json` deferred to a follow-up issue.
   - Phase B (catalog rebuild), Phase B4+C1 (borrow with return date), Phase D (admin members restyle) — to be opened later.
 
 ## License

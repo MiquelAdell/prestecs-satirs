@@ -3,10 +3,17 @@
 from __future__ import annotations
 
 import hashlib
+import json
+import logging
+import os
+from datetime import UTC, datetime
 from pathlib import Path
 
 from scraper.config import ScraperConfig
 from scraper.manifest import Manifest, PageRecord, dump, load
+from scraper.nav_extractor import NavItem
+
+_log = logging.getLogger(__name__)
 
 
 class DeletionGuardError(RuntimeError):
@@ -15,6 +22,47 @@ class DeletionGuardError(RuntimeError):
 
 def content_sha(content_html: str) -> str:
     return hashlib.sha256(content_html.encode("utf-8")).hexdigest()
+
+
+_NAV_FILENAME = "_nav.json"
+
+
+def _serialise_item(item: NavItem) -> dict[str, object]:
+    """Serialise a NavItem, omitting ``children`` when empty."""
+    payload: dict[str, object] = {"href": item.href, "label": item.label}
+    if item.children:
+        payload["children"] = [_serialise_item(child) for child in item.children]
+    return payload
+
+
+def write_nav(items: tuple[NavItem, ...], target_dir: Path) -> str | None:
+    """Serialise *items* to ``_nav.json`` inside *target_dir* atomically.
+
+    Returns the SHA-256 hex digest of the written JSON bytes so the caller can
+    store it in the manifest. If *items* is empty, does not write and returns
+    ``None``. Each item's ``children`` (L2 submenu items) is included when
+    non-empty so the frontend can render dropdowns.
+    """
+    if not items:
+        _log.warning("nav extraction returned no items — skipping _nav.json write")
+        return None
+
+    payload = {
+        "generated_at": datetime.now(UTC).isoformat(timespec="seconds"),
+        "items": [_serialise_item(item) for item in items],
+        "version": 1,
+    }
+    json_bytes = (
+        json.dumps(payload, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
+        + "\n"
+    ).encode("utf-8")
+    sha = hashlib.sha256(json_bytes).hexdigest()
+
+    dest = target_dir / _NAV_FILENAME
+    tmp = target_dir / f"{_NAV_FILENAME}.tmp"
+    tmp.write_bytes(json_bytes)
+    os.replace(tmp, dest)
+    return sha
 
 
 def write_page(

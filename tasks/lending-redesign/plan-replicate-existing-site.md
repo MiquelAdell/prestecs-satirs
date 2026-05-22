@@ -188,6 +188,12 @@ Decision 1 Option 3 (live reverse proxy) or Option 4 (headless CMS).
 - 301 redirects for old slugs.
 - Publish to a staging URL for visual parity review.
 
+> **TODO (Phase 1 follow-up):** when the static content pages are ported to
+> React, the scraper-driven `_nav.json` mechanism becomes redundant —
+> replace it with a React-resident nav config and remove `nav_extractor` /
+> `_nav.json`. Until then, members reach the lending app via direct URL or
+> bookmark.
+
 **Phase 2 — native Ludoteca**
 - Public `/ludoteca` (reuse redesigned catalog, read-only for guests).
 - BGG sync button (admin).

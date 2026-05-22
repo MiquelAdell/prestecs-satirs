@@ -15,7 +15,7 @@ FRONTEND_DIR = Path(__file__).resolve().parent.parent.parent / "frontend" / "dis
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="Refugio del Sátiro — Préstecs", version="0.1.0")
+    app = FastAPI(title="Refugio del Sátiro — Préstamos", version="0.1.0")
 
     app.include_router(games_router)
     app.include_router(auth_router)

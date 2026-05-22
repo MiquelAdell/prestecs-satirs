@@ -4,7 +4,10 @@
       "mcp__plugin_playwright_playwright__browser_take_screenshot",
       "Bash(whois refugiodelsatiro.es)",
       "Bash(ssh -o ConnectTimeout=10 -o StrictHostKeyChecking=accept-new deploy@45.95.175.19 \"echo 'connected ok'\")",
-      "mcp__plugin_playwright_playwright__browser_tabs"
+      "mcp__plugin_playwright_playwright__browser_tabs",
+      "mcp__chrome-devtools__new_page",
+      "mcp__chrome-devtools__wait_for",
+      "mcp__chrome-devtools__take_screenshot"
     ]
   },
   "hooks": {

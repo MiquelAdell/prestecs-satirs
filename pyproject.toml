@@ -46,6 +46,15 @@ target-version = "py312"
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP", "B", "SIM", "TCH"]
 
+[tool.ruff.lint.per-file-ignores]
+# Scraper modules use imports at runtime (isinstance checks, Path as parameter
+# types) and pre-date the TCH rule enforcement. Suppress until a dedicated
+# refactor pass adds proper TYPE_CHECKING guards across the whole module.
+"scraper/*.py" = ["TCH001", "TCH002", "TCH003"]
+# Test files always need runtime imports for fixtures, pytest marks, and
+# isinstance checks — TYPE_CHECKING guards would break them.
+"tests/**/*.py" = ["TCH001", "TCH002", "TCH003"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
