@@ -21,6 +21,7 @@ small scraper (see `scraper/`) and served as static files by Caddy.
 - Python 3.12+
 - Node.js 18+
 - pip
+- [Caddy](https://caddyserver.com/docs/install) (`brew install caddy` on macOS)
 
 ## Installation
 
@@ -83,14 +84,21 @@ Or you can instead run the command:
 ```bash
 ./dev.sh
 ```
-From the repo root. It starts uvicorn on :8000, Vite on :5173, and a
-`python -m http.server` content-mirror on :8080. Ctrl+C kills all three.
 
-Open http://localhost:5173/prestamos. Vite proxies `/prestamos/api` to the
-backend on `:8000` and the top-level scraped paths (`/inicio`, `/calendario`,
-`/juegos-de-rol`, `/juegos-de-mesa`, `/eventos`, `/faq`, `/socios`) plus
-`/_nav.json` and `/_assets` to the content mirror on `:8080`, so cross-app
-nav links resolve the same way Caddy resolves them in production.
+From the repo root. It starts all four processes and kills them together on
+Ctrl+C:
+
+| Process | Port | Role |
+|---------|------|------|
+| uvicorn | :8000 | FastAPI backend |
+| dev_mirror.py | :8080 | Static content mirror |
+| Vite | :5173 | React dev server (HMR) |
+| Caddy | :2015 | Single entry point |
+
+Open **http://localhost:2015**. Caddy routes `/prestamos/*` to the Vite dev
+server and everything else to the content mirror, so you can navigate between
+`/prestamos/` and `/calendario/` (or any other static page) without switching
+ports — the same routing split as production. HMR works as usual.
 
 ### Scraped site only
 

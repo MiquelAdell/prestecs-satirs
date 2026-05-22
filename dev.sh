@@ -18,13 +18,18 @@ npm install --silent
 npm run dev &
 FRONTEND_PID=$!
 
-trap "kill $BACKEND_PID $MIRROR_PID $FRONTEND_PID 2>/dev/null" EXIT INT TERM
+cd ..
+caddy run --config Caddyfile.dev --adapter caddyfile &
+CADDY_PID=$!
+
+trap "kill $BACKEND_PID $MIRROR_PID $FRONTEND_PID $CADDY_PID 2>/dev/null" EXIT INT TERM
 
 echo ""
+echo "Dev server:     http://localhost:2015"
 echo "Backend:        http://localhost:8000"
 echo "Frontend:       http://localhost:5173"
 echo "Content mirror: http://localhost:8080"
-echo "Press Ctrl+C to stop all three."
+echo "Press Ctrl+C to stop all."
 echo ""
 
 wait
