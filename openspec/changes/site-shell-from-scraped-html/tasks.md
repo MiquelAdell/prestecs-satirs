@@ -103,7 +103,7 @@ Branch from `development` as `feature/import-menu`. Sequenced after `lending-des
 - [x] 14.3 [FE] `cd frontend && npm test` passes.
 - [x] 14.4 [FE] `cd frontend && npm run build` produces a clean build.
 - [x] 14.5 [BE] `pytest tests/scraper/` passes.
-- [~] 14.6 [FE] `cd e2e && npx playwright test` passes.  *(descoped)*
+- [x] 14.6 [FE] `cd frontend && yarn test:e2e` passes. *(Playwright harness wired with three projects @ 375/768/1280, globalSetup auth-state seeding, three spec files: site-shell, url-redirects, visual. int-1/int-2 skipped pending dev_mirror in front of Vite in the e2e stack. CI smoke job runs the suite.)*
 - [x] 14.7 [FE] Manual smoke via Chrome DevTools MCP: trigger a scrape (admin "Contenido" → re-sync), verify `_nav.json` exists with expected schema and `/prestamos` excluded; navigate to `/prestamos/` and confirm fetched items + Préstamos render; cross-navigate to a fetched item; test guest / member / admin submenu shapes; mobile-emulate 375 px and exercise the drawer + nested expand + Escape; console clean. Assert visual parity for the header at 1280 / 768 / 375.
 
 ## 15. Documentation
