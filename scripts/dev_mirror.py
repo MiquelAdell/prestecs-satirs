@@ -35,10 +35,23 @@ REDIRECTS: dict[str, str] = {
 }
 
 
+def redirect_target(path: str) -> str | None:
+    """Extract redirect target for a path, or None if no redirect applies.
+
+    Args:
+        path: The request path (may be percent-encoded, may have query string).
+              Query strings are stripped before lookup.
+
+    Returns:
+        The target path if a redirect applies, or None otherwise.
+    """
+    decoded = unquote(path.split("?", 1)[0])
+    return REDIRECTS.get(decoded)
+
+
 class MirrorHandler(http.server.SimpleHTTPRequestHandler):
     def _redirect_target(self) -> str | None:
-        decoded = unquote(self.path.split("?", 1)[0])
-        return REDIRECTS.get(decoded)
+        return redirect_target(self.path)
 
     def do_GET(self) -> None:  # noqa: N802 — http.server API
         target = self._redirect_target()

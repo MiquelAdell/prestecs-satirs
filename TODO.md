@@ -19,7 +19,6 @@ Follow-up (after PR #46 merges):
 Not yet scoped:
 - [ ] review filters in the catalog page
 
-
 ## Post-deploy hardening
 - [ ] Set up a simple backup strategy for the SQLite database (cron + copy to local)
 - [ ] Share the URL with club members for soft launch
