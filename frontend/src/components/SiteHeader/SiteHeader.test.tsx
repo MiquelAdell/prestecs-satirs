@@ -19,7 +19,7 @@ vi.mock("../../hooks/useNavItemsContext", () => ({
   useNavItemsContext: () => mockNavState,
 }));
 
-vi.mock("../../context/AuthContext", () => ({
+vi.mock("../../context/useAuth", () => ({
   useAuth: () => mockAuthState,
 }));
 

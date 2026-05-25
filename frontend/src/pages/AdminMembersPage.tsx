@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 import { apiFetch } from "../api/client";
 import type {
   AdminMember,
@@ -64,7 +64,7 @@ export function AdminMembersPage() {
 
   useEffect(() => {
     if (member?.is_admin) {
-      void fetchMembers();
+      fetchMembers().catch(() => {});
     }
   }, [member, fetchMembers]);
 

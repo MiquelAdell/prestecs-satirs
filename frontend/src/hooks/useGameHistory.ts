@@ -1,47 +1,62 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 import { apiFetch } from "../api/client";
 import type { LoanHistoryEntry } from "../types/loan";
 import type { GameWithStatus } from "../types/game";
 
-interface UseGameHistoryResult {
+interface State {
   readonly game: GameWithStatus | null;
   readonly history: readonly LoanHistoryEntry[];
   readonly loading: boolean;
   readonly error: string | null;
+}
+
+type Action =
+  | { readonly type: "start" }
+  | { readonly type: "success"; readonly game: GameWithStatus; readonly history: readonly LoanHistoryEntry[] }
+  | { readonly type: "error"; readonly error: string };
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case "start":
+      return { ...state, loading: true, error: null };
+    case "success":
+      return { game: action.game, history: action.history, loading: false, error: null };
+    case "error":
+      return { ...state, loading: false, error: action.error };
+  }
+}
+
+interface UseGameHistoryResult extends State {
   readonly refetch: () => void;
 }
 
 export function useGameHistory(slug: string | undefined): UseGameHistoryResult {
-  const [game, setGame] = useState<GameWithStatus | null>(null);
-  const [history, setHistory] = useState<readonly LoanHistoryEntry[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [state, dispatch] = useReducer(reducer, {
+    game: null,
+    history: [],
+    loading: true,
+    error: null,
+  });
 
   const fetchAll = useCallback(() => {
     if (!slug) {
-      setLoading(false);
-      setError("Identificador de juego no válido");
+      dispatch({ type: "error", error: "Identificador de juego no válido" });
       return;
     }
 
-    setLoading(true);
-    setError(null);
+    dispatch({ type: "start" });
 
     Promise.all([
       apiFetch<GameWithStatus>(`/juegos/${slug}`),
       apiFetch<readonly LoanHistoryEntry[]>(`/juegos/${slug}/history`),
     ])
-      .then(([found, entries]) => {
-        setGame(found);
-        setHistory(entries);
-      })
-      .catch((err: Error) => setError(err.message))
-      .finally(() => setLoading(false));
+      .then(([game, history]) => dispatch({ type: "success", game, history }))
+      .catch((err: Error) => dispatch({ type: "error", error: err.message }));
   }, [slug]);
 
   useEffect(() => {
     fetchAll();
   }, [fetchAll]);
 
-  return { game, history, loading, error, refetch: fetchAll };
+  return { ...state, refetch: fetchAll };
 }

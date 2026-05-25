@@ -1,25 +1,16 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { apiFetch } from "../api/client";
 import type { CurrentMember } from "../types/member";
+import { AuthContext } from "./auth-context";
 
 const SESSION_KEY = "prestamos_session";
 
-interface AuthState {
-  readonly member: CurrentMember | null;
-  readonly loading: boolean;
-  readonly login: (email: string, password: string) => Promise<void>;
-  readonly logout: () => Promise<void>;
-}
-
-const AuthContext = createContext<AuthState | null>(null);
-
 export function AuthProvider({ children }: { readonly children: ReactNode }) {
   const [member, setMember] = useState<CurrentMember | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => Boolean(localStorage.getItem(SESSION_KEY)));
 
   useEffect(() => {
     if (!localStorage.getItem(SESSION_KEY)) {
-      setLoading(false);
       return;
     }
     apiFetch<CurrentMember>("/me")
@@ -52,12 +43,4 @@ export function AuthProvider({ children }: { readonly children: ReactNode }) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth(): AuthState {
-  const context = useContext(AuthContext);
-  if (context === null) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
 }

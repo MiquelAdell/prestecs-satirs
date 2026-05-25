@@ -1,31 +1,50 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 import { apiFetch } from "../api/client";
 import type { GameWithStatus } from "../types/game";
 
-interface UseGamesResult {
+interface State {
   readonly games: readonly GameWithStatus[];
   readonly loading: boolean;
   readonly error: string | null;
+}
+
+type Action =
+  | { readonly type: "start" }
+  | { readonly type: "success"; readonly games: readonly GameWithStatus[] }
+  | { readonly type: "error"; readonly error: string };
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case "start":
+      return { ...state, loading: true, error: null };
+    case "success":
+      return { games: action.games, loading: false, error: null };
+    case "error":
+      return { ...state, loading: false, error: action.error };
+  }
+}
+
+interface UseGamesResult extends State {
   readonly refetch: () => void;
 }
 
 export function useGames(): UseGamesResult {
-  const [games, setGames] = useState<readonly GameWithStatus[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [state, dispatch] = useReducer(reducer, {
+    games: [],
+    loading: true,
+    error: null,
+  });
 
   const fetchGames = useCallback(() => {
-    setLoading(true);
-    setError(null);
+    dispatch({ type: "start" });
     apiFetch<readonly GameWithStatus[]>("/juegos")
-      .then(setGames)
-      .catch((err: Error) => setError(err.message))
-      .finally(() => setLoading(false));
+      .then((games) => dispatch({ type: "success", games }))
+      .catch((err: Error) => dispatch({ type: "error", error: err.message }));
   }, []);
 
   useEffect(() => {
     fetchGames();
   }, [fetchGames]);
 
-  return { games, loading, error, refetch: fetchGames };
+  return { ...state, refetch: fetchGames };
 }

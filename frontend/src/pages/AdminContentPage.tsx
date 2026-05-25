@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 import { apiFetch } from "../api/client";
 import { Button } from "../ui/Button";
 import "./AdminContentPage.css";
@@ -83,7 +83,7 @@ export function AdminContentPage() {
 
   useEffect(() => {
     if (!member?.is_admin) return;
-    void fetchStatus();
+    fetchStatus().catch(() => {});
     connectStream();
     return () => {
       eventSourceRef.current?.close();

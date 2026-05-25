@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useMatch } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { useNavItemsContext } from "../../hooks/useNavItemsContext";
 import styles from "./SiteHeader.module.css";
 

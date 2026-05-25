@@ -17,7 +17,7 @@ vi.mock("../hooks/useGameHistory", () => ({
   useGameHistory: () => useGameHistoryMock(),
 }));
 
-vi.mock("../context/AuthContext", () => ({
+vi.mock("../context/useAuth", () => ({
   useAuth: () => useAuthMock(),
 }));
 

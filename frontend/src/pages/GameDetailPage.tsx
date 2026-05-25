@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { apiFetch } from "../api/client";
 import { ConfirmDialog } from "../components/ConfirmDialog";
 import { LoanHistoryEntry } from "../components/LoanHistoryEntry";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 import { useGameHistory } from "../hooks/useGameHistory";
 import { Button } from "../ui/Button";
 import "./GameDetailPage.css";
