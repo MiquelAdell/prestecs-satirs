@@ -162,6 +162,71 @@ test.describe("site-shell @ admin", () => {
   });
 });
 
+// ── Static content-mirror pages ──────────────────────────────────────────────
+// The site-shell embed bundle is injected into every scraped static page.
+// These tests verify the React SiteHeader renders correctly on a static page
+// and that the Google Sites original header is hidden.
+
+const STATIC_PAGE = "/calendario/";
+
+test.describe("site-shell @ static page (guest)", () => {
+  test.use({ storageState: GUEST_STATE });
+
+  test("static-shell-1: site-shell-root exists and is visible", async ({
+    page,
+  }) => {
+    await page.goto(STATIC_PAGE);
+    await expect(page.locator("#site-shell-root")).toBeVisible();
+  });
+
+  test("static-shell-2: Préstamos link href points to /prestamos/", async ({
+    page,
+  }, testInfo) => {
+    await page.goto(STATIC_PAGE);
+    if (isMobileProject(testInfo.project.name)) {
+      await page.getByRole("button", { name: "Abrir menú" }).click();
+    }
+    const link = page.getByRole("link", { name: new RegExp(`^${PRESTAMOS_LABEL}`) }).first();
+    await expect(link).toBeVisible();
+    await expect(link).toHaveAttribute("href", "/prestamos/");
+  });
+
+  test("static-shell-3: Iniciar sesión link visible for guest", async ({
+    page,
+  }, testInfo) => {
+    await page.goto(STATIC_PAGE);
+    if (isMobileProject(testInfo.project.name)) {
+      await page.getByRole("button", { name: "Abrir menú" }).click();
+    }
+    await expect(
+      page.getByRole("link", { name: "Iniciar sesión" }).first(),
+    ).toBeVisible();
+  });
+
+  test("static-shell-4: Google Sites original header is hidden", async ({
+    page,
+  }) => {
+    await page.goto(STATIC_PAGE);
+    await expect(page.locator("[data-gs-header]")).toBeHidden();
+  });
+});
+
+test.describe("site-shell @ static page (member)", () => {
+  test.use({ storageState: MEMBER_STATE });
+
+  test("static-shell-5: Cerrar sesión visible for member", async ({
+    page,
+  }, testInfo) => {
+    await page.goto(STATIC_PAGE);
+    if (isMobileProject(testInfo.project.name)) {
+      await page.getByRole("button", { name: "Abrir menú" }).click();
+    }
+    await expect(
+      page.getByRole("button", { name: "Cerrar sesión" }).first(),
+    ).toBeVisible();
+  });
+});
+
 test.describe("site-shell drawer", () => {
   test.use({ storageState: GUEST_STATE });
 
