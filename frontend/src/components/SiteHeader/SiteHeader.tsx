@@ -34,12 +34,6 @@ interface LinkSubmenuItem {
   readonly roles: readonly SubmenuRole[];
 }
 
-interface ActionSubmenuItem {
-  readonly type: "action";
-  readonly label: string;
-  readonly roles: readonly SubmenuRole[];
-}
-
 interface NestedSubmenuItem {
   readonly type: "nested";
   readonly label: string;
@@ -47,7 +41,7 @@ interface NestedSubmenuItem {
   readonly children: readonly LinkSubmenuItem[];
 }
 
-type SubmenuItem = LinkSubmenuItem | ActionSubmenuItem | NestedSubmenuItem;
+type SubmenuItem = LinkSubmenuItem | NestedSubmenuItem;
 
 // `to` values are router-relative (inside `<BrowserRouter basename="/prestamos">`),
 // so they omit the `/prestamos` prefix — the router prepends it.
@@ -62,7 +56,6 @@ const PRESTAMOS_SUBMENU: readonly SubmenuItem[] = [
       { type: "link", label: "Contenido", to: "/admin/content", roles: ["admin"] },
     ],
   },
-  { type: "action", label: "Cerrar sesión", roles: ["member", "admin"] },
 ];
 
 // ─── AdminNestedSubmenu ───────────────────────────────────────────────────────
@@ -112,7 +105,6 @@ function AdminNestedSubmenu({
 
 interface PrestamosSubmenuProps {
   readonly role: SubmenuRole;
-  readonly onLogout: () => void;
   readonly adminExpanded: boolean;
   readonly onToggleAdmin: () => void;
   readonly onItemClick?: () => void;
@@ -120,7 +112,6 @@ interface PrestamosSubmenuProps {
 
 function PrestamosSubmenu({
   role,
-  onLogout,
   adminExpanded,
   onToggleAdmin,
   onItemClick,
@@ -141,22 +132,6 @@ function PrestamosSubmenu({
               onToggleMobile={onToggleAdmin}
               onItemClick={onItemClick}
             />
-          );
-        }
-        if (item.type === "action") {
-          return (
-            <li key={item.label} className={styles.submenuItem} role="menuitem">
-              <button
-                type="button"
-                className={styles.submenuButton}
-                onClick={() => {
-                  onLogout();
-                  onItemClick?.();
-                }}
-              >
-                {item.label}
-              </button>
-            </li>
           );
         }
         return (
@@ -277,7 +252,6 @@ export function SiteHeader() {
                   </Link>
                   <PrestamosSubmenu
                     role={role}
-                    onLogout={handleLogout}
                     adminExpanded={false}
                     onToggleAdmin={() => undefined}
                   />
@@ -290,13 +264,24 @@ export function SiteHeader() {
         </nav>
 
         {/* Right-side actions */}
-        {role === "guest" && (
-          <div className={styles.headerActions}>
+        <div className={styles.headerActions}>
+          {role === "guest" ? (
             <Link to="/login" className={styles.loginAction}>
               Iniciar sesión
             </Link>
-          </div>
-        )}
+          ) : (
+            <>
+              <span className={styles.userDisplayName}>{member!.display_name}</span>
+              <button
+                type="button"
+                className={styles.logoutAction}
+                onClick={handleLogout}
+              >
+                Cerrar sesión
+              </button>
+            </>
+          )}
+        </div>
 
         {/* Hamburger */}
         <button
@@ -322,7 +307,7 @@ export function SiteHeader() {
       >
         <nav aria-label="Principal">
           <ul className={styles.drawerList}>
-            {role === "guest" && (
+            {role === "guest" ? (
               <li className={styles.drawerItem}>
                 <Link
                   to="/login"
@@ -331,6 +316,17 @@ export function SiteHeader() {
                 >
                   Iniciar sesión
                 </Link>
+              </li>
+            ) : (
+              <li className={`${styles.drawerItem} ${styles.drawerUserRow}`}>
+                <span className={styles.drawerUserDisplayName}>{member!.display_name}</span>
+                <button
+                  type="button"
+                  className={styles.drawerLogoutAction}
+                  onClick={() => { handleLogout(); closeDrawer(); }}
+                >
+                  Cerrar sesión
+                </button>
               </li>
             )}
 
@@ -360,7 +356,6 @@ export function SiteHeader() {
                   {prestamosExpanded && (
                     <PrestamosSubmenu
                       role={role}
-                      onLogout={handleLogout}
                       adminExpanded={adminExpanded}
                       onToggleAdmin={() => setAdminExpanded((prev) => !prev)}
                       onItemClick={closeDrawer}

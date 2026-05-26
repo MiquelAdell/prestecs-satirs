@@ -301,6 +301,63 @@
   font-weight: var(--font-weight-medium);
 }
 
+/* ─── User actions (authenticated state) ──────────────────────────── */
+
+.userDisplayName {
+  color: var(--color-header-fg);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+
+.logoutAction {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-xs) var(--space-md);
+  color: var(--color-header-fg);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  border: 1px solid var(--color-header-fg);
+  border-radius: var(--radius-sm, 4px);
+  white-space: nowrap;
+  background: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.logoutAction:hover,
+.logoutAction:focus-visible {
+  background-color: var(--color-header-fg);
+  color: var(--color-header-bg);
+}
+
+.drawerUserRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.drawerUserDisplayName {
+  padding: var(--space-md) var(--space-lg);
+  color: var(--color-header-fg);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+}
+
+.drawerLogoutAction {
+  padding: var(--space-md) var(--space-lg);
+  color: var(--color-header-fg-active);
+  font-size: var(--font-size-sm);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-family-body);
+  font-weight: var(--font-weight-medium);
+  text-decoration: underline;
+}
+
 /* ─── Hamburger ──────────────────────────────────────────────────────── */
 
 .hamburger {
@@ -408,7 +465,9 @@
 .hamburger:focus-visible,
 .drawerItem > a:focus-visible,
 .drawerParent:focus-visible,
-.logoLink:focus-visible {
+.logoLink:focus-visible,
+.logoutAction:focus-visible,
+.drawerLogoutAction:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.8);
   outline-offset: 2px;
   border-radius: var(--radius-sm);

@@ -213,7 +213,7 @@ describe("SiteHeader", () => {
   });
 
   describe("Préstamos submenu — member", () => {
-    it("renders exactly Mis préstamos, Cerrar sesión for member", () => {
+    it("renders exactly Mis préstamos in submenu (not Cerrar sesión) for member", () => {
       setMember();
       renderHeader();
 
@@ -221,7 +221,7 @@ describe("SiteHeader", () => {
         .getAllByRole("menuitem")
         .map((el) => el.textContent?.trim());
 
-      expect(submenuItems).toEqual(["Mis préstamos", "Cerrar sesión"]);
+      expect(submenuItems).toEqual(["Mis préstamos"]);
 
       const misPrestamosLinks = screen
         .getAllByRole("menuitem")
@@ -230,6 +230,18 @@ describe("SiteHeader", () => {
       misPrestamosLinks.forEach((link) => {
         expect(link).toHaveAttribute("href", "/my-loans");
       });
+    });
+
+    it("shows Cerrar sesión button in header actions (not in submenu) for member", () => {
+      setMember();
+      renderHeader();
+
+      // The desktop header actions slot is always in the DOM; the drawer is aria-hidden when closed
+      const cerrarBtns = screen.getAllByRole("button", { name: "Cerrar sesión" });
+      expect(cerrarBtns.length).toEqual(1);
+
+      const menuitems = screen.getAllByRole("menuitem").map((el) => el.textContent?.trim());
+      expect(menuitems).not.toContain("Cerrar sesión");
     });
 
     it("does not show Iniciar sesión or Administración for member", () => {
@@ -242,7 +254,7 @@ describe("SiteHeader", () => {
   });
 
   describe("Préstamos submenu — admin", () => {
-    it("renders Mis préstamos, Administración, Cerrar sesión for admin", () => {
+    it("renders Mis préstamos in submenu but not Cerrar sesión for admin", () => {
       setAdmin();
       renderHeader();
 
@@ -250,9 +262,13 @@ describe("SiteHeader", () => {
         .getAllByRole("menuitem")
         .map((el) => el.textContent?.trim());
 
-      // Admin sees all items; Administración is a nested parent (not a menuitem) covered by a separate test
+      // Admin sees link items in submenu; Cerrar sesión is now in the header actions slot
       expect(submenuItems).toContain("Mis préstamos");
-      expect(submenuItems).toContain("Cerrar sesión");
+      expect(submenuItems).not.toContain("Cerrar sesión");
+
+      // Cerrar sesión is a button in the header actions area; drawer is aria-hidden when closed
+      const cerrarBtns = screen.getAllByRole("button", { name: "Cerrar sesión" });
+      expect(cerrarBtns.length).toEqual(1);
     });
 
     it("renders the Administración nested parent for admin", () => {
@@ -260,15 +276,15 @@ describe("SiteHeader", () => {
       renderHeader();
 
       // The nested trigger renders as a button inside a menuitem
-      expect(screen.getByText("Administración")).toBeDefined();
+      expect(screen.getByText("Administración").tagName).toEqual("BUTTON");
     });
 
     it("renders Miembros and Contenido as nested items for admin", () => {
       setAdmin();
       renderHeader();
 
-      expect(screen.getByText("Miembros")).toBeDefined();
-      expect(screen.getByText("Contenido")).toBeDefined();
+      expect(screen.getByText("Miembros").tagName).toEqual("A");
+      expect(screen.getByText("Contenido").tagName).toEqual("A");
     });
 
     it("does not show nested admin items for guest", () => {
@@ -294,10 +310,66 @@ describe("SiteHeader", () => {
       mockLogout.mockResolvedValue(undefined);
       renderHeader();
 
-      const cerrarBtn = screen.getByText("Cerrar sesión");
-      fireEvent.click(cerrarBtn);
+      const cerrarBtn = screen.getAllByRole("button", { name: "Cerrar sesión" })[0];
+      fireEvent.click(cerrarBtn!);
 
       expect(mockLogout).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("user actions — authenticated", () => {
+    it("shows display_name in header for member", () => {
+      setMember();
+      renderHeader();
+
+      // Displayed in both desktop header actions slot and mobile drawer
+      const displayNameEls = screen.getAllByText("Test User");
+      expect(displayNameEls.length).toEqual(2);
+    });
+
+    it("shows Cerrar sesión button in header for member (not in submenu)", () => {
+      setMember();
+      renderHeader();
+
+      // Desktop header actions slot only — drawer is aria-hidden when closed
+      const cerrarBtns = screen.getAllByRole("button", { name: "Cerrar sesión" });
+      expect(cerrarBtns.length).toEqual(1);
+
+      const menuitems = screen.getAllByRole("menuitem").map((el) => el.textContent?.trim());
+      expect(menuitems).not.toContain("Cerrar sesión");
+    });
+
+    it("does not show Cerrar sesión in Préstamos submenu for member", () => {
+      setMember();
+      renderHeader();
+
+      const menuitems = screen.getAllByRole("menuitem").map((el) => el.textContent?.trim());
+      expect(menuitems).toEqual(["Mis préstamos"]);
+    });
+
+    it("shows display_name and Cerrar sesión in drawer without expanding Préstamos", () => {
+      setMember();
+      mockLogout.mockResolvedValue(undefined);
+      const { container } = renderHeader();
+
+      const hamburger = screen.getByRole("button", { name: "Abrir menú" });
+      fireEvent.click(hamburger);
+
+      const drawer = container.querySelector("#mobile-drawer") as HTMLElement;
+      const drawerUserName = within(drawer).getByText("Test User");
+      expect(drawerUserName.textContent).toEqual("Test User");
+
+      const cerrarBtn = within(drawer).getByRole("button", { name: "Cerrar sesión" });
+      fireEvent.click(cerrarBtn);
+      expect(mockLogout).toHaveBeenCalledTimes(1);
+      expect(hamburger.getAttribute("aria-expanded")).toEqual("false");
+    });
+
+    it("does not show Iniciar sesión for member", () => {
+      setMember();
+      renderHeader();
+
+      expect(screen.queryByText("Iniciar sesión")).toBeNull();
     });
   });
 
@@ -330,7 +402,7 @@ describe("SiteHeader", () => {
       renderHeader();
 
       const hamburger = screen.getByRole("button", { name: "Abrir menú" });
-      expect(hamburger).toBeDefined();
+      expect(hamburger.tagName).toEqual("BUTTON");
     });
 
     it("hamburger starts with aria-expanded false", () => {
@@ -424,8 +496,8 @@ describe("SiteHeader", () => {
       fireEvent.click(adminTrigger!);
 
       // Miembros and Contenido links are now visible inside the drawer
-      expect(within(drawer).getByText("Miembros")).toBeDefined();
-      expect(within(drawer).getByText("Contenido")).toBeDefined();
+      expect(within(drawer).getByText("Miembros").tagName).toEqual("A");
+      expect(within(drawer).getByText("Contenido").tagName).toEqual("A");
 
       const miembrosLinks = within(drawer)
         .getAllByRole("menuitem")
@@ -434,8 +506,8 @@ describe("SiteHeader", () => {
         .getAllByRole("menuitem")
         .filter((el) => el.textContent?.trim() === "Contenido");
 
-      expect(miembrosLinks.length).toBeGreaterThan(0);
-      expect(contenidoLinks.length).toBeGreaterThan(0);
+      expect(miembrosLinks.length).toEqual(1);
+      expect(contenidoLinks.length).toEqual(1);
     });
 
     // auth-5: Cerrar sesión in drawer closes the drawer
@@ -452,19 +524,8 @@ describe("SiteHeader", () => {
       const drawer = container.querySelector("#mobile-drawer") as HTMLElement;
       expect(drawer).not.toBeNull();
 
-      // Open Préstamos submenu in drawer
-      const drawerPrestamos = within(drawer)
-        .getAllByRole("button")
-        .find(
-          (el) =>
-            el.textContent?.includes("Préstamos") &&
-            el.getAttribute("aria-haspopup") === "menu"
-        );
-      expect(drawerPrestamos).toBeDefined();
-      fireEvent.click(drawerPrestamos!);
-
-      // Click Cerrar sesión inside the drawer
-      const cerrarBtn = within(drawer).getByText("Cerrar sesión");
+      // Cerrar sesión is at the top of the drawer — no need to expand Préstamos submenu
+      const cerrarBtn = within(drawer).getByRole("button", { name: "Cerrar sesión" });
       fireEvent.click(cerrarBtn);
 
       expect(mockLogout).toHaveBeenCalledTimes(1);
@@ -569,7 +630,7 @@ describe("SiteHeader", () => {
       );
       expect(prestamosLi).toBeDefined();
       const chevrons = prestamosLi!.querySelectorAll("svg");
-      expect(chevrons.length).toBeGreaterThan(0);
+      expect(chevrons.length).toEqual(1);
     });
 
     it("Préstamos parent in desktop nav contains a chevron SVG for admin", () => {
@@ -583,8 +644,9 @@ describe("SiteHeader", () => {
         (li) => li.textContent?.includes("Préstamos")
       );
       expect(prestamosLi).toBeDefined();
+      // Admin: 2 SVGs — one for Préstamos link chevron, one for Administración nested trigger chevron
       const chevrons = prestamosLi!.querySelectorAll("svg");
-      expect(chevrons.length).toBeGreaterThan(0);
+      expect(chevrons.length).toEqual(2);
     });
 
     it("Préstamos item in desktop nav has no chevron SVG for guest", () => {
